@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import java.util.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<BorderPane xmlns="http://javafx.com/javafx"
+            xmlns:fx="http://javafx.com/fxml">
+    <left>
+<!--        Move style to its own CSS stylesheet -->
+        <VBox prefWidth="400.0" style=" -fx-border-color:black; -fx-border-width: 1; -fx-border-style: solid; -fx-background-color: grey;">
+            <fx:include source="FormattingPanel.fxml"/>
+            <fx:include source="ElementLibraryPanel.fxml"/>
+        </VBox>
+    </left>
+    <bottom>
+        <fx:include source="SessionInfoBar.fxml"/>
+    </bottom>
+</BorderPane>

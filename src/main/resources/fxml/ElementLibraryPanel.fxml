@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import java.util.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.image.Image?>
+<TitledPane xmlns="http://javafx.com/javafx"
+            xmlns:fx="http://javafx.com/fxml"
+            fx:controller="carleton.sysc4907.view.ElementLibraryPanelController">
+    <text>Element Library</text>
+    <FlowPane fx:id="elementsPane" hgap="5" vgap="5">
+        <ImageView fitHeight="100.0" fitWidth="100.0" pickOnBounds="true" preserveRatio="true">
+            <Image url="/icons/bold_text_icon.png"/>
+        </ImageView>
+        <ImageView fitHeight="100.0" fitWidth="100.0" pickOnBounds="true" preserveRatio="true">
+            <Image url="/icons/italics_text_icon.png"/>
+        </ImageView>
+        <ImageView fitHeight="100.0" fitWidth="100.0" pickOnBounds="true" preserveRatio="true">
+            <Image url="/icons/underline_text_icon.png"/>
+        </ImageView>
+        <ImageView fitHeight="100.0" fitWidth="100.0" pickOnBounds="true" preserveRatio="true">
+            <Image url="/icons/underline_text_icon.png"/>
+        </ImageView>
+        <ImageView fitHeight="100.0" fitWidth="100.0" pickOnBounds="true" preserveRatio="true">
+            <Image url="/icons/bold_text_icon.png"/>
+        </ImageView>
+        <ImageView fitHeight="100.0" fitWidth="100.0" pickOnBounds="true" preserveRatio="true">
+            <Image url="/icons/italics_text_icon.png"/>
+        </ImageView>
+    </FlowPane>
+</TitledPane>

@@ -22,6 +22,11 @@
             <artifactId>javafx-controls</artifactId>
             <version>${javafx.version}</version>
         </dependency>
+        <dependency>
+            <groupId>org.openjfx</groupId>
+            <artifactId>javafx-fxml</artifactId>
+            <version>${javafx.version}</version>
+        </dependency>
     </dependencies>
 
     <build>
@@ -31,7 +36,7 @@
                 <artifactId>javafx-maven-plugin</artifactId>
                 <version>${javafx.maven.plugin.version}</version>
                 <configuration>
-                    <mainClass>carleton.sysc4907.HelloFX</mainClass>
+                    <mainClass>carleton.sysc4907.MainApp</mainClass>
                 </configuration>
             </plugin>
         </plugins>
