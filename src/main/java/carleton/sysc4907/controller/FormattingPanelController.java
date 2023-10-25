@@ -1,4 +1,4 @@
-package carleton.sysc4907.view;
+package carleton.sysc4907.controller;
 
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;

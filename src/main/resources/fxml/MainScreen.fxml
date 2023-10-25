@@ -7,7 +7,8 @@
 <?import javafx.scene.layout.*?>
 
 <BorderPane xmlns="http://javafx.com/javafx"
-            xmlns:fx="http://javafx.com/fxml">
+            xmlns:fx="http://javafx.com/fxml"
+            fx:controller="carleton.sysc4907.controller.MainScreenController">
     <left>
 <!--        Move style to its own CSS stylesheet -->
         <VBox prefWidth="400.0" style=" -fx-border-color:black; -fx-border-width: 1; -fx-border-style: solid; -fx-background-color: grey;">
@@ -15,7 +16,13 @@
             <fx:include source="ElementLibraryPanel.fxml"/>
         </VBox>
     </left>
+    <top>
+        <fx:include source="Menu.fxml" fx:id="menu"/>
+    </top>
     <bottom>
         <fx:include source="SessionInfoBar.fxml"/>
     </bottom>
+    <center>
+        <fx:include source="ImageDisplayPanel.fxml" fx:id="imageDisplay"/>
+    </center>
 </BorderPane>

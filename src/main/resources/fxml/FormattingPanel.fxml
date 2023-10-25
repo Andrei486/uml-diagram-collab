@@ -11,7 +11,7 @@
 <TitledPane xmlns="http://javafx.com/javafx"
             xmlns:fx="http://javafx.com/fxml"
             fx:id="titledPane"
-            fx:controller="carleton.sysc4907.view.FormattingPanelController">
+            fx:controller="carleton.sysc4907.controller.FormattingPanelController">
     <text>Formatting Options</text>
     <HBox>
         <Button fx:id="boldButton">
