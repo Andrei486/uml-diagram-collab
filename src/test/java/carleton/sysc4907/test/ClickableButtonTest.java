@@ -1,3 +1,5 @@
+package carleton.sysc4907.test;
+
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.testfx.api.FxRobot;
