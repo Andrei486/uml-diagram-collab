@@ -25,6 +25,7 @@
             </Spinner>
         </HBox>
         <HBox>
+            <!--- Icons from https://uxwing.com/tag/editor-icons/, apparently does not require attribution -->
             <Button fx:id="boldButton">
                 <graphic>
                     <ImageView fitHeight="25.0" fitWidth="25.0" pickOnBounds="true" preserveRatio="true">
@@ -35,7 +36,7 @@
             <Button fx:id="italicsButton">
                 <graphic>
                     <ImageView fitHeight="25.0" fitWidth="25.0" pickOnBounds="true" preserveRatio="true">
-                        <Image url="/icons/italics_text_icon.png"/>
+                        <Image url="/icons/italic_text_icon.png"/>
                     </ImageView>
                 </graphic>
             </Button>
