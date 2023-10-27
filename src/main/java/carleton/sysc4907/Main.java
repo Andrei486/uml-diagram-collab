@@ -8,14 +8,18 @@ import javafx.stage.Stage;
 
 import java.io.IOException;
 
-public class HelloFX extends Application {
+public class Main extends Application {
 
     @Override
     public void start(Stage stage) throws IOException {
+        //Create dependency injector to link models and controllers
         DependencyInjector injector = new DependencyInjector();
+        //Create the session
         SessionModel sessionModel = new SessionModel();
+        //Add instantiation methods to the dependency injector
         injector.addInjectionMethod(SessionInfoBarController.class, () -> new SessionInfoBarController(sessionModel));
 
+        //Set up and show the scene
         Scene scene = new Scene(injector.load("view/SessionInfoBar.fxml"), 640, 480);
         stage.setScene(scene);
         stage.show();
