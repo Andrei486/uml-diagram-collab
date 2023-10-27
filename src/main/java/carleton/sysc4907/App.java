@@ -20,7 +20,8 @@ public class App extends Application {
         injector.addInjectionMethod(SessionInfoBarController.class, () -> new SessionInfoBarController(sessionModel));
 
         //Set up and show the scene
-        Scene scene = new Scene(injector.load("view/SessionInfoBar.fxml"), 640, 480);
+        Scene scene = new Scene(injector.load("view/StartScreenView.fxml"), 640, 480);
+        scene.getStylesheets().add("stylesheet/StartScreenStyle.css");
         stage.setScene(scene);
         stage.show();
     }

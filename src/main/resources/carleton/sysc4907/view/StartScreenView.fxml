@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import java.util.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<?import javafx.scene.control.skin.ToolBarSkin.ToolBarOverflowMenu?>
+<?import javafx.scene.shape.Rectangle?>
+<?import javafx.scene.shape.Box?>
+<HBox xmlns="http://javafx.com/javafx"
+      xmlns:fx="http://javafx.com/fxml"
+      fx:controller="carleton.sysc4907.controller.StartScreenController"
+      prefHeight="400.0" prefWidth="600.0" alignment="CENTER">
+    <VBox alignment="CENTER_LEFT">
+        <Label text="Welcome!" styleClass="label-title"/>
+        <Label text="Enter a username, then open, create, or join a diagram." styleClass="label-paragraph"/>
+        <Rectangle height="30"/>
+        <VBox>
+            <Label text="Enter a username:" styleClass="label-textfield"/>
+            <TextField text="username" prefWidth="250" styleClass="text-field-1"/>
+        </VBox>
+        <Rectangle height="30"/>
+        <HBox alignment="CENTER">
+            <Button fx:id="openBtn" text="Open" styleClass="button-main">
+                <Tooltip text="Open a saved diagram"/>
+            </Button>
+            <Rectangle width="5"/>
+            <Button fx:id="newBtn" text="New" styleClass="button-main">
+                <Tooltip text="Create a new diagram"/>
+            </Button>
+            <Rectangle width="5"/>
+            <Button fx:id="joinBtn" text="Join" styleClass="button-main">
+                <Tooltip text="Join an existing room"/>
+            </Button>
+        </HBox>
+    </VBox>
+</HBox>
