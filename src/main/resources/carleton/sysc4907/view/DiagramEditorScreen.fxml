@@ -17,7 +17,11 @@
         </VBox>
     </left>
     <top>
-        <fx:include source="DiagramMenuBar.fxml" fx:id="menu"/>
+        <HBox>
+            <fx:include source="DiagramMenu.fxml" fx:id="diagramMenu" prefHeight="15"/>
+            <Region HBox.hgrow="SOMETIMES" styleClass="menu-bar"/> <!--- Set style class here later -->
+            <fx:include source="SessionUsersMenu.fxml" fx:id="usersMenu" prefHeight="15"/>
+        </HBox>
     </top>
     <bottom>
         <fx:include source="SessionInfoBar.fxml"/>

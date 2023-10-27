@@ -10,7 +10,7 @@ public class SessionInfoBarController {
     @FXML
     private Text roomCode;
 
-    private SessionModel sessionModel;
+    private final SessionModel sessionModel;
 
     public SessionInfoBarController(SessionModel sessionModel) {
         this.sessionModel = sessionModel;
@@ -20,6 +20,6 @@ public class SessionInfoBarController {
     public void initialize() {
         // make a text property for the room code on the session object, subscribe to changed on the property
         // set the initial value here
-        roomCode.setText("Room code: 123456789012");
+        roomCode.setText("Room code: " + sessionModel.getRoomCode());
     }
 }
