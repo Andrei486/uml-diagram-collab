@@ -36,6 +36,7 @@ public class UserFactory {
      * Resets the factory, so it can handle a new room.
      */
     public void resetFactory() {
+        ID_COUNTER = 0;
         hostUser = null;
     }
 }

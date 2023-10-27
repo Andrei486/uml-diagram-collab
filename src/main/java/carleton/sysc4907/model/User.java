@@ -71,8 +71,14 @@ public class User {
      * @param permissionLevel the new permission level for the user
      */
     public void setPermissionLevel(PermissionLevel permissionLevel) {
+        if (permissionLevel == getPermissionLevel()) {
+            return;
+        }
         if (permissionLevel == PermissionLevel.HOST && getPermissionLevel() != null) {
             throw new IllegalStateException("Cannot escalate permissions of an existing user to host!");
+        }
+        if (getPermissionLevel() == PermissionLevel.HOST && permissionLevel != PermissionLevel.HOST) {
+            throw new IllegalArgumentException("Cannot reduce a host's permissions!");
         }
         getPermissionLevelProperty().set(permissionLevel);
     }

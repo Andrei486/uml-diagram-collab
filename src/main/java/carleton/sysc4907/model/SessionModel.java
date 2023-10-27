@@ -19,6 +19,9 @@ public class SessionModel {
         if (!roomCode.matches("([A-Z0-9]){12}")) {
             throw new IllegalArgumentException("Room code must be 12 digits long and alphanumeric (uppercase only).");
         }
+        if (localUser == null) {
+            throw new IllegalArgumentException("Local user for a room cannot be null.");
+        }
         this.roomCode = roomCode;
         this.localUser = localUser;
         getUsers().add(localUser);
@@ -74,6 +77,8 @@ public class SessionModel {
      * @param user the User to kick from the room
      */
     public void kickUser(User user) {
-        getUsers().remove(user);
+        if (user.getPermissionLevel() != PermissionLevel.HOST) {
+            getUsers().remove(user);
+        }
     }
 }
