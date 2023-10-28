@@ -26,27 +26,27 @@
         </HBox>
         <HBox>
             <!--- Icons from https://uxwing.com/tag/editor-icons/, apparently does not require attribution -->
-            <Button fx:id="boldButton">
+            <ToggleButton fx:id="boldButton">
                 <graphic>
                     <ImageView fitHeight="25.0" fitWidth="25.0" pickOnBounds="true" preserveRatio="true">
                         <Image url="/icons/bold_text_icon.png"/>
                     </ImageView>
                 </graphic>
-            </Button>
-            <Button fx:id="italicsButton">
+            </ToggleButton>
+            <ToggleButton fx:id="italicsButton">
                 <graphic>
                     <ImageView fitHeight="25.0" fitWidth="25.0" pickOnBounds="true" preserveRatio="true">
                         <Image url="/icons/italic_text_icon.png"/>
                     </ImageView>
                 </graphic>
-            </Button>
-            <Button fx:id="underlineButton">
+            </ToggleButton>
+            <ToggleButton fx:id="underlineButton">
                 <graphic>
                     <ImageView fitHeight="25.0" fitWidth="25.0" pickOnBounds="true" preserveRatio="true">
                         <Image url="/icons/underline_text_icon.png"/>
                     </ImageView>
                 </graphic>
-            </Button>
+            </ToggleButton>
         </HBox>
     </VBox>
 </TitledPane>

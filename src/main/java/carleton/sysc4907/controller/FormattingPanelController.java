@@ -15,11 +15,11 @@ public class FormattingPanelController {
     @FXML
     private TitledPane titledPane;
     @FXML
-    private Button underlineButton;
+    private ToggleButton underlineButton;
     @FXML
-    private Button italicsButton;
+    private ToggleButton italicsButton;
     @FXML
-    private Button boldButton;
+    private ToggleButton boldButton;
 
     private final TextFormattingModel textFormattingModel;
 
@@ -30,10 +30,6 @@ public class FormattingPanelController {
     @FXML
     public void initialize() {
         // deselect and disable all formatting options
-        boldButton.setDisable(true);
-        italicsButton.setDisable(true);
-        underlineButton.setDisable(true);
-
         fontName.setItems(textFormattingModel.getFontFamilyNames());
     }
 
