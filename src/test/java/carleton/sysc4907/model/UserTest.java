@@ -7,24 +7,19 @@ import static org.junit.jupiter.api.Assertions.*;
 
 public class UserTest {
 
-    private User user;
-
-    @BeforeEach
-    public void setup() {
-        user = new User(0, "Test User", PermissionLevel.HOST);
-    }
-
     @Test
     public void testConstructSuccess() {
-        assertEquals(0, user.getId());
-        assertEquals("Test User", user.getUsername());
-        assertEquals(PermissionLevel.HOST, user.getPermissionLevel());
+        User host = new User(0, "Test User", PermissionLevel.HOST);
+        assertEquals(0, host.getId());
+        assertEquals("Test User", host.getUsername());
+        assertEquals(PermissionLevel.HOST, host.getPermissionLevel());
     }
 
     @Test
     public void testSetUsername() {
-        user.setUsername("New Name");
-        assertEquals("New Name", user.getUsername());
+        User host = new User(0, "Test User", PermissionLevel.HOST);
+        host.setUsername("New Name");
+        assertEquals("New Name", host.getUsername());
     }
 
     @Test
@@ -36,8 +31,9 @@ public class UserTest {
         guest.setPermissionLevel(PermissionLevel.READ_ONLY);
         assertEquals(PermissionLevel.READ_ONLY, guest.getPermissionLevel());
 
-        user.setPermissionLevel(PermissionLevel.HOST);
-        assertEquals(PermissionLevel.HOST, user.getPermissionLevel());
+        User host = new User(0, "Test User", PermissionLevel.HOST);
+        host.setPermissionLevel(PermissionLevel.HOST);
+        assertEquals(PermissionLevel.HOST, host.getPermissionLevel());
     }
 
     @Test
@@ -46,8 +42,9 @@ public class UserTest {
         assertEquals(PermissionLevel.READ_WRITE, guest.getPermissionLevel());
 
         // Try reducing a host's permissions
+        User host = new User(0, "Test User", PermissionLevel.HOST);
         assertThrows(IllegalArgumentException.class,
-                () -> user.setPermissionLevel(PermissionLevel.READ_ONLY));
+                () -> host.setPermissionLevel(PermissionLevel.READ_ONLY));
 
         // Try escalating a guest to host
         assertThrows(IllegalStateException.class,
