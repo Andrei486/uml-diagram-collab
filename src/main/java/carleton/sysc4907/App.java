@@ -39,6 +39,7 @@ public class App extends Application {
 
         //Set up and show the scene
         Scene scene = new Scene(injector.load("view/DiagramEditorScreen.fxml"), 1280, 720);
+        scene.getStylesheets().add("stylesheet/DiagramEditorScreenStyle.css");
         stage.setScene(scene);
         stage.setTitle("Diagram Editor");
         stage.show();

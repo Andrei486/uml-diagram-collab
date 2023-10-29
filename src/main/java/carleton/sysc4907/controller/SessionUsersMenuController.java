@@ -50,9 +50,8 @@ public class SessionUsersMenuController {
         itemContent.setPrefWidth(100);
         // Create a label for the username
         Label userLabel = new Label();
-        userLabel.setTextFill(Color.BLACK); // change to style class once stylesheet added
+        userLabel.setTextFill(Color.BLACK);
         userLabel.textProperty().bind(user.getUsernameProperty());
-//        userLabel.setAlignment(Pos.CENTER_LEFT);
         itemContent.getChildren().add(userLabel);
         // Create a kick button if needed
         if (canKick) {
@@ -60,17 +59,11 @@ public class SessionUsersMenuController {
             HBox.setHgrow(separator, Priority.SOMETIMES);
             itemContent.getChildren().add(separator);
             Button kickButton = new Button("Kick");
-            kickButton.setOnAction(new EventHandler<ActionEvent>() {
-                @Override
-                public void handle(ActionEvent actionEvent) {
-                    sessionModel.kickUser(user);
-                }
-            });
-//            kickButton.setAlignment(Pos.CENTER_RIGHT);
+            kickButton.getStyleClass().add("button-kick");
+            kickButton.setOnAction(actionEvent -> sessionModel.kickUser(user));
             itemContent.getChildren().add(kickButton);
         }
         CustomMenuItem item = new CustomMenuItem(itemContent);
-//        item.setHideOnClick(false);
         return item;
     }
 }
