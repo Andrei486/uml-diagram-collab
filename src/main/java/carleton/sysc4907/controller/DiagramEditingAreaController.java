@@ -7,6 +7,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Parent;
 import javafx.scene.control.Button;
+import javafx.scene.control.ScrollPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
@@ -14,6 +15,9 @@ import javafx.scene.shape.Rectangle;
 import java.io.IOException;
 
 public class DiagramEditingAreaController {
+
+    @FXML
+    private ScrollPane scrollPane;
 
     @FXML
     private Pane editingArea;
@@ -24,10 +28,14 @@ public class DiagramEditingAreaController {
 
     @FXML
     public void initialize() throws IOException {
+        scrollPane.setHvalue(0.5);
+        scrollPane.setVvalue(0.5);
         FXMLLoader loader = new FXMLLoader(DiagramEditingAreaController.class.getResource(
                 "/carleton/sysc4907/view/element/Rectangle.fxml"));
         loader.setController(new RectangleController());
         Parent obj = loader.load();
+        obj.setLayoutX(1550);
+        obj.setLayoutY(1600);
         editingArea.getChildren().add(obj);
     }
 }
