@@ -1,6 +1,7 @@
 package carleton.sysc4907.controller;
 
 import carleton.sysc4907.DependencyInjector;
+import carleton.sysc4907.controller.element.MovePreviewCreator;
 import carleton.sysc4907.controller.element.RectangleController;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -32,7 +33,7 @@ public class DiagramEditingAreaController {
         scrollPane.setVvalue(0.5);
         FXMLLoader loader = new FXMLLoader(DiagramEditingAreaController.class.getResource(
                 "/carleton/sysc4907/view/element/Rectangle.fxml"));
-        loader.setController(new RectangleController());
+        loader.setController(new RectangleController(new MovePreviewCreator()));
         Parent obj = loader.load();
         obj.setLayoutX(1550);
         obj.setLayoutY(1600);
