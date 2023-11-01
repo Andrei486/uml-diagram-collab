@@ -6,7 +6,7 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
 /**
- * Model containing information about the online session.
+ * A model containing information about the online session.
  */
 public class SessionModel {
 
@@ -15,6 +15,11 @@ public class SessionModel {
     private final User localUser; // Same thing: if reused across rooms this must be a property.
     private ObservableList<User> users = FXCollections.observableArrayList();
 
+    /**
+     * Creates a new SessionModel for a room with the given room code and local user.
+     * @param roomCode the room's room code, a 12-length alphanumeric string (letters must be uppercase)
+     * @param localUser the local User accessing the room
+     */
     public SessionModel(String roomCode, User localUser) {
         if (!roomCode.matches("([A-Z0-9]){12}")) {
             throw new IllegalArgumentException("Room code must be 12 digits long and alphanumeric (uppercase only).");

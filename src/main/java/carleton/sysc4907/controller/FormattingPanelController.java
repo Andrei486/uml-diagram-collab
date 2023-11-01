@@ -6,6 +6,9 @@ import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import carleton.sysc4907.model.Diagram;
 
+/**
+ * Controller for the formatting panel, the panel on the diagram editor page that provides text formatting options.
+ */
 public class FormattingPanelController {
 
     @FXML
@@ -23,10 +26,17 @@ public class FormattingPanelController {
 
     private final TextFormattingModel textFormattingModel;
 
+    /**
+     * Constructs a FormattingPanelController.
+     * @param textFormattingModel the TextFormattingModel containing text formatting information
+     */
     public FormattingPanelController(TextFormattingModel textFormattingModel) {
         this.textFormattingModel = textFormattingModel;
     }
 
+    /**
+     * Initializes the view.
+     */
     @FXML
     public void initialize() {
         // deselect and disable all formatting options

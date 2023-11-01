@@ -1,11 +1,17 @@
 package carleton.sysc4907.model;
 
+/**
+ * Factory class used to create User objects.
+ */
 public class UserFactory {
 
-    private static int ID_COUNTER = 0;
+    private static int ID_COUNTER = 0; // Keeps incrementing to provide unique user IDs
 
     private User hostUser;
 
+    /**
+     * Constructs a new UserFactory.
+     */
     public UserFactory() {
         resetFactory();
     }

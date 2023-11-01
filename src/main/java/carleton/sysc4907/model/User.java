@@ -83,6 +83,12 @@ public class User {
         getPermissionLevelProperty().set(permissionLevel);
     }
 
+    /**
+     * Creates a new User with the given parameters.
+     * @param id a unique ID for the user within the room
+     * @param username the display username for the user
+     * @param permissionLevel the user's permission level within the room
+     */
     public User(int id, String username, PermissionLevel permissionLevel) {
         this.id = id;
         setUsername(username);

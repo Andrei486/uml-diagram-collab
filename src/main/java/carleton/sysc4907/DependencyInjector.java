@@ -10,7 +10,7 @@ import java.util.Map;
 import java.util.concurrent.Callable;
 
 /**
- * Contains methods to provide controllers via dependency injection.
+ * Contains methods to load FXML with controllers constructed via dependency injection.
  */
 public class DependencyInjector {
 

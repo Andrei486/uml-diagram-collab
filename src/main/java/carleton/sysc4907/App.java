@@ -12,8 +12,17 @@ import java.io.IOException;
 import java.util.LinkedList;
 import java.util.List;
 
+/**
+ * The main JavaFX application. Cannot be run directly unless JavaFX is installed or unless using the Maven javafx:run
+ * plugin. Use Main.java to run instead.
+ */
 public class App extends Application {
 
+    /**
+     * Starts the application.
+     * @param stage the Stage to show the application in
+     * @throws IOException if loading the FXML for the application fails
+     */
     @Override
     public void start(Stage stage) throws IOException {
         //Create dependency injector to link models and controllers
