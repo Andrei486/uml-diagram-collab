@@ -27,5 +27,6 @@
         <fx:include source="SessionInfoBar.fxml"/>
     </bottom>
     <center>
+        <fx:include source="DiagramEditingArea.fxml"/>
     </center>
 </BorderPane>
