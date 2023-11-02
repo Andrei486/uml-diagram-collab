@@ -1,11 +1,10 @@
 package carleton.sysc4907.controller.element;
 
-import carleton.sysc4907.command.Command;
-import carleton.sysc4907.command.MoveCommand;
 import carleton.sysc4907.command.MoveCommandFactory;
 import carleton.sysc4907.command.args.MoveCommandArgs;
 import carleton.sysc4907.model.DiagramElement;
 import carleton.sysc4907.model.DiagramModel;
+import javafx.collections.ListChangeListener;
 import javafx.event.EventType;
 import javafx.fxml.FXML;
 import javafx.scene.image.ImageView;
@@ -73,11 +72,13 @@ public abstract class DiagramElementController {
             }
             mouseEvent.consume(); // Make it so only one element receives the event
         });
-        diagramModel.getSelectedElementProperty().addListener((observableValue, oldValue, newValue) -> {
-            if (oldValue == element && newValue != element) {
-                element.getStyleClass().remove("selected-element");
-            } else if (oldValue != element && newValue == element) {
-                element.getStyleClass().add("selected-element");
+        diagramModel.getSelectedElements().addListener((ListChangeListener<DiagramElement>) change -> {
+            while (change.next()) {
+                if (change.wasAdded() && change.getAddedSubList().contains(element)) {
+                    element.getStyleClass().add("selected-element");
+                } else if (change.wasRemoved() && change.getRemoved().contains(element)) {
+                    element.getStyleClass().remove("selected-element");
+                }
             }
         });
     }
@@ -96,7 +97,12 @@ public abstract class DiagramElementController {
     }
 
     protected void handleSelect(MouseEvent event) {
-        diagramModel.setSelectedElement(element);
+        if (!diagramModel.getSelectedElements().contains(element)) {
+            if (!event.isControlDown()) {
+                diagramModel.getSelectedElements().clear();
+            }
+            diagramModel.getSelectedElements().add(element);
+        }
     }
 
     protected void handleDragDetectedMove(MouseEvent event) {

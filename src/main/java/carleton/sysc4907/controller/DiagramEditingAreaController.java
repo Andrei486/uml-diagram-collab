@@ -40,11 +40,6 @@ public class DiagramEditingAreaController {
     public void initialize() {
         scrollPane.setHvalue(0.5);
         scrollPane.setVvalue(0.5);
-        editingArea.setOnMouseClicked(new EventHandler<MouseEvent>() {
-            @Override
-            public void handle(MouseEvent mouseEvent) {
-                diagramModel.setSelectedElement(null);
-            }
-        });
+        editingArea.setOnMouseClicked(mouseEvent -> diagramModel.getSelectedElements().clear());
     }
 }

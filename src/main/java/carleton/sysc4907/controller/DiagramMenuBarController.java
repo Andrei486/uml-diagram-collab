@@ -10,6 +10,8 @@ import javafx.scene.control.MenuItem;
 import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
 
+import java.util.List;
+
 
 public class DiagramMenuBarController {
 
@@ -30,17 +32,17 @@ public class DiagramMenuBarController {
         this.editingArea = editingArea;
     }
 
-    public void deleteElement() {
-        DiagramElement toDelete = diagramModel.getSelectedElement();
-        System.out.println("Selected element: " + toDelete);
-        editingArea.getChildren().remove(toDelete);
-        diagramModel.getElements().remove(toDelete);
-        diagramModel.setSelectedElement(null);
-    }
-
     public void closeApplication() {
         Stage stage = (Stage) menuBar.getScene().getWindow();
         stage.close();
+    }
+
+    public void deleteElement() {
+        List<DiagramElement> toDelete = diagramModel.getSelectedElements();
+        System.out.println("Selected element: " + toDelete);
+        editingArea.getChildren().removeAll(toDelete);
+        diagramModel.getElements().removeAll(toDelete);
+        diagramModel.getSelectedElements().clear();
     }
 
     @FXML
