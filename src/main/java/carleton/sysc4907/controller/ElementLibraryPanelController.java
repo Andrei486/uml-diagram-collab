@@ -62,6 +62,7 @@ public class ElementLibraryPanelController {
             editingArea.getChildren().add(obj);
             DiagramElement element = (DiagramElement) obj;
             diagramModel.getElements().add(element);
+            diagramModel.setSelectedElement(element);
         });
         elementsPane.getChildren().add(rectangleButton);
     }
