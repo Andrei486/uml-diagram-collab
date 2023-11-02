@@ -9,6 +9,7 @@
 <?import javafx.scene.shape.Rectangle?>
 <?import carleton.sysc4907.model.DiagramElement?>
 <DiagramElement xmlns="http://javafx.com/javafx" fx:id="element"
-                xmlns:fx="http://javafx.com/fxml">
+                xmlns:fx="http://javafx.com/fxml"
+                fx:controller="carleton.sysc4907.controller.element.RectangleController">
     <Rectangle styleClass="diagram-background-element" fx:id="rect" height="100" width="200"/>
 </DiagramElement>

@@ -13,13 +13,13 @@
         <!--        Move style to its own CSS stylesheet -->
         <VBox prefWidth="400.0">
             <fx:include source="FormattingPanel.fxml"/>
-            <fx:include source="ElementLibraryPanel.fxml"/>
+            <fx:include source="ElementLibraryPanel.fxml" fx:id="elementLibraryPanel"/>
         </VBox>
     </left>
     <top>
         <HBox>
             <fx:include source="DiagramMenu.fxml" fx:id="diagramMenu" prefHeight="15"/>
-            <Region HBox.hgrow="SOMETIMES" styleClass="menu-bar"/> <!--- Set style class here later -->
+            <Region HBox.hgrow="SOMETIMES" styleClass="menu-bar"/>
             <fx:include source="SessionUsersMenu.fxml" fx:id="usersMenu" prefHeight="15"/>
         </HBox>
     </top>
@@ -27,6 +27,6 @@
         <fx:include source="SessionInfoBar.fxml"/>
     </bottom>
     <center>
-        <fx:include source="DiagramEditingArea.fxml"/>
+        <fx:include source="DiagramEditingArea.fxml" fx:id="diagramEditingArea"/>
     </center>
 </BorderPane>

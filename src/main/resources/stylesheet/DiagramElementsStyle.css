@@ -40,3 +40,7 @@
     -fx-fill: #EDEDED;
     -fx-stroke: #000000;
 }
+
+.selected-element {
+    -fx-effect: dropshadow(gaussian, #38B6FF, 10, 0.5, 0, 0);
+}

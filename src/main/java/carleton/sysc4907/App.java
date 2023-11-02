@@ -1,8 +1,8 @@
 package carleton.sysc4907;
 
-import carleton.sysc4907.controller.FormattingPanelController;
-import carleton.sysc4907.controller.SessionInfoBarController;
-import carleton.sysc4907.controller.SessionUsersMenuController;
+import carleton.sysc4907.controller.*;
+import carleton.sysc4907.controller.element.MovePreviewCreator;
+import carleton.sysc4907.controller.element.RectangleController;
 import carleton.sysc4907.model.*;
 import javafx.application.Application;
 import javafx.scene.Scene;
@@ -29,13 +29,25 @@ public class App extends Application {
         SessionModel sessionModel = new SessionModel("TEST1234TEST", hostUser);
         guestUsers.forEach(sessionModel::addUser);
         TextFormattingModel textFormattingModel = new TextFormattingModel(fontOptionsFinder);
-        //Add instantiation methods to the dependency injector
+        DiagramModel diagramModel = new DiagramModel();
+        MovePreviewCreator movePreviewCreator = new MovePreviewCreator();
+        DependencyInjector elementControllerInjector = new DependencyInjector();
+        // Add instantiation methods for the element injector, used to create diagram element controllers
+        elementControllerInjector.addInjectionMethod(RectangleController.class,
+                () -> new RectangleController(movePreviewCreator, diagramModel));
+        // Add instantiation methods to the main dependency injector, used to create UI elements
         injector.addInjectionMethod(SessionInfoBarController.class,
                 () -> new SessionInfoBarController(sessionModel));
         injector.addInjectionMethod(FormattingPanelController.class,
                 () -> new FormattingPanelController(textFormattingModel));
         injector.addInjectionMethod(SessionUsersMenuController.class,
                 () -> new SessionUsersMenuController(sessionModel));
+        injector.addInjectionMethod(DiagramMenuBarController.class,
+                () -> new DiagramMenuBarController(diagramModel));
+        injector.addInjectionMethod(DiagramEditingAreaController.class,
+                () -> new DiagramEditingAreaController(diagramModel));
+        injector.addInjectionMethod(ElementLibraryPanelController.class,
+                () -> new ElementLibraryPanelController(diagramModel, elementControllerInjector));
 
         //Set up and show the scene
         Scene scene = new Scene(injector.load("view/DiagramEditorScreen.fxml"), 1280, 720);
