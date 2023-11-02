@@ -1,5 +1,6 @@
 package carleton.sysc4907;
 
+import carleton.sysc4907.command.MoveCommandFactory;
 import carleton.sysc4907.controller.*;
 import carleton.sysc4907.controller.element.MovePreviewCreator;
 import carleton.sysc4907.controller.element.RectangleController;
@@ -32,9 +33,10 @@ public class App extends Application {
         DiagramModel diagramModel = new DiagramModel();
         MovePreviewCreator movePreviewCreator = new MovePreviewCreator();
         DependencyInjector elementControllerInjector = new DependencyInjector();
+        MoveCommandFactory moveCommandFactory = new MoveCommandFactory();
         // Add instantiation methods for the element injector, used to create diagram element controllers
         elementControllerInjector.addInjectionMethod(RectangleController.class,
-                () -> new RectangleController(movePreviewCreator, diagramModel));
+                () -> new RectangleController(movePreviewCreator, moveCommandFactory, diagramModel));
         // Add instantiation methods to the main dependency injector, used to create UI elements
         injector.addInjectionMethod(SessionInfoBarController.class,
                 () -> new SessionInfoBarController(sessionModel));

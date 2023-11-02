@@ -1,11 +1,11 @@
 package carleton.sysc4907.controller.element;
 
+import carleton.sysc4907.command.Command;
 import carleton.sysc4907.command.MoveCommand;
+import carleton.sysc4907.command.MoveCommandFactory;
 import carleton.sysc4907.command.args.MoveCommandArgs;
 import carleton.sysc4907.model.DiagramElement;
 import carleton.sysc4907.model.DiagramModel;
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
 import javafx.event.EventType;
 import javafx.fxml.FXML;
 import javafx.scene.image.ImageView;
@@ -35,16 +35,23 @@ public abstract class DiagramElementController {
 
     private final MovePreviewCreator previewCreator;
 
+    private final MoveCommandFactory moveCommandFactory;
+
     protected final DiagramModel diagramModel;
 
     /**
      * Constructs a new DiagramElementController.
      *
-     * @param previewCreator a MovePreviewCreator, used to create the move preview
-     * @param diagramModel the DiagramModel for the current diagram
+     * @param previewCreator     a MovePreviewCreator, used to create the move preview
+     * @param moveCommandFactory a MoveCommandFactory, used to create move commands
+     * @param diagramModel       the DiagramModel for the current diagram
      */
-    public DiagramElementController(MovePreviewCreator previewCreator, DiagramModel diagramModel) {
+    public DiagramElementController(
+            MovePreviewCreator previewCreator,
+            MoveCommandFactory moveCommandFactory,
+            DiagramModel diagramModel) {
         this.previewCreator = previewCreator;
+        this.moveCommandFactory = moveCommandFactory;
         this.diagramModel = diagramModel;
         mouseHandlers = new HashMap<>();
         addMouseHandler(MouseEvent.DRAG_DETECTED, this::handleDragDetectedMove);
@@ -109,7 +116,7 @@ public abstract class DiagramElementController {
                     dragStartX, dragStartY,
                     dragEndX, dragEndY,
                     preview);
-            MoveCommand command = new MoveCommand(args);
+            var command = moveCommandFactory.create(args);
             command.execute();
         }
     }
@@ -127,7 +134,7 @@ public abstract class DiagramElementController {
                 dragStartX, dragStartY,
                 dragEndX, dragEndY,
                 element);
-        MoveCommand command = new MoveCommand(args);
+        var command = moveCommandFactory.create(args);
         command.execute();
     }
 }
