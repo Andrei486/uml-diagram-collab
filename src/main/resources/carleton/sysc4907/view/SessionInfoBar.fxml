@@ -13,11 +13,10 @@
       fx:controller="carleton.sysc4907.controller.SessionInfoBarController">
     <GridPane>
         <padding>
-            <Insets top="25" right="25" bottom="25" left="25"/>
+            <Insets top="10" right="10" bottom="10" left="10"/>
         </padding>
-
+        <Text fx:id="roomCode" GridPane.columnIndex="0" GridPane.rowIndex="0">
+            Room Code
+        </Text>
     </GridPane>
-    <Text fx:id="roomCode" GridPane.columnIndex="0" GridPane.rowIndex="0">
-        Room Code
-    </Text>
 </HBox>

@@ -24,7 +24,7 @@
         </HBox>
     </top>
     <bottom>
-        <fx:include source="SessionInfoBar.fxml"/>
+        <fx:include source="SessionInfoBar.fxml" styleClass="bottom-bar"/>
     </bottom>
     <center>
     </center>

@@ -45,3 +45,10 @@
 .menu-item:hover {
     -fx-background-color: #38B6FF;
 }
+
+.bottom-bar {
+    -fx-border-color: lightgrey;
+    -fx-border-width: 2;
+    -fx-border-style: solid none none none;
+    -fx-background-color: linear-gradient(to top, lightgrey, white);
+}
