@@ -1,10 +1,8 @@
 package carleton.sysc4907.controller;
 
-import carleton.sysc4907.model.FontOptionsFinder;
 import carleton.sysc4907.model.TextFormattingModel;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
-import carleton.sysc4907.model.Diagram;
 
 /**
  * Controller for the formatting panel, the panel on the diagram editor page that provides text formatting options.
