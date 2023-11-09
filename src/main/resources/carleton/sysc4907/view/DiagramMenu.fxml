@@ -22,7 +22,7 @@
         <MenuItem text="Exit" onAction="#closeApplication"/>
     </Menu>
     <Menu text="Edit">
-        <MenuItem text="Delete Element" disable="true"/>
+        <MenuItem text="Delete Selected" onAction="#deleteSelectedElements" fx:id="deleteElement"/>
     </Menu>
     <Menu text="View">
 
