@@ -79,7 +79,7 @@ public abstract class DiagramElementController {
                 if (change.wasAdded() && change.getAddedSubList().contains(element)) {
                     element.getStyleClass().add(SELECTED_STYLE_CLASS);
                 } else if (change.wasRemoved() && change.getRemoved().contains(element)) {
-                    element.getStyleClass().remove(SELECTED_STYLE_CLASS);
+                    element.getStyleClass().removeAll(SELECTED_STYLE_CLASS);
                 }
             }
         });
