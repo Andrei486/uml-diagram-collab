@@ -7,8 +7,16 @@
 <?import javafx.scene.layout.*?>
 
 <?import javafx.scene.text.Text?>
+<?import javafx.geometry.Insets?>
 <HBox xmlns="http://javafx.com/javafx"
-            xmlns:fx="http://javafx.com/fxml"
-            fx:controller="carleton.sysc4907.controller.SessionInfoBarController">
-    <Text>Test</Text>
+      xmlns:fx="http://javafx.com/fxml"
+      fx:controller="carleton.sysc4907.controller.SessionInfoBarController">
+    <GridPane>
+        <padding>
+            <Insets top="10" right="10" bottom="10" left="10"/>
+        </padding>
+        <Text fx:id="roomCode" GridPane.columnIndex="0" GridPane.rowIndex="0">
+            Room Code
+        </Text>
+    </GridPane>
 </HBox>

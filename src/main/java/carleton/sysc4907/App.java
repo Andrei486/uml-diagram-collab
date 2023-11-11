@@ -1,28 +1,33 @@
 package carleton.sysc4907;
 
+import carleton.sysc4907.controller.FormattingPanelController;
 import carleton.sysc4907.controller.SessionInfoBarController;
-import carleton.sysc4907.model.SessionModel;
+import carleton.sysc4907.controller.SessionUsersMenuController;
+import carleton.sysc4907.model.*;
 import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
+import jdk.jshell.Diag;
 
 import java.io.IOException;
+import java.util.LinkedList;
+import java.util.List;
 
+/**
+ * The main JavaFX application. Cannot be run directly unless JavaFX is installed or unless using the Maven javafx:run
+ * plugin. Use Main.java to run instead.
+ */
 public class App extends Application {
 
+    /**
+     * Starts the application.
+     * @param stage the Stage to show the application in
+     * @throws IOException if loading the FXML for the application fails
+     */
     @Override
     public void start(Stage stage) throws IOException {
-        //Create dependency injector to link models and controllers
-        DependencyInjector injector = new DependencyInjector();
-        //Create the session
-        SessionModel sessionModel = new SessionModel();
-        //Add instantiation methods to the dependency injector
-        injector.addInjectionMethod(SessionInfoBarController.class, () -> new SessionInfoBarController(sessionModel));
-
-        //Set up and show the scene
-        Scene scene = new Scene(injector.load("view/SessionInfoBar.fxml"), 640, 480);
-        stage.setScene(scene);
-        stage.show();
+        DiagramEditorLoader loader = new DiagramEditorLoader();
+        loader.load(stage);
     }
 
     public static void main(String[] args) {
