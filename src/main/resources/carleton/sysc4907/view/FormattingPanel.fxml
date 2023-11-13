@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import java.util.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.image.Image?>
+<TitledPane xmlns="http://javafx.com/javafx"
+            xmlns:fx="http://javafx.com/fxml"
+            fx:id="titledPane"
+            fx:controller="carleton.sysc4907.controller.FormattingPanelController">
+    <text>Formatting Options</text>
+    <VBox>
+        <HBox>
+            <ComboBox fx:id="fontName">
+                <!--- Set possible font names dynamically -->
+            </ComboBox>
+            <Spinner fx:id="fontSize" prefWidth="60">
+                <valueFactory>
+                    <SpinnerValueFactory.IntegerSpinnerValueFactory min="6" max="60"/>
+                </valueFactory>
+            </Spinner>
+        </HBox>
+        <HBox>
+            <!--- Icons from https://uxwing.com/tag/editor-icons/, apparently does not require attribution -->
+            <ToggleButton fx:id="boldButton">
+                <graphic>
+                    <ImageView fitHeight="25.0" fitWidth="25.0" pickOnBounds="true" preserveRatio="true">
+                        <Image url="/icons/bold_text_icon.png"/>
+                    </ImageView>
+                </graphic>
+            </ToggleButton>
+            <ToggleButton fx:id="italicsButton">
+                <graphic>
+                    <ImageView fitHeight="25.0" fitWidth="25.0" pickOnBounds="true" preserveRatio="true">
+                        <Image url="/icons/italic_text_icon.png"/>
+                    </ImageView>
+                </graphic>
+            </ToggleButton>
+            <ToggleButton fx:id="underlineButton">
+                <graphic>
+                    <ImageView fitHeight="25.0" fitWidth="25.0" pickOnBounds="true" preserveRatio="true">
+                        <Image url="/icons/underline_text_icon.png"/>
+                    </ImageView>
+                </graphic>
+            </ToggleButton>
+        </HBox>
+    </VBox>
+</TitledPane>

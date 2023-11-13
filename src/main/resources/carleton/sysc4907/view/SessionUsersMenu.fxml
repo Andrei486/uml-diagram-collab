@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import java.util.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.image.Image?>
+<MenuBar xmlns="http://javafx.com/javafx"
+      xmlns:fx="http://javafx.com/fxml"
+      fx:controller="carleton.sysc4907.controller.SessionUsersMenuController">
+    <Menu fx:id="usersMenu">
+        <graphic>
+            <ImageView fitHeight="15" pickOnBounds="true" preserveRatio="true">
+                <!-- From The Noun Project (https://thenounproject.com/icon/account-circle-4148245/), CC license -->
+                <Image url="/icons/user_icon.png"/>
+            </ImageView>
+        </graphic>
+        <!-- Items are generated dynamically in the controller -->
+    </Menu>
+</MenuBar>
