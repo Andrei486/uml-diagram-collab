@@ -13,25 +13,27 @@
       xmlns:fx="http://javafx.com/fxml"
       fx:controller="carleton.sysc4907.controller.StartScreenController"
       prefHeight="400.0" prefWidth="600.0" alignment="CENTER">
+
     <VBox alignment="CENTER_LEFT">
         <Label text="Welcome!" styleClass="label-title"/>
+        <Rectangle height="5"/>
         <Label text="Enter a username, then open, create, or join a diagram." styleClass="label-paragraph"/>
         <Rectangle height="30"/>
         <VBox>
             <Label text="Enter a username:" styleClass="label-textfield"/>
-            <TextField text="username" prefWidth="250" styleClass="text-field-1"/>
+            <TextField fx:id="usernameField" prefWidth="250" styleClass="text-field-1" promptText="username"/>
         </VBox>
         <Rectangle height="30"/>
         <HBox alignment="CENTER">
-            <Button fx:id="openBtn" text="Open" styleClass="button-main">
+            <Button fx:id="openBtn" text="Open" styleClass="button-main" onAction="#onOpenBtnClicked">
                 <Tooltip text="Open a saved diagram"/>
             </Button>
             <Rectangle width="5"/>
-            <Button fx:id="newBtn" text="New" styleClass="button-main">
+            <Button fx:id="newBtn" text="New" styleClass="button-main" onAction="#onNewBtnClicked">
                 <Tooltip text="Create a new diagram"/>
             </Button>
             <Rectangle width="5"/>
-            <Button fx:id="joinBtn" text="Join" styleClass="button-main">
+            <Button fx:id="joinBtn" text="Join" styleClass="button-main" onAction="#onJoinBtnClicked">
                 <Tooltip text="Join an existing room"/>
             </Button>
         </HBox>

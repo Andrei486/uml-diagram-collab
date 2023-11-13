@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import java.util.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<?import javafx.scene.shape.Rectangle?>
+<DialogPane xmlns="http://javafx.com/javafx"
+            xmlns:fx="http://javafx.com/fxml"
+            prefHeight="325.0" prefWidth="550.0">
+    <content>
+        <HBox alignment="CENTER">
+            <VBox alignment="CENTER_LEFT">
+                <Label text="Enter a room code" styleClass="label-subtitle" />
+                <Rectangle height="3"/>
+                <Label text="Enter the 12-digit room code provided by the host of the room you would like to join" styleClass="label-paragraph" wrapText="true"/>
+                <Rectangle height="25"/>
+                <VBox>
+                    <Label text="Room code:" styleClass="label-textfield"/>
+                    <TextField fx:id="roomCodeField" styleClass="text-field-1" maxWidth="250" promptText="ex. 1A2B3CD4E5F6"/>
+                </VBox>
+                <!--
+                <Button fx:id="connectBtn" text="Connect" alignment="CENTER" styleClass="button-main"/>
+                -->
+            </VBox>
+        </HBox>
+    </content>
+    <ButtonType fx:id="connectButtonType" text="Connect" buttonData="OK_DONE"/>
+    <ButtonType fx:id="cancelButtonType" text="Cancel" buttonData="CANCEL_CLOSE"/>
+</DialogPane>

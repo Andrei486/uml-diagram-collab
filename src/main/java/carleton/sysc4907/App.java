@@ -1,6 +1,8 @@
 package carleton.sysc4907;
 
 import carleton.sysc4907.controller.SessionInfoBarController;
+import carleton.sysc4907.controller.StartScreenController;
+import carleton.sysc4907.model.PreferencesModel;
 import carleton.sysc4907.model.SessionModel;
 import javafx.application.Application;
 import javafx.scene.Scene;
@@ -16,13 +18,16 @@ public class App extends Application {
         DependencyInjector injector = new DependencyInjector();
         //Create the session
         SessionModel sessionModel = new SessionModel();
+        PreferencesModel preferencesModel = new PreferencesModel();
         //Add instantiation methods to the dependency injector
         injector.addInjectionMethod(SessionInfoBarController.class, () -> new SessionInfoBarController(sessionModel));
+        injector.addInjectionMethod(StartScreenController.class, () -> new StartScreenController(preferencesModel));
 
         //Set up and show the scene
         Scene scene = new Scene(injector.load("view/StartScreenView.fxml"), 640, 480);
         scene.getStylesheets().add("stylesheet/StartScreenStyle.css");
         stage.setScene(scene);
+        stage.setTitle("Collaborative UML Diagram Tool");
         stage.show();
     }
 
