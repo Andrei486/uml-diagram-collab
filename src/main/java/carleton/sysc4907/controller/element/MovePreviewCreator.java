@@ -1,6 +1,6 @@
 package carleton.sysc4907.controller.element;
 
-import carleton.sysc4907.model.DiagramElement;
+import carleton.sysc4907.view.DiagramElement;
 import javafx.scene.image.ImageView;
 import javafx.scene.image.WritableImage;
 import javafx.scene.layout.Pane;

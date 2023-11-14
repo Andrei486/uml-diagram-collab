@@ -2,7 +2,6 @@ package carleton.sysc4907.view;
 
 import carleton.sysc4907.DependencyInjector;
 import carleton.sysc4907.controller.DiagramEditingAreaController;
-import carleton.sysc4907.model.DiagramElement;
 import carleton.sysc4907.model.DiagramModel;
 import javafx.collections.ObservableList;
 import javafx.scene.Scene;

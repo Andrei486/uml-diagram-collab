@@ -8,7 +8,7 @@ import javafx.scene.shape.Rectangle;
 public class RectangleController extends DiagramElementController {
 
     @FXML
-    private Rectangle rect;
+    private Rectangle background;
 
     public RectangleController(
             MovePreviewCreator previewCreator,

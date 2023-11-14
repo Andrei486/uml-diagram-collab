@@ -1,4 +1,4 @@
-package carleton.sysc4907.model;
+package carleton.sysc4907.view;
 
 import javafx.scene.layout.Pane;
 

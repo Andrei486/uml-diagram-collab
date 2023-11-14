@@ -1,6 +1,6 @@
 package carleton.sysc4907.model;
 
-import javafx.beans.value.ObservableValue;
+import carleton.sysc4907.view.DiagramElement;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 

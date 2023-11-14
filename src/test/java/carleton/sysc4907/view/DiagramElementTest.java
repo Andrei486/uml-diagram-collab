@@ -4,13 +4,7 @@ import carleton.sysc4907.DependencyInjector;
 import carleton.sysc4907.command.MoveCommandFactory;
 import carleton.sysc4907.controller.DiagramEditingAreaController;
 import carleton.sysc4907.controller.element.MovePreviewCreator;
-import carleton.sysc4907.controller.element.RectangleController;
-import carleton.sysc4907.model.DiagramElement;
 import carleton.sysc4907.model.DiagramModel;
-import carleton.sysc4907.model.TextFormattingModel;
-import javafx.collections.ObservableList;
-import javafx.scene.Node;
-import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.image.ImageView;
@@ -25,8 +19,6 @@ import org.testfx.framework.junit5.ApplicationExtension;
 import org.testfx.framework.junit5.Start;
 
 import java.io.IOException;
-import java.lang.annotation.Inherited;
-import java.util.Objects;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
