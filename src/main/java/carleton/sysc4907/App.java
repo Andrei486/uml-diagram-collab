@@ -31,11 +31,9 @@ public class App extends Application {
     public void start(Stage stage) throws IOException {
         //Create dependency injector to link models and controllers
         DependencyInjector injector = new DependencyInjector();
-        //Create the session
-        SessionModel sessionModel = new SessionModel();
         PreferencesModel preferencesModel = new PreferencesModel();
+
         //Add instantiation methods to the dependency injector
-        injector.addInjectionMethod(SessionInfoBarController.class, () -> new SessionInfoBarController(sessionModel));
         injector.addInjectionMethod(StartScreenController.class, () -> new StartScreenController(preferencesModel));
 
         //Set up and show the scene
@@ -44,9 +42,6 @@ public class App extends Application {
         stage.setScene(scene);
         stage.setTitle("Collaborative UML Diagram Tool");
         stage.show();
-
-        DiagramEditorLoader loader = new DiagramEditorLoader();
-        //loader.load(stage);
     }
 
     public static void main(String[] args) {

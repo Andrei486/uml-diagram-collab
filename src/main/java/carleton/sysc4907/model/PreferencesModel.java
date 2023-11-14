@@ -12,10 +12,5 @@ public class PreferencesModel {
     public PreferencesModel() {
 
     }
-    public void loadVals() {
-        username.set("test");
-    }
-    public void printUsername() {
-        System.out.println(username.get());
-    }
+
 }

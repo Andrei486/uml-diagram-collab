@@ -1,6 +1,5 @@
 package carleton.sysc4907.controller;
 
-import javafx.application.Platform;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.event.ActionEvent;
@@ -13,7 +12,7 @@ import java.io.IOException;
 import java.util.Objects;
 
 
-public class EnterRoomCodeDialog extends Dialog<String> {
+public class EnterRoomCodeDialogController extends Dialog<String> {
     public Button connectBtn;
     public javafx.scene.control.TextField roomCodeField;
     public ButtonType connectButtonType;
@@ -21,7 +20,7 @@ public class EnterRoomCodeDialog extends Dialog<String> {
 
     private ObjectProperty<String> roomCode = new SimpleObjectProperty<>(null);
 
-    public EnterRoomCodeDialog(Window owner) {
+    public EnterRoomCodeDialogController(Window owner) {
         try {
             FXMLLoader loader = new FXMLLoader();
             loader.setLocation(getClass().getResource("/carleton/sysc4907/view/EnterRoomCodeDialogView.fxml"));

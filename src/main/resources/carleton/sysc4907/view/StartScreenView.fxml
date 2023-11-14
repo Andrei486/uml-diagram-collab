@@ -25,17 +25,11 @@
         </VBox>
         <Rectangle height="30"/>
         <HBox alignment="CENTER">
-            <Button fx:id="openBtn" text="Open" styleClass="button-main" onAction="#onOpenBtnClicked">
-                <Tooltip text="Open a saved diagram"/>
-            </Button>
+            <Button fx:id="openBtn" text="Open" styleClass="button-main" onAction="#onOpenBtnClicked"/>
             <Rectangle width="5"/>
-            <Button fx:id="newBtn" text="New" styleClass="button-main" onAction="#onNewBtnClicked">
-                <Tooltip text="Create a new diagram"/>
-            </Button>
+            <Button fx:id="newBtn" text="New" styleClass="button-main" onAction="#onNewBtnClicked"/>
             <Rectangle width="5"/>
-            <Button fx:id="joinBtn" text="Join" styleClass="button-main" onAction="#onJoinBtnClicked">
-                <Tooltip text="Join an existing room"/>
-            </Button>
+            <Button fx:id="joinBtn" text="Join" styleClass="button-main" onAction="#onJoinBtnClicked"/>
         </HBox>
     </VBox>
 </HBox>
