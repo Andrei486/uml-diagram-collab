@@ -62,5 +62,20 @@ public class ElementLibraryPanelController {
             diagramModel.getSelectedElements().add(element);
         });
         elementsPane.getChildren().add(rectangleButton);
+        Button squareButton = new Button("Small Square");
+        squareButton.setOnAction(actionEvent -> {
+            Parent obj;
+            try {
+                obj = elementInjector.load("/carleton/sysc4907/view/element/SmallSquare.fxml");
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+            editingArea.getChildren().add(obj);
+            DiagramElement element = (DiagramElement) obj;
+            diagramModel.getElements().add(element);
+            diagramModel.getSelectedElements().clear();
+            diagramModel.getSelectedElements().add(element);
+        });
+        elementsPane.getChildren().add(squareButton);
     }
 }

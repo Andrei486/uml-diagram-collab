@@ -99,6 +99,10 @@ public abstract class DiagramElementController {
     }
 
     protected void handleSelect(MouseEvent event) {
+        // Handle left click only
+        if (!event.isPrimaryButtonDown()) {
+            return;
+        }
         if (event.isControlDown()) {
             if (!diagramModel.getSelectedElements().contains(element)) {
                 diagramModel.getSelectedElements().add(element);
@@ -114,18 +118,27 @@ public abstract class DiagramElementController {
     }
 
     protected void handleDragDetectedMove(MouseEvent event) {
+        // Handle left click only
+        if (!event.isPrimaryButtonDown()) {
+            return;
+        }
         dragging = true;
         dragStartX = event.getSceneX() - element.getLayoutX();
         dragStartY = event.getSceneY() - element.getLayoutY();
         previewCreator.deleteMovePreview(element, preview);
+        element.getStyleClass().removeAll(SELECTED_STYLE_CLASS);
         preview = previewCreator.createMovePreview(element, dragStartX, dragStartY);
+        element.getStyleClass().add(SELECTED_STYLE_CLASS);
     }
 
     protected void handleMouseDraggedMovePreview(MouseEvent event) {
+        // Handle left click only
+        if (!event.isPrimaryButtonDown()) {
+            return;
+        }
         if (preview != null) {
             double dragEndX = event.getSceneX();
             double dragEndY = event.getSceneY();
-            // these two lines need to be put into a factory ASAP
             MoveCommandArgs args = new MoveCommandArgs(
                     dragStartX, dragStartY,
                     dragEndX, dragEndY,

@@ -32,9 +32,9 @@ public class MovePreviewCreator {
 
         ImageView preview = new ImageView(img);
         preview.setOpacity(0.5);
-        ((Pane) element.getParent()).getChildren().add(preview);
         preview.setLayoutX(element.getLayoutX());
-        preview.setLayoutX(element.getLayoutY());
+        preview.setLayoutY(element.getLayoutY());
+        ((Pane) element.getParent()).getChildren().add(preview);
         return preview;
     }
 
