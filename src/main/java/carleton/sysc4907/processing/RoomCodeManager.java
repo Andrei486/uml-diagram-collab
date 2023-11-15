@@ -38,7 +38,10 @@ public class RoomCodeManager {
         char c;
         for (int i = 0; i < roomCode.length(); i++) {
             c = roomCode.charAt(i);
-            if ((!Character.isLetterOrDigit(c)) && (!Character.isUpperCase(c))) {
+            if ((!Character.isLetterOrDigit(c))) {
+                return false;
+            }
+            if (Character.isLetter(c) && !Character.isUpperCase(c)) {
                 return false;
             }
         }

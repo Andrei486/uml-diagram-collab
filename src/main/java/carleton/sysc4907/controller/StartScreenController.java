@@ -64,7 +64,6 @@ public class StartScreenController {
             roomCode = room;
             if (roomCodeManager.validateRoomCode(roomCode)) {
                 Stage stage = (Stage) ((Node) actionEvent.getSource()).getScene().getWindow();
-                String roomCode = roomCodeManager.getNewRoomCode();
                 openEditor(roomCode, preferences.getUsername(), stage);
             }
             else {
@@ -82,7 +81,6 @@ public class StartScreenController {
     @FXML
     public void onNewBtnClicked(ActionEvent actionEvent) {
         //create new diagram
-        //preferences.printUsername();
         Stage stage = (Stage) ((Node) actionEvent.getSource()).getScene().getWindow();
         String roomCode = roomCodeManager.getNewRoomCode();
         openEditor(roomCode, preferences.getUsername(), stage);
@@ -93,7 +91,7 @@ public class StartScreenController {
         FileChooser fileChooser = new FileChooser();
         fileChooser.setTitle("Open");
         Stage stage = (Stage) ((Node) actionEvent.getSource()).getScene().getWindow();
-        File file = fileChooser.showOpenDialog(stage); // should handle cancelling
+        File file = fileChooser.showOpenDialog(stage);
 
         try {
             if (file != null) {
