@@ -31,10 +31,13 @@ public class StartScreenController {
 
     private final RoomCodeManager roomCodeManager;
 
+    private final DiagramEditorLoader loader;
 
-    public StartScreenController(PreferencesModel preferences) {
+
+    public StartScreenController(PreferencesModel preferences, DiagramEditorLoader loader, RoomCodeManager manager) {
         this.preferences = preferences;
-        roomCodeManager = new RoomCodeManager();
+        this.loader = loader;
+        roomCodeManager = manager;
     }
 
     @FXML
@@ -109,7 +112,6 @@ public class StartScreenController {
     }
 
     private void openEditor(String roomCode, String username, Stage stage) {
-        DiagramEditorLoader loader = new DiagramEditorLoader();
         try {
             loader.load(stage, preferences.getUsername(), roomCode);
         } catch (IOException e) {
