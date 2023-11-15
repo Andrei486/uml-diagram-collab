@@ -1,6 +1,5 @@
 package carleton.sysc4907.controller;
 
-import carleton.sysc4907.model.Diagram;
 import carleton.sysc4907.model.SessionModel;
 import javafx.fxml.FXML;
 import javafx.scene.text.Text;

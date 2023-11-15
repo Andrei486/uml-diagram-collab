@@ -13,7 +13,7 @@
         <!--        Move style to its own CSS stylesheet -->
         <VBox prefWidth="400.0">
             <fx:include source="FormattingPanel.fxml"/>
-            <fx:include source="ElementLibraryPanel.fxml"/>
+            <fx:include source="ElementLibraryPanel.fxml" fx:id="elementLibraryPanel"/>
         </VBox>
     </left>
     <top>
@@ -27,5 +27,6 @@
         <fx:include source="SessionInfoBar.fxml" styleClass="bottom-bar"/>
     </bottom>
     <center>
+        <fx:include source="DiagramEditingArea.fxml" fx:id="diagramEditingArea"/>
     </center>
 </BorderPane>
