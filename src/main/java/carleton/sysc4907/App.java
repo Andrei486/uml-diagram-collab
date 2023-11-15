@@ -2,8 +2,12 @@ package carleton.sysc4907;
 
 import carleton.sysc4907.controller.FormattingPanelController;
 import carleton.sysc4907.controller.SessionInfoBarController;
+import carleton.sysc4907.controller.StartScreenController;
+import carleton.sysc4907.model.PreferencesModel;
+import carleton.sysc4907.model.SessionModel;
 import carleton.sysc4907.controller.SessionUsersMenuController;
 import carleton.sysc4907.model.*;
+import carleton.sysc4907.processing.RoomCodeManager;
 import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
@@ -26,8 +30,24 @@ public class App extends Application {
      */
     @Override
     public void start(Stage stage) throws IOException {
+        //Create dependency injector to link models and controllers
+        DependencyInjector injector = new DependencyInjector();
+        PreferencesModel preferencesModel = new PreferencesModel();
         DiagramEditorLoader loader = new DiagramEditorLoader();
-        loader.load(stage);
+        RoomCodeManager roomCodeManager = new RoomCodeManager();
+
+        //Add instantiation methods to the dependency injector
+        injector.addInjectionMethod(StartScreenController.class, () -> new StartScreenController(
+                preferencesModel,
+                loader,
+                roomCodeManager));
+
+        //Set up and show the scene
+        Scene scene = new Scene(injector.load("view/StartScreenView.fxml"), 640, 480);
+        scene.getStylesheets().add("stylesheet/StartScreenStyle.css");
+        stage.setScene(scene);
+        stage.setTitle("Collaborative UML Diagram Tool");
+        stage.show();
     }
 
     public static void main(String[] args) {
