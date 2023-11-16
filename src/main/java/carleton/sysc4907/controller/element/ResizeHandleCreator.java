@@ -19,8 +19,8 @@ public class ResizeHandleCreator {
     }
 
     public Node createResizeHandle(DiagramElement element, boolean isTop, boolean isRight) {
-        double posX = isRight ? element.getWidth() - HANDLE_SIZE : 0;
-        double posY = isTop ? 0 : element.getHeight() - HANDLE_SIZE;
+        double posX = isRight ? element.getMaxWidth() - HANDLE_SIZE : 0;
+        double posY = isTop ? 0 : element.getMaxHeight() - HANDLE_SIZE;
         FXMLLoader loader = new FXMLLoader();
         loader.setLocation(ResizeHandleCreator.class.getResource("/carleton/sysc4907/view/element/ResizeHandle.fxml"));
         Rectangle resizeHandle = null;

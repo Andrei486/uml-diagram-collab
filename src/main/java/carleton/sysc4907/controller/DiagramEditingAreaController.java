@@ -41,6 +41,10 @@ public class DiagramEditingAreaController {
     public void initialize() {
         scrollPane.setHvalue(0); // scroll to far left
         scrollPane.setVvalue(0); // scroll to top
-        editingArea.setOnMouseClicked(mouseEvent -> diagramModel.getSelectedElements().clear());
+        editingArea.setOnMouseClicked(mouseEvent -> {
+            if (mouseEvent.isStillSincePress()) {
+                diagramModel.getSelectedElements().clear();
+            }
+        });
     }
 }

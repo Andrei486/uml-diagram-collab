@@ -81,8 +81,11 @@ public abstract class ResizableElementController extends DiagramElementControlle
                         event.getSceneX(),
                         event.getSceneY());
                 resizeDragging = false;
+                toggleShowResizeHandles(false);
+                toggleShowResizeHandles(true);
                 event.consume();
             });
+            handle.setOnMouseClicked(Event::consume);
             resizeHandles.add(handle);
         }
     }
@@ -98,11 +101,26 @@ public abstract class ResizableElementController extends DiagramElementControlle
         }
     }
 
-    public abstract void resize(
+    public void resize(
             boolean isTopAnchor,
             boolean isRightAnchor,
             double dragStartX,
             double dragStartY,
             double dragEndX,
-            double dragEndY);
+            double dragEndY) {
+        double widthChange = dragEndX - dragStartX;
+        widthChange = isRightAnchor ? widthChange : -widthChange;
+        widthChange = Math.max(widthChange, -element.getMaxWidth() + 20);
+        double heightChange = dragEndY - dragStartY;
+        heightChange = isTopAnchor ? -heightChange : heightChange;
+        heightChange = Math.max(heightChange, -element.getMaxHeight() + 20);
+        element.setMaxWidth(element.getMaxWidth() + widthChange);
+        element.setMaxHeight(element.getMaxHeight() + heightChange);
+        if (isTopAnchor) {
+            element.setLayoutY(element.getLayoutY() - heightChange);
+        }
+        if (!isRightAnchor) {
+            element.setLayoutX(element.getLayoutX() - widthChange);
+        }
+    }
 }

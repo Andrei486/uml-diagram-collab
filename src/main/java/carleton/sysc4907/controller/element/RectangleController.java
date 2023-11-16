@@ -19,18 +19,9 @@ public class RectangleController extends ResizableElementController {
     }
 
     @Override
-    public void resize(
-            boolean isTopAnchor,
-            boolean isRightAnchor,
-            double dragStartX,
-            double dragStartY,
-            double dragEndX,
-            double dragEndY) {
-        double widthChange = dragEndX - dragStartX;
-        widthChange = isRightAnchor ? widthChange : -widthChange;
-        double heightChange = dragEndY - dragStartY;
-        heightChange = isTopAnchor ? -heightChange : heightChange;
-        rect.setWidth(rect.getWidth() + widthChange);
-        rect.setHeight(rect.getHeight() + heightChange);
+    public void initialize() {
+        super.initialize();
+        rect.widthProperty().bind(element.maxWidthProperty());
+        rect.heightProperty().bind(element.maxHeightProperty());
     }
 }
