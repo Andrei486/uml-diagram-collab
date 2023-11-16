@@ -1,5 +1,8 @@
 package carleton.sysc4907.communications;
 
+import carleton.sysc4907.communications.messages.JoinMessage;
+
+import java.io.EOFException;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
@@ -40,9 +43,11 @@ public class ClientHandler extends Thread{
         try {
             while((message = inputStream.readObject()) != null) {
                 if (message instanceof JoinMessage) {
-                    System.out.println("User " + ((JoinMessage) message).getUsername() + " has joined the server");
+                    System.out.println("User " + ((JoinMessage) message).username() + " has joined the server");
                 }
             }
+        } catch (EOFException e) {
+            System.out.println("End of Transmission");
         } catch (IOException e) {
             throw new RuntimeException(e);
         } catch (ClassNotFoundException e) {

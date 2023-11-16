@@ -1,7 +1,8 @@
 package carleton.sysc4907.communications;
 
+import carleton.sysc4907.communications.messages.JoinMessage;
+
 import java.io.IOException;
-import java.io.ObjectInput;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
@@ -40,7 +41,7 @@ public class Client extends Thread{
 
     public void sendJoinMessage() {
         try {
-            outputStream.writeObject(new JoinMessage(username));
+            outputStream.writeObject(new JoinMessage(MessageType.JOIN, username));
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
