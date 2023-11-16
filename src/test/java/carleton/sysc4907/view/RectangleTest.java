@@ -2,6 +2,7 @@ package carleton.sysc4907.view;
 
 import carleton.sysc4907.DependencyInjector;
 import carleton.sysc4907.controller.element.RectangleController;
+import carleton.sysc4907.controller.element.ResizeHandleCreator;
 import carleton.sysc4907.model.DiagramElement;
 import carleton.sysc4907.model.DiagramModel;
 import javafx.scene.Node;
@@ -15,16 +16,19 @@ import java.io.IOException;
 
 public class RectangleTest extends DiagramElementTest {
 
+    private ResizeHandleCreator resizeHandleCreator;
+
     @Start
     @Override
     protected void start(Stage stage) throws IOException {
         super.start(stage);
+        resizeHandleCreator = new ResizeHandleCreator();
     }
 
     @Override
     protected void addInjectionMethods() {
         dependencyInjector.addInjectionMethod(RectangleController.class,
-                () -> new RectangleController(movePreviewCreator, moveCommandFactory, diagramModel));
+                () -> new RectangleController(movePreviewCreator, moveCommandFactory, diagramModel, resizeHandleCreator));
     }
 
     @Override

@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.shape.Rectangle?>
+<Rectangle xmlns="http://javafx.com/javafx"
+           width="10.0" height="10.0" styleClass="resize-handle">
+</Rectangle>
