@@ -2,6 +2,7 @@ package carleton.sysc4907.model;
 
 import carleton.sysc4907.view.DiagramElement;
 import javafx.beans.property.*;
+import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
