@@ -43,6 +43,8 @@ public class DiagramEditorLoader {
                 () -> new RectangleController(movePreviewCreator, moveCommandFactory, diagramModel));
         elementControllerInjector.addInjectionMethod(UmlCommentController.class,
                 () -> new UmlCommentController(movePreviewCreator, moveCommandFactory, diagramModel));
+        elementControllerInjector.addInjectionMethod(EditableLabelController.class,
+                EditableLabelController::new);
         // Add instantiation methods to the main dependency injector, used to create UI elements
         injector.addInjectionMethod(SessionInfoBarController.class,
                 () -> new SessionInfoBarController(sessionModel));

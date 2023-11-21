@@ -15,6 +15,7 @@ import javafx.scene.Scene;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
+import javafx.scene.input.MouseButton;
 import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
 import org.junit.jupiter.api.Test;
@@ -25,6 +26,7 @@ import org.testfx.framework.junit5.ApplicationExtension;
 import org.testfx.framework.junit5.Start;
 
 import java.io.IOException;
+import java.util.concurrent.TimeUnit;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
@@ -110,6 +112,24 @@ public abstract class DiagramElementTest {
         assertTrue(element.getStyleClass().contains(SELECTED_STYLE_CLASS));
     }
 
+    /**
+     * Tests that the element is not selected when right-clicked.
+     * @param robot TestFX robot, injected automatically
+     */
+    @Test
+    protected void testNoSelectOnRightClick(FxRobot robot) {
+        var selectedElements = diagramModel.getSelectedElements();
+        assertEquals(0, selectedElements.size());
+        assertFalse(element.getStyleClass().contains(SELECTED_STYLE_CLASS));
+        robot.rightClickOn(element);
+        assertEquals(0, selectedElements.size());
+        assertFalse(element.getStyleClass().contains(SELECTED_STYLE_CLASS));
+    }
+
+    /**
+     * Tests that the element is dragged when left-click-dragged.
+     * @param robot TestFX robot, injected automatically
+     */
     @Test
     protected void testDragMove(FxRobot robot) {
         var x = element.getLayoutX();
@@ -122,8 +142,13 @@ public abstract class DiagramElementTest {
         assertTrue(deltaY < 10);
     }
 
+    /**
+     * Tests that the element correctly becomes deselected when CTRL-clicked.
+     * @param robot TestFX robot, injected automatically
+     * @throws InterruptedException when the wait is interrupted
+     */
     @Test
-    protected void testCtrlClickDeselect(FxRobot robot) {
+    protected void testCtrlClickDeselect(FxRobot robot) throws InterruptedException {
         var selectedElements = diagramModel.getSelectedElements();
         assertEquals(0, selectedElements.size());
         assertFalse(element.getStyleClass().contains(SELECTED_STYLE_CLASS));
@@ -132,6 +157,7 @@ public abstract class DiagramElementTest {
         robot.release(KeyCode.CONTROL);
         assertTrue(selectedElements.contains(element));
         assertTrue(element.getStyleClass().contains(SELECTED_STYLE_CLASS));
+        TimeUnit.MILLISECONDS.sleep(500); // Wait so the second click is not considered a double click
         robot.press(KeyCode.CONTROL);
         robot.clickOn(element);
         robot.release(KeyCode.CONTROL);

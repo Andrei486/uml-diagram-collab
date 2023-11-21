@@ -3,14 +3,11 @@
 <?import javafx.scene.shape.Rectangle?>
 <?import carleton.sysc4907.view.DiagramElement?>
 <?import javafx.scene.layout.StackPane?>
-<?import javafx.scene.control.Label?>
-<?import javafx.scene.control.TextArea?>
 <DiagramElement xmlns="http://javafx.com/javafx" fx:id="element"
                 xmlns:fx="http://javafx.com/fxml"
                 fx:controller="carleton.sysc4907.controller.element.UmlCommentController">
     <StackPane maxHeight="100" maxWidth="200">
         <Rectangle styleClass="diagram-background-element" fx:id="background" height="100" width="200"/>
-        <Label styleClass="diagram-text" fx:id="label" prefHeight="100" prefWidth="200"/>
-        <TextArea styleClass="diagram-text" fx:id="editableText" prefHeight="100" prefWidth="200"/>
+        <fx:include source="EditableLabel.fxml" fx:id="editableLabel"/>
     </StackPane>
 </DiagramElement>
