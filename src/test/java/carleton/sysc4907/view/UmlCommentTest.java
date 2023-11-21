@@ -18,6 +18,8 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 
 public class UmlCommentTest extends DiagramElementTest {
 
+    private UmlCommentController controller;
+
     @Start
     @Override
     protected void start(Stage stage) throws IOException {
@@ -35,7 +37,10 @@ public class UmlCommentTest extends DiagramElementTest {
     @Override
     protected DiagramElement loadElement() {
         try {
-            return (DiagramElement) dependencyInjector.load("view/element/UmlComment.fxml");
+            var loader = dependencyInjector.getLoader("view/element/UmlComment.fxml");
+            var newElement = (DiagramElement) loader.load();
+            controller = loader.getController();
+            return newElement;
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
@@ -85,8 +90,10 @@ public class UmlCommentTest extends DiagramElementTest {
         // Double click
         var editableText = robot.lookup("#editableText").queryAs(TextArea.class);
         var label = robot.lookup("#label").queryAs(Label.class);
-        AtomicInteger changeEventCounter = new AtomicInteger();
-        label.textProperty().addListener((observableValue, s, t1) -> changeEventCounter.getAndIncrement());
+        AtomicInteger labelChangeEventCounter = new AtomicInteger();
+        AtomicInteger controllerChangeEventCounter = new AtomicInteger();
+        label.textProperty().addListener((observableValue, s, t1) -> labelChangeEventCounter.getAndIncrement());
+        controller.getTextProperty().addListener((observableValue, s, t1) -> controllerChangeEventCounter.getAndIncrement());
         robot.doubleClickOn(element);
         robot.type(KeyCode.T, KeyCode.E, KeyCode.S, KeyCode.T, KeyCode.ENTER, KeyCode.A, KeyCode.ENTER);
         for (int i = 0; i < 20; i++) {
@@ -102,6 +109,57 @@ public class UmlCommentTest extends DiagramElementTest {
         assertTrue(label.isVisible());
         assertEquals(expectedText, label.getText());
         assertEquals(expectedText, editableText.getText());
-        assertEquals(1, changeEventCounter.get());
+        assertEquals(1, labelChangeEventCounter.get());
+        assertEquals(1, controllerChangeEventCounter.get());
+    }
+
+    /**
+     * Tests that the controller's getText() method returns correct values during various states of editing.
+     * @param robot TestFX robot, injected automatically
+     */
+    @Test
+    protected void testGetText(FxRobot robot) {
+        // Test while not editing
+        assertEquals("UML Comment", controller.getText());
+        robot.doubleClickOn(element);
+        // Test while editing before edits
+        assertEquals("UML Comment", controller.getText());
+        // Test while editing after edits
+        robot.type(KeyCode.T, KeyCode.E, KeyCode.S, KeyCode.T, KeyCode.ENTER, KeyCode.A);
+        assertEquals("UML Comment", controller.getText());
+        // Test after edits are applied
+        robot.moveBy(100, 100);
+        robot.clickOn();
+        String expectedText = """
+                test
+                a""";
+        assertEquals(expectedText, controller.getText());
+    }
+
+    /**
+     * Tests that the controller's setText() method correctly sets the UML comment's text,
+     * and that it overwrites current edits.
+     * @param robot TestFX robot, injected automatically
+     */
+    @Test
+    protected void testSetText(FxRobot robot) {
+        var editableText = robot.lookup("#editableText").queryAs(TextArea.class);
+        var label = robot.lookup("#label").queryAs(Label.class);
+        // Test while not editing
+        robot.interact(() -> controller.setText("Test"));
+        assertEquals("Test", editableText.getText());
+        assertEquals("Test", controller.getText());
+        // Test while editing
+        robot.doubleClickOn(element);
+        robot.type(KeyCode.A, KeyCode.B, KeyCode.C, KeyCode.D, KeyCode.ENTER, KeyCode.A);
+        robot.interact(() -> controller.setText("Test2"));
+        assertEquals("Test2", editableText.getText());
+        assertEquals("Test2", controller.getText());
+        // Test that edits are not applied
+        robot.moveBy(100, 100);
+        robot.clickOn();
+        assertEquals("Test2", editableText.getText());
+        assertEquals("Test2", label.getText());
+        assertEquals("Test2", controller.getText());
     }
 }

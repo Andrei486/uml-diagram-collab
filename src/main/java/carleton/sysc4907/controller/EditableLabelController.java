@@ -77,8 +77,8 @@ public class EditableLabelController {
      * @param text the new value for the text
      */
     public void setText(String text) {
-        label.textProperty().set(text);
-        editableText.textProperty().set(text);
+        label.setText(text);
+        editableText.setText(text);
     }
 
     /**
