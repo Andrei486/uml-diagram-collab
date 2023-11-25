@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+
+<Group xmlns="http://javafx.com/javafx"
+            xmlns:fx="http://javafx.com/fxml"
+            fx:controller="carleton.sysc4907.controller.EditableLabelController">
+    <Label styleClass="diagram-text" fx:id="label" prefHeight="100" prefWidth="200"/>
+    <TextArea styleClass="diagram-text" fx:id="editableText" prefHeight="100" prefWidth="200"/>
+</Group>
