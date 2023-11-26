@@ -8,6 +8,7 @@ import carleton.sysc4907.controller.*;
 import carleton.sysc4907.controller.element.MovePreviewCreator;
 import carleton.sysc4907.controller.element.RectangleController;
 import carleton.sysc4907.controller.element.ResizeHandleCreator;
+import carleton.sysc4907.controller.element.UmlCommentController;
 import carleton.sysc4907.model.*;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
@@ -42,6 +43,10 @@ public class DiagramEditorLoader {
         // Add instantiation methods for the element injector, used to create diagram element controllers
         elementControllerInjector.addInjectionMethod(RectangleController.class,
                 () -> new RectangleController(movePreviewCreator, moveCommandFactory, diagramModel, resizeHandleCreator));
+        elementControllerInjector.addInjectionMethod(UmlCommentController.class,
+                () -> new UmlCommentController(movePreviewCreator, moveCommandFactory, diagramModel));
+        elementControllerInjector.addInjectionMethod(EditableLabelController.class,
+                EditableLabelController::new);
         // Add instantiation methods to the main dependency injector, used to create UI elements
         injector.addInjectionMethod(SessionInfoBarController.class,
                 () -> new SessionInfoBarController(sessionModel));

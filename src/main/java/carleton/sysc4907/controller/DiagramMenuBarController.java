@@ -1,6 +1,6 @@
 package carleton.sysc4907.controller;
 
-import carleton.sysc4907.model.DiagramElement;
+import carleton.sysc4907.view.DiagramElement;
 import carleton.sysc4907.model.DiagramModel;
 import javafx.fxml.FXML;
 import javafx.scene.control.MenuBar;

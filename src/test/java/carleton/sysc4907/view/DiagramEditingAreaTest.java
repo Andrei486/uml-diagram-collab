@@ -2,7 +2,6 @@ package carleton.sysc4907.view;
 
 import carleton.sysc4907.DependencyInjector;
 import carleton.sysc4907.controller.DiagramEditingAreaController;
-import carleton.sysc4907.model.DiagramElement;
 import carleton.sysc4907.model.DiagramModel;
 import javafx.collections.ObservableList;
 import javafx.scene.Scene;
@@ -20,7 +19,6 @@ import org.testfx.framework.junit5.Start;
 
 import java.io.IOException;
 
-import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.verify;
 
