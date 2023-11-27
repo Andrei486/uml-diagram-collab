@@ -2,10 +2,6 @@ package carleton.sysc4907.view;
 
 import carleton.sysc4907.controller.element.RectangleController;
 import carleton.sysc4907.controller.element.ResizeHandleCreator;
-import carleton.sysc4907.model.DiagramElement;
-import carleton.sysc4907.model.DiagramModel;
-import javafx.scene.Node;
-import javafx.scene.Parent;
 import javafx.stage.Stage;
 import org.testfx.framework.junit5.Start;
 

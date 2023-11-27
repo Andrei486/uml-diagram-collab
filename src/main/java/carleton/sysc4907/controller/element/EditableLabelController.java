@@ -1,5 +1,7 @@
-package carleton.sysc4907.controller;
+package carleton.sysc4907.controller.element;
 
+import javafx.beans.property.DoubleProperty;
+import javafx.beans.property.SimpleDoubleProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import javafx.fxml.FXML;
@@ -20,6 +22,9 @@ public class EditableLabelController {
 
     private final StringProperty textProperty = new SimpleStringProperty();
 
+    private final DoubleProperty widthProperty = new SimpleDoubleProperty();
+    private final DoubleProperty heightProperty = new SimpleDoubleProperty();
+
     /**
      * Constructs a new EditableLabelController.
      */
@@ -32,9 +37,13 @@ public class EditableLabelController {
     @FXML
     public void initialize() {
         textProperty.bind(label.textProperty());
-        editableText.setFocusTraversable(false);
-        label.setTextAlignment(TextAlignment.CENTER);
         label.setWrapText(true);
+        editableText.setFocusTraversable(false);
+        editableText.maxHeightProperty().bind(heightProperty);
+        editableText.maxWidthProperty().bind(widthProperty);
+        label.maxHeightProperty().bind(heightProperty);
+        label.maxWidthProperty().bind(widthProperty);
+        label.setTextAlignment(TextAlignment.CENTER);
         editableText.setWrapText(true);
         toggleEditable(false);
         editableText.focusedProperty().addListener(((observableValue, oldValue, newValue) -> toggleEditable(newValue)));
@@ -51,6 +60,22 @@ public class EditableLabelController {
     public void startEditing() {
         toggleEditable(true);
         editableText.requestFocus();
+    }
+
+    /**
+     * Gets the height property of this editable label. Used for resizing.
+     * @return the DoubleProperty corresponding to this editable label's height
+     */
+    public DoubleProperty getHeightProperty() {
+        return heightProperty;
+    }
+
+    /**
+     * Gets the width property of this editable label. Used for resizing.
+     * @return the DoubleProperty corresponding to this editable label's width
+     */
+    public DoubleProperty getWidthProperty() {
+        return widthProperty;
     }
 
     /**

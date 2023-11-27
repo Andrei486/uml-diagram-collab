@@ -1,30 +1,25 @@
 package carleton.sysc4907.controller.element;
 
 import carleton.sysc4907.command.MoveCommandFactory;
-import carleton.sysc4907.controller.EditableLabelController;
 import carleton.sysc4907.model.DiagramModel;
 import javafx.beans.property.StringProperty;
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
-import javafx.css.PseudoClass;
 import javafx.fxml.FXML;
-import javafx.scene.control.Label;
-import javafx.scene.control.TextArea;
-import javafx.scene.control.TextField;
-import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.StackPane;
 import javafx.scene.shape.Rectangle;
-import javafx.scene.text.TextAlignment;
 
 /**
  * Controller for a UML comment element which supports editable text.
  */
-public class UmlCommentController extends DiagramElementController {
+public class UmlCommentController extends ResizableElementController {
 
     @FXML
     private EditableLabelController editableLabelController; // Get the editable label's controller, keys off the fx:id
 
     @FXML
     private Rectangle background;
+
+    @FXML
+    private StackPane stackPane;
 
     /**
      * Constructs a new UmlCommentController.
@@ -36,8 +31,9 @@ public class UmlCommentController extends DiagramElementController {
     public UmlCommentController(
             MovePreviewCreator previewCreator,
             MoveCommandFactory moveCommandFactory,
-            DiagramModel diagramModel) {
-        super(previewCreator, moveCommandFactory, diagramModel);
+            DiagramModel diagramModel,
+            ResizeHandleCreator resizeHandleCreator) {
+        super(previewCreator, moveCommandFactory, diagramModel, resizeHandleCreator);
     }
 
     /**
@@ -47,6 +43,12 @@ public class UmlCommentController extends DiagramElementController {
     public void initialize() {
         super.initialize();
         setText("UML Comment"); // Eventually this should probably allow for a specific text.
+        background.widthProperty().bind(element.maxWidthProperty());
+        background.heightProperty().bind(element.maxHeightProperty());
+        stackPane.maxWidthProperty().bind(element.maxWidthProperty());
+        stackPane.maxHeightProperty().bind(element.maxHeightProperty());
+        editableLabelController.getHeightProperty().bind(element.maxHeightProperty());
+        editableLabelController.getWidthProperty().bind(element.maxWidthProperty());
     }
 
     /**

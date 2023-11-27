@@ -1,11 +1,8 @@
 package carleton.sysc4907.controller.element;
 
-import carleton.sysc4907.model.DiagramElement;
-import javafx.event.EventHandler;
+import carleton.sysc4907.view.DiagramElement;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
-import javafx.scene.input.MouseEvent;
-import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 
 import java.io.IOException;
