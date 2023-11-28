@@ -7,15 +7,15 @@ import org.testfx.framework.junit5.Start;
 
 import java.io.IOException;
 
-public class RectangleTest extends DiagramElementTest {
+public class RectangleTest extends ResizableElementTest {
 
     private ResizeHandleCreator resizeHandleCreator;
 
     @Start
     @Override
     protected void start(Stage stage) throws IOException {
-        super.start(stage);
         resizeHandleCreator = new ResizeHandleCreator();
+        super.start(stage);
     }
 
     @Override

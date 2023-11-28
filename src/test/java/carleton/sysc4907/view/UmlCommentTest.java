@@ -17,7 +17,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 
-public class UmlCommentTest extends DiagramElementTest {
+public class UmlCommentTest extends ResizableElementTest {
 
     private UmlCommentController controller;
 
@@ -26,8 +26,8 @@ public class UmlCommentTest extends DiagramElementTest {
     @Start
     @Override
     protected void start(Stage stage) throws IOException {
-        super.start(stage);
         resizeHandleCreator = new ResizeHandleCreator();
+        super.start(stage);
     }
 
     @Override
