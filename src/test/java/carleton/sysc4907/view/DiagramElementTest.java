@@ -38,7 +38,7 @@ import static org.mockito.Mockito.doNothing;
 @ExtendWith(ApplicationExtension.class)
 public abstract class DiagramElementTest {
 
-    private final String SELECTED_STYLE_CLASS = "selected-element";
+    protected final String SELECTED_STYLE_CLASS = "selected-element";
     protected DiagramModel diagramModel;
 
     protected MovePreviewCreator movePreviewCreator;

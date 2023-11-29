@@ -4,6 +4,7 @@
 <?import carleton.sysc4907.view.DiagramElement?>
 <DiagramElement xmlns="http://javafx.com/javafx" fx:id="element"
                 xmlns:fx="http://javafx.com/fxml"
-                fx:controller="carleton.sysc4907.controller.element.RectangleController">
-    <Rectangle styleClass="diagram-background-element" fx:id="rect" height="100" width="200"/>
+                fx:controller="carleton.sysc4907.controller.element.RectangleController"
+                maxWidth="200" maxHeight="100">
+    <Rectangle styleClass="diagram-background-element" fx:id="rect"/>
 </DiagramElement>

@@ -1,6 +1,7 @@
 package carleton.sysc4907.view;
 
-import carleton.sysc4907.controller.EditableLabelController;
+import carleton.sysc4907.controller.element.EditableLabelController;
+import carleton.sysc4907.controller.element.ResizeHandleCreator;
 import carleton.sysc4907.controller.element.UmlCommentController;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextArea;
@@ -16,20 +17,23 @@ import java.util.concurrent.atomic.AtomicInteger;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 
-public class UmlCommentTest extends DiagramElementTest {
+public class UmlCommentTest extends ResizableElementTest {
 
     private UmlCommentController controller;
+
+    private ResizeHandleCreator resizeHandleCreator;
 
     @Start
     @Override
     protected void start(Stage stage) throws IOException {
+        resizeHandleCreator = new ResizeHandleCreator();
         super.start(stage);
     }
 
     @Override
     protected void addInjectionMethods() {
         dependencyInjector.addInjectionMethod(UmlCommentController.class,
-                () -> new UmlCommentController(movePreviewCreator, moveCommandFactory, diagramModel));
+                () -> new UmlCommentController(movePreviewCreator, moveCommandFactory, diagramModel, resizeHandleCreator));
         dependencyInjector.addInjectionMethod(EditableLabelController.class,
                 EditableLabelController::new);
     }

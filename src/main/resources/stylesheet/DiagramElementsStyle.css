@@ -52,3 +52,8 @@
 .selected-element {
     -fx-effect: dropshadow(gaussian, #38B6FF, 5, 0.75, 0, 0);
 }
+
+.resize-handle {
+    -fx-fill: #EDEDED;
+    -fx-stroke: #000000;
+}

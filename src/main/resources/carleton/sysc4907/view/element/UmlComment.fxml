@@ -5,9 +5,10 @@
 <?import javafx.scene.layout.StackPane?>
 <DiagramElement xmlns="http://javafx.com/javafx" fx:id="element"
                 xmlns:fx="http://javafx.com/fxml"
-                fx:controller="carleton.sysc4907.controller.element.UmlCommentController">
-    <StackPane maxHeight="100" maxWidth="200">
-        <Rectangle styleClass="diagram-background-element" fx:id="background" height="100" width="200"/>
+                fx:controller="carleton.sysc4907.controller.element.UmlCommentController"
+                maxHeight="100" maxWidth="200">
+    <StackPane fx:id="stackPane">
+        <Rectangle styleClass="diagram-background-element" fx:id="background"/>
         <fx:include source="EditableLabel.fxml" fx:id="editableLabel"/>
     </StackPane>
 </DiagramElement>
