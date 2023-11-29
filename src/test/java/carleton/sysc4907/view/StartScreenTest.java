@@ -17,6 +17,8 @@ import org.testfx.framework.junit5.ApplicationExtension;
 import org.testfx.framework.junit5.Start;
 import java.io.IOException;
 
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
 @ExtendWith(MockitoExtension.class)
 @ExtendWith(ApplicationExtension.class)
 public class StartScreenTest {
@@ -49,6 +51,7 @@ public class StartScreenTest {
     public void newButtonClickedWithoutUsername(FxRobot robot) throws IOException {
         robot.clickOn("#newBtn");
         Mockito.verify(mockLoader, Mockito.never()).load(Mockito.any(Stage.class), Mockito.any(String.class), Mockito.any(String.class));
+        assertTrue(robot.lookup("#newBtn").queryButton().isDisable());
     }
 
     @Test
@@ -61,9 +64,19 @@ public class StartScreenTest {
     }
 
     @Test
+    public void joinButtonClickedWithSpaceUsername(FxRobot robot) throws IOException {
+        robot.clickOn("#usernameField");
+        robot.type(KeyCode.SPACE);
+        robot.clickOn("#joinBtn");
+        Mockito.verify(mockLoader, Mockito.never()).load(Mockito.any(Stage.class), Mockito.any(String.class), Mockito.any(String.class));
+        assertTrue(robot.lookup("#joinBtn").queryButton().isDisable());
+    }
+
+    @Test
     public void joinButtonClickedWithoutUsername(FxRobot robot) throws IOException {
         robot.clickOn("#joinBtn");
         Mockito.verify(mockLoader, Mockito.never()).load(Mockito.any(Stage.class), Mockito.any(String.class), Mockito.any(String.class));
+        assertTrue(robot.lookup("#joinBtn").queryButton().isDisable());
     }
 
     @Test

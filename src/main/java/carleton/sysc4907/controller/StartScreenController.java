@@ -43,14 +43,14 @@ public class StartScreenController {
     @FXML
     public void initialize() {
         preferences.usernameProperty().bindBidirectional(usernameField.textProperty());
-        if (preferences.getUsername().isEmpty()) {
+        if (preferences.getUsername().trim().isEmpty()) {
             disableButtons();
         }
         else {
             enableButtons();
         }
         usernameField.textProperty().addListener((observable, oldValue, newValue) -> {
-            if (usernameField.textProperty().isEmpty().get()) {
+            if (usernameField.getText().trim().isEmpty()) {
                 disableButtons();
             }
             else {
