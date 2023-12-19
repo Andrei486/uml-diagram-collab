@@ -1,5 +1,6 @@
 package carleton.sysc4907.view;
 
+import carleton.sysc4907.command.ResizeCommandFactory;
 import carleton.sysc4907.controller.element.EditableLabelController;
 import carleton.sysc4907.controller.element.ResizeHandleCreator;
 import carleton.sysc4907.controller.element.UmlCommentController;
@@ -23,17 +24,24 @@ public class UmlCommentTest extends ResizableElementTest {
 
     private ResizeHandleCreator resizeHandleCreator;
 
+    private ResizeCommandFactory resizeCommandFactory;
+
     @Start
     @Override
     protected void start(Stage stage) throws IOException {
         resizeHandleCreator = new ResizeHandleCreator();
+        resizeCommandFactory = new ResizeCommandFactory();
         super.start(stage);
     }
 
     @Override
     protected void addInjectionMethods() {
         dependencyInjector.addInjectionMethod(UmlCommentController.class,
-                () -> new UmlCommentController(movePreviewCreator, moveCommandFactory, diagramModel, resizeHandleCreator));
+                () -> new UmlCommentController(movePreviewCreator,
+                        moveCommandFactory,
+                        diagramModel,
+                        resizeHandleCreator,
+                        resizeCommandFactory));
         dependencyInjector.addInjectionMethod(EditableLabelController.class,
                 EditableLabelController::new);
     }

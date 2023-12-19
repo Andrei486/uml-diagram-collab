@@ -1,6 +1,7 @@
 package carleton.sysc4907.controller.element;
 
 import carleton.sysc4907.command.MoveCommandFactory;
+import carleton.sysc4907.command.ResizeCommandFactory;
 import carleton.sysc4907.model.DiagramModel;
 import javafx.beans.property.StringProperty;
 import javafx.fxml.FXML;
@@ -32,8 +33,9 @@ public class UmlCommentController extends ResizableElementController {
             MovePreviewCreator previewCreator,
             MoveCommandFactory moveCommandFactory,
             DiagramModel diagramModel,
-            ResizeHandleCreator resizeHandleCreator) {
-        super(previewCreator, moveCommandFactory, diagramModel, resizeHandleCreator);
+            ResizeHandleCreator resizeHandleCreator,
+            ResizeCommandFactory resizeCommandFactory) {
+        super(previewCreator, moveCommandFactory, diagramModel, resizeHandleCreator, resizeCommandFactory);
     }
 
     /**

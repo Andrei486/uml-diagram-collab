@@ -1,6 +1,10 @@
 package carleton.sysc4907.controller.element;
 
+import carleton.sysc4907.command.Command;
 import carleton.sysc4907.command.MoveCommandFactory;
+import carleton.sysc4907.command.ResizeCommand;
+import carleton.sysc4907.command.ResizeCommandFactory;
+import carleton.sysc4907.command.args.ResizeCommandArgs;
 import carleton.sysc4907.view.DiagramElement;
 import carleton.sysc4907.model.DiagramModel;
 import javafx.collections.ListChangeListener;
@@ -17,6 +21,7 @@ public abstract class ResizableElementController extends DiagramElementControlle
     private final List<Node> resizeHandles;
 
     private final ResizeHandleCreator resizeHandleCreator;
+    private final ResizeCommandFactory resizeCommandFactory;
 
     private double resizeDragStartX = 0;
     private double resizeDragStartY = 0;
@@ -34,9 +39,11 @@ public abstract class ResizableElementController extends DiagramElementControlle
             MovePreviewCreator previewCreator,
             MoveCommandFactory moveCommandFactory,
             DiagramModel diagramModel,
-            ResizeHandleCreator resizeHandleCreator) {
+            ResizeHandleCreator resizeHandleCreator,
+            ResizeCommandFactory resizeCommandFactory) {
         super(previewCreator, moveCommandFactory, diagramModel);
         this.resizeHandleCreator = resizeHandleCreator;
+        this.resizeCommandFactory = resizeCommandFactory;
         this.resizeHandles = new LinkedList<>();
         diagramModel.getSelectedElements().addListener((ListChangeListener<DiagramElement>) change -> {
             while (change.next()) {
@@ -74,12 +81,16 @@ public abstract class ResizableElementController extends DiagramElementControlle
                 if (!resizeDragging) {
                     return;
                 }
-                resize(isTop,
+                var command = resizeCommandFactory.create(new ResizeCommandArgs(
+                        isTop,
                         isRight,
                         resizeDragStartX,
                         resizeDragStartY,
                         event.getSceneX(),
-                        event.getSceneY());
+                        event.getSceneY(),
+                        element
+                ));
+                command.execute();
                 resizeDragging = false;
                 toggleShowResizeHandles(false);
                 toggleShowResizeHandles(true);

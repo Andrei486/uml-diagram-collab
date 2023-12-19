@@ -1,5 +1,6 @@
 package carleton.sysc4907;
 
+import carleton.sysc4907.command.ResizeCommandFactory;
 import carleton.sysc4907.controller.FormattingPanelController;
 import carleton.sysc4907.controller.SessionInfoBarController;
 import carleton.sysc4907.controller.SessionUsersMenuController;
@@ -37,11 +38,12 @@ public class DiagramEditorLoader {
         ResizeHandleCreator resizeHandleCreator = new ResizeHandleCreator();
         DependencyInjector elementControllerInjector = new DependencyInjector();
         MoveCommandFactory moveCommandFactory = new MoveCommandFactory();
+        ResizeCommandFactory resizeCommandFactory = new ResizeCommandFactory();
         // Add instantiation methods for the element injector, used to create diagram element controllers
         elementControllerInjector.addInjectionMethod(RectangleController.class,
-                () -> new RectangleController(movePreviewCreator, moveCommandFactory, diagramModel, resizeHandleCreator));
+                () -> new RectangleController(movePreviewCreator, moveCommandFactory, diagramModel, resizeHandleCreator, resizeCommandFactory));
         elementControllerInjector.addInjectionMethod(UmlCommentController.class,
-                () -> new UmlCommentController(movePreviewCreator, moveCommandFactory, diagramModel, resizeHandleCreator));
+                () -> new UmlCommentController(movePreviewCreator, moveCommandFactory, diagramModel, resizeHandleCreator, resizeCommandFactory));
         elementControllerInjector.addInjectionMethod(EditableLabelController.class,
                 EditableLabelController::new);
         // Add instantiation methods to the main dependency injector, used to create UI elements
