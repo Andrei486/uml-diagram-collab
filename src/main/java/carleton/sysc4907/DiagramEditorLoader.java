@@ -36,14 +36,17 @@ public class DiagramEditorLoader {
         DiagramModel diagramModel = new DiagramModel();
         MovePreviewCreator movePreviewCreator = new MovePreviewCreator();
         ResizeHandleCreator resizeHandleCreator = new ResizeHandleCreator();
+        ResizePreviewCreator resizePreviewCreator = new ResizePreviewCreator();
         DependencyInjector elementControllerInjector = new DependencyInjector();
         MoveCommandFactory moveCommandFactory = new MoveCommandFactory();
         ResizeCommandFactory resizeCommandFactory = new ResizeCommandFactory();
         // Add instantiation methods for the element injector, used to create diagram element controllers
         elementControllerInjector.addInjectionMethod(RectangleController.class,
-                () -> new RectangleController(movePreviewCreator, moveCommandFactory, diagramModel, resizeHandleCreator, resizeCommandFactory));
+                () -> new RectangleController(movePreviewCreator, moveCommandFactory, diagramModel,
+                        resizeHandleCreator, resizePreviewCreator, resizeCommandFactory));
         elementControllerInjector.addInjectionMethod(UmlCommentController.class,
-                () -> new UmlCommentController(movePreviewCreator, moveCommandFactory, diagramModel, resizeHandleCreator, resizeCommandFactory));
+                () -> new UmlCommentController(movePreviewCreator, moveCommandFactory, diagramModel,
+                        resizeHandleCreator, resizePreviewCreator, resizeCommandFactory));
         elementControllerInjector.addInjectionMethod(EditableLabelController.class,
                 EditableLabelController::new);
         // Add instantiation methods to the main dependency injector, used to create UI elements

@@ -1,8 +1,6 @@
 package carleton.sysc4907.view;
 
-import carleton.sysc4907.command.ResizeCommandFactory;
 import carleton.sysc4907.controller.element.EditableLabelController;
-import carleton.sysc4907.controller.element.ResizeHandleCreator;
 import carleton.sysc4907.controller.element.UmlCommentController;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextArea;
@@ -22,15 +20,9 @@ public class UmlCommentTest extends ResizableElementTest {
 
     private UmlCommentController controller;
 
-    private ResizeHandleCreator resizeHandleCreator;
-
-    private ResizeCommandFactory resizeCommandFactory;
-
     @Start
     @Override
     protected void start(Stage stage) throws IOException {
-        resizeHandleCreator = new ResizeHandleCreator();
-        resizeCommandFactory = new ResizeCommandFactory();
         super.start(stage);
     }
 
@@ -41,6 +33,7 @@ public class UmlCommentTest extends ResizableElementTest {
                         moveCommandFactory,
                         diagramModel,
                         resizeHandleCreator,
+                        resizePreviewCreator,
                         resizeCommandFactory));
         dependencyInjector.addInjectionMethod(EditableLabelController.class,
                 EditableLabelController::new);

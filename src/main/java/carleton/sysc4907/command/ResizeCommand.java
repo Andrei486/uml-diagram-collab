@@ -2,6 +2,7 @@ package carleton.sysc4907.command;
 
 import carleton.sysc4907.command.args.ResizeCommandArgs;
 import carleton.sysc4907.view.DiagramElement;
+import javafx.scene.layout.Pane;
 
 public class ResizeCommand implements Command<ResizeCommandArgs> {
 
@@ -13,7 +14,7 @@ public class ResizeCommand implements Command<ResizeCommandArgs> {
 
     @Override
     public void execute() {
-        var element = (DiagramElement) args.element();
+        var element = args.element();
         var dragStartX = args.dragStartX();
         var dragStartY = args.dragStartY();
         var dragEndX = args.dragEndX();

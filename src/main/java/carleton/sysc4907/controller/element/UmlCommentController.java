@@ -34,8 +34,9 @@ public class UmlCommentController extends ResizableElementController {
             MoveCommandFactory moveCommandFactory,
             DiagramModel diagramModel,
             ResizeHandleCreator resizeHandleCreator,
+            ResizePreviewCreator resizePreviewCreator,
             ResizeCommandFactory resizeCommandFactory) {
-        super(previewCreator, moveCommandFactory, diagramModel, resizeHandleCreator, resizeCommandFactory);
+        super(previewCreator, moveCommandFactory, diagramModel, resizeHandleCreator, resizePreviewCreator, resizeCommandFactory);
     }
 
     /**

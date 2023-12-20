@@ -1,6 +1,6 @@
 package carleton.sysc4907.command.args;
 
-import javafx.scene.Node;
+import javafx.scene.layout.Pane;
 
 public record ResizeCommandArgs(boolean isTopAnchor,
                                 boolean isRightAnchor,
@@ -8,6 +8,6 @@ public record ResizeCommandArgs(boolean isTopAnchor,
                                 double dragStartY,
                                 double dragEndX,
                                 double dragEndY,
-                                Node element) {
+                                Pane element) {
 
 }
