@@ -1,0 +1,6 @@
+<?xml version="1.0"?>
+<templates>
+    <!-- FXML paths must be specified relative to the resources directory, with a leading slash.-->
+    <template type="rectangle" fxml="/carleton/sysc4907/view/element/Rectangle.fxml"/>
+    <template type="uml-comment" fxml="/carleton/sysc4907/view/element/UmlComment.fxml"/>
+</templates>

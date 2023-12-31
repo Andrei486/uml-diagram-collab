@@ -7,6 +7,7 @@ import carleton.sysc4907.command.MoveCommandFactory;
 import carleton.sysc4907.controller.*;
 import carleton.sysc4907.controller.element.*;
 import carleton.sysc4907.model.*;
+import carleton.sysc4907.processing.FontOptionsFinder;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 
