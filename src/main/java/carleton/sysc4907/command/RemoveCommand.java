@@ -5,6 +5,9 @@ import carleton.sysc4907.command.args.RemoveCommandArgs;
 import carleton.sysc4907.model.DiagramModel;
 import javafx.scene.layout.Pane;
 
+/**
+ * Command for the remove element operation. Multiple remove operations can be done with one command
+ */
 public class RemoveCommand implements Command<RemoveCommandArgs> {
 
     private final RemoveCommandArgs args;

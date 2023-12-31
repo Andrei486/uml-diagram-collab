@@ -64,15 +64,6 @@ public class DiagramMenuBarController {
         var command = removeCommandFactory.create(args);
         command.execute();
     }
-    /*
-    public void deleteSelectedElements() {
-        List<DiagramElement> toDelete = diagramModel.getSelectedElements();
-        System.out.println("Selected element: " + toDelete);
-        editingArea.getChildren().removeAll(toDelete);
-        diagramModel.getElements().removeAll(toDelete);
-        diagramModel.getSelectedElements().clear();
-    }
-     */
 
     /**
      * Initializes the view.

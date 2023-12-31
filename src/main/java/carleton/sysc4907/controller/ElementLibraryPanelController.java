@@ -78,20 +78,6 @@ public class ElementLibraryPanelController {
             var command = addCommandFactory.create(args);
             command.execute();
 
-            /*
-            Parent obj;
-            try {
-                obj = elementInjector.load(fxmlPath);
-            } catch (IOException e) {
-                throw new RuntimeException(e);
-            }
-            editingArea.getChildren().add(obj);
-            DiagramElement element = (DiagramElement) obj;
-            diagramModel.getElements().add(element);
-            diagramModel.getSelectedElements().clear();
-            diagramModel.getSelectedElements().add(element);
-
-             */
         });
         return button;
     }

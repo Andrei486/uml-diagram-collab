@@ -5,5 +5,9 @@ import javafx.scene.Node;
 
 import java.util.List;
 
+/**
+ * Arguments for the remove command
+ * @param elements the elements to remove
+ */
 public record RemoveCommandArgs(List<DiagramElement> elements) {
 }

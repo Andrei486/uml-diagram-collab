@@ -10,6 +10,9 @@ import javafx.scene.layout.Pane;
 
 import java.io.IOException;
 
+/**
+ * Command for the add element operation
+ */
 public class AddCommand implements Command<AddCommandArgs> {
 
     private final AddCommandArgs args;
@@ -34,7 +37,9 @@ public class AddCommand implements Command<AddCommandArgs> {
         editingArea.getChildren().add(obj);
         DiagramElement element = (DiagramElement) obj;
         diagramModel.getElements().add(element);
+        /*
         diagramModel.getSelectedElements().clear();
         diagramModel.getSelectedElements().add(element);
+         */
     }
 }

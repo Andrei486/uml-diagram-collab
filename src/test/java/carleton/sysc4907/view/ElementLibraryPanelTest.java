@@ -50,10 +50,9 @@ public class ElementLibraryPanelTest {
     private DependencyInjector mockDependencyInjector;
     @Start
     private void start(Stage stage) throws IOException {
-        /*
         Mockito.when(mockDependencyInjector.load(any(String.class))).thenReturn(new DiagramElement());
         DependencyInjector injector = new DependencyInjector();
-        AddCommandFactory addCommandFactory = new AddCommandFactory(mockDiagramModel);
+        AddCommandFactory addCommandFactory = new AddCommandFactory(mockDiagramModel, mockDependencyInjector);
         injector.addInjectionMethod(ElementLibraryPanelController.class,
                 () -> {
                     var controller = new ElementLibraryPanelController(mockDiagramModel, mockDependencyInjector, addCommandFactory);
@@ -63,7 +62,6 @@ public class ElementLibraryPanelTest {
         Scene scene = new Scene(injector.load("view/ElementLibraryPanel.fxml"));
         stage.setScene(scene);
         stage.show();
-         */
     }
 
     @Test

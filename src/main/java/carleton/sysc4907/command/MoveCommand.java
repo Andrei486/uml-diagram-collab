@@ -3,6 +3,9 @@ package carleton.sysc4907.command;
 import carleton.sysc4907.command.args.MoveCommandArgs;
 import carleton.sysc4907.model.DiagramModel;
 
+/**
+ * Command for the move element operation
+ */
 public class MoveCommand implements Command<MoveCommandArgs> {
 
     private final MoveCommandArgs args;
