@@ -1,6 +1,7 @@
 package carleton.sysc4907.command;
 
 import carleton.sysc4907.command.args.MoveCommandArgs;
+import carleton.sysc4907.model.DiagramModel;
 import javafx.scene.Node;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
