@@ -60,9 +60,12 @@ public class DiagramMenuBarController {
      */
     public void deleteSelectedElements() {
         List<DiagramElement> toDelete = diagramModel.getSelectedElements();
-        RemoveCommandArgs args = new RemoveCommandArgs(toDelete);
-        var command = removeCommandFactory.create(args);
-        command.execute();
+        if (!toDelete.isEmpty()) {
+            RemoveCommandArgs args = new RemoveCommandArgs(toDelete);
+            var command = removeCommandFactory.create(args);
+            command.execute();
+        }
+
     }
 
     /**

@@ -46,6 +46,12 @@ public class RemoveCommandTest {
     @Mock
     private Pane mockEditingArea;
 
+    @Mock
+    private DiagramElement mockDiagramElement1;
+
+    @Mock
+    private DiagramElement mockDiagramElement2;
+
     @Test
     void executeRemoves() {
     /* test that these are called:
@@ -68,11 +74,9 @@ public class RemoveCommandTest {
             Mockito.when(mockElementsList.removeAll(any(List.class)))
                     .thenReturn(true);
             doNothing().when(mockSelectedElementsList).clear();
-            DiagramElement diagramElement1 = new DiagramElement();
-            DiagramElement diagramElement2 = new DiagramElement();
             List<DiagramElement> elemList = new ArrayList<>();
-            elemList.add(diagramElement1);
-            elemList.add(diagramElement2);
+            elemList.add(mockDiagramElement1);
+            elemList.add(mockDiagramElement2);
 
             RemoveCommandArgs args = new RemoveCommandArgs(elemList);
             RemoveCommand command = new RemoveCommand(args, mockDiagramModel);
