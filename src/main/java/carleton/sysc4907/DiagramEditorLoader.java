@@ -67,7 +67,7 @@ public class DiagramEditorLoader {
         injector.addInjectionMethod(DiagramEditingAreaController.class,
                 () -> new DiagramEditingAreaController(diagramModel));
         injector.addInjectionMethod(ElementLibraryPanelController.class,
-                () -> new ElementLibraryPanelController(diagramModel, elementControllerInjector, addCommandFactory));
+                () -> new ElementLibraryPanelController(diagramModel, addCommandFactory));
 
         //Set up and show the scene
         Scene scene = new Scene(injector.load("view/DiagramEditorScreen.fxml"), 1280, 720);

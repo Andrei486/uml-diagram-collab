@@ -1,6 +1,7 @@
 package carleton.sysc4907.view;
 
 import carleton.sysc4907.DependencyInjector;
+import carleton.sysc4907.EditingAreaProvider;
 import carleton.sysc4907.command.AddCommandFactory;
 import carleton.sysc4907.controller.ElementLibraryPanelController;
 import carleton.sysc4907.model.DiagramModel;
@@ -12,6 +13,7 @@ import javafx.stage.Stage;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
+import org.mockito.MockedStatic;
 import org.mockito.Mockito;
 import org.mockito.junit.MockitoJUnitRunner;
 import org.mockito.junit.jupiter.MockitoExtension;
@@ -50,26 +52,30 @@ public class ElementLibraryPanelTest {
     private DependencyInjector mockDependencyInjector;
     @Start
     private void start(Stage stage) throws IOException {
-        Mockito.when(mockDependencyInjector.load(any(String.class))).thenReturn(new DiagramElement());
-        DependencyInjector injector = new DependencyInjector();
-        AddCommandFactory addCommandFactory = new AddCommandFactory(mockDiagramModel, mockDependencyInjector);
-        injector.addInjectionMethod(ElementLibraryPanelController.class,
-                () -> {
-                    var controller = new ElementLibraryPanelController(mockDiagramModel, mockDependencyInjector, addCommandFactory);
-                    controller.setEditingArea(editingArea);
-                    return controller;
-                });
-        Scene scene = new Scene(injector.load("view/ElementLibraryPanel.fxml"));
-        stage.setScene(scene);
-        stage.show();
+        try (MockedStatic<EditingAreaProvider> utilities = Mockito.mockStatic(EditingAreaProvider.class)) {
+            utilities.when(EditingAreaProvider::getEditingArea).thenReturn(editingArea);
+            Mockito.when(editingArea.getChildren()).thenReturn(mockNodesList);
+            Mockito.when(mockDependencyInjector.load(any(String.class))).thenReturn(new DiagramElement());
+            DependencyInjector injector = new DependencyInjector();
+            AddCommandFactory addCommandFactory = new AddCommandFactory(mockDiagramModel, mockDependencyInjector);
+            injector.addInjectionMethod(ElementLibraryPanelController.class,
+                    () -> {
+                        var controller = new ElementLibraryPanelController(mockDiagramModel, addCommandFactory);
+                        return controller;
+                    });
+            Scene scene = new Scene(injector.load("view/ElementLibraryPanel.fxml"));
+            stage.setScene(scene);
+            stage.show();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     @Test
     void addRectangle(FxRobot robot) {
+        EditingAreaProvider.init(editingArea);
         Mockito.when(mockDiagramModel.getElements()).thenReturn(mockElementsList);
-        Mockito.when(mockDiagramModel.getSelectedElements()).thenReturn(mockSelectedElementsList);
         Mockito.when(mockElementsList.add(any(DiagramElement.class))).thenReturn(true);
-        doNothing().when(mockSelectedElementsList).clear();
         Mockito.when(editingArea.getChildren()).thenReturn(mockNodesList);
         Mockito.when(mockNodesList.add(any(Node.class))).thenReturn(true);
 
@@ -77,5 +83,6 @@ public class ElementLibraryPanelTest {
 
         Mockito.verify(mockElementsList).add(any(DiagramElement.class));
         Mockito.verify(mockNodesList).add(any(Node.class));
+        EditingAreaProvider.init(null);
     }
 }

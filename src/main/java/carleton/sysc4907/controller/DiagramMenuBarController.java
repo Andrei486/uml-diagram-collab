@@ -24,7 +24,6 @@ public class DiagramMenuBarController {
     @FXML
     private MenuBar menuBar;
 
-    private Pane editingArea;
     private final DiagramModel diagramModel;
 
     private final RemoveCommandFactory removeCommandFactory;
@@ -36,15 +35,6 @@ public class DiagramMenuBarController {
     public DiagramMenuBarController(DiagramModel diagramModel, RemoveCommandFactory removeCommandFactory) {
         this.diagramModel = diagramModel;
         this.removeCommandFactory = removeCommandFactory;
-    }
-
-    /**
-     * Sets the editing area where users can manipulate elements.
-     * Should be called on initialization.
-     * @param editingArea the new editing area
-     */
-    public void setEditingArea(Pane editingArea) {
-        this.editingArea = editingArea;
     }
 
     /**

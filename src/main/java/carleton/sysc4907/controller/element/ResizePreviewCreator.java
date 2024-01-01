@@ -1,5 +1,6 @@
 package carleton.sysc4907.controller.element;
 
+import carleton.sysc4907.EditingAreaProvider;
 import carleton.sysc4907.view.DiagramElement;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
@@ -34,7 +35,8 @@ public class ResizePreviewCreator {
         preview.setMaxHeight(element.getMaxHeight());
         preview.setLayoutX(element.getLayoutX());
         preview.setLayoutY(element.getLayoutY());
-        ((Pane) element.getParent()).getChildren().add(preview);
+        Pane editingArea = EditingAreaProvider.getEditingArea();
+        editingArea.getChildren().add(preview);
         return preview;
     }
 
