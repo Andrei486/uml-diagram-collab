@@ -1,5 +1,6 @@
 package carleton.sysc4907.controller;
 
+import carleton.sysc4907.EditingAreaProvider;
 import carleton.sysc4907.model.DiagramModel;
 import javafx.fxml.FXML;
 import javafx.scene.control.ScrollPane;
@@ -46,5 +47,6 @@ public class DiagramEditingAreaController {
                 diagramModel.getSelectedElements().clear();
             }
         });
+        EditingAreaProvider.init(editingArea);
     }
 }
