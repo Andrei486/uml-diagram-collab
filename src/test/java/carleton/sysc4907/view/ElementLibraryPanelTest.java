@@ -1,6 +1,7 @@
 package carleton.sysc4907.view;
 
 import carleton.sysc4907.DependencyInjector;
+import carleton.sysc4907.command.AddCommandFactory;
 import carleton.sysc4907.controller.ElementLibraryPanelController;
 import carleton.sysc4907.model.DiagramModel;
 import javafx.collections.ObservableList;
@@ -51,9 +52,10 @@ public class ElementLibraryPanelTest {
     private void start(Stage stage) throws IOException {
         Mockito.when(mockDependencyInjector.load(any(String.class))).thenReturn(new DiagramElement());
         DependencyInjector injector = new DependencyInjector();
+        AddCommandFactory addCommandFactory = new AddCommandFactory(mockDiagramModel, mockDependencyInjector);
         injector.addInjectionMethod(ElementLibraryPanelController.class,
                 () -> {
-                    var controller = new ElementLibraryPanelController(mockDiagramModel, mockDependencyInjector);
+                    var controller = new ElementLibraryPanelController(mockDiagramModel, mockDependencyInjector, addCommandFactory);
                     controller.setEditingArea(editingArea);
                     return controller;
                 });

@@ -1,6 +1,8 @@
 package carleton.sysc4907;
 
 import carleton.sysc4907.command.ResizeCommandFactory;
+import carleton.sysc4907.command.AddCommandFactory;
+import carleton.sysc4907.command.RemoveCommandFactory;
 import carleton.sysc4907.controller.FormattingPanelController;
 import carleton.sysc4907.controller.SessionInfoBarController;
 import carleton.sysc4907.controller.SessionUsersMenuController;
@@ -40,6 +42,9 @@ public class DiagramEditorLoader {
         DependencyInjector elementControllerInjector = new DependencyInjector();
         MoveCommandFactory moveCommandFactory = new MoveCommandFactory();
         ResizeCommandFactory resizeCommandFactory = new ResizeCommandFactory();
+        AddCommandFactory addCommandFactory = new AddCommandFactory(diagramModel, elementControllerInjector);
+        RemoveCommandFactory removeCommandFactory = new RemoveCommandFactory(diagramModel);
+
         // Add instantiation methods for the element injector, used to create diagram element controllers
         elementControllerInjector.addInjectionMethod(RectangleController.class,
                 () -> new RectangleController(movePreviewCreator, moveCommandFactory, diagramModel,
@@ -49,6 +54,7 @@ public class DiagramEditorLoader {
                         resizeHandleCreator, resizePreviewCreator, resizeCommandFactory));
         elementControllerInjector.addInjectionMethod(EditableLabelController.class,
                 EditableLabelController::new);
+
         // Add instantiation methods to the main dependency injector, used to create UI elements
         injector.addInjectionMethod(SessionInfoBarController.class,
                 () -> new SessionInfoBarController(sessionModel));
@@ -57,11 +63,11 @@ public class DiagramEditorLoader {
         injector.addInjectionMethod(SessionUsersMenuController.class,
                 () -> new SessionUsersMenuController(sessionModel));
         injector.addInjectionMethod(DiagramMenuBarController.class,
-                () -> new DiagramMenuBarController(diagramModel));
+                () -> new DiagramMenuBarController(diagramModel, removeCommandFactory));
         injector.addInjectionMethod(DiagramEditingAreaController.class,
                 () -> new DiagramEditingAreaController(diagramModel));
         injector.addInjectionMethod(ElementLibraryPanelController.class,
-                () -> new ElementLibraryPanelController(diagramModel, elementControllerInjector));
+                () -> new ElementLibraryPanelController(diagramModel, elementControllerInjector, addCommandFactory));
 
         //Set up and show the scene
         Scene scene = new Scene(injector.load("view/DiagramEditorScreen.fxml"), 1280, 720);

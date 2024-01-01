@@ -1,5 +1,8 @@
 package carleton.sysc4907.controller;
 
+import carleton.sysc4907.command.MoveCommandFactory;
+import carleton.sysc4907.command.RemoveCommandFactory;
+import carleton.sysc4907.command.args.RemoveCommandArgs;
 import carleton.sysc4907.view.DiagramElement;
 import carleton.sysc4907.model.DiagramModel;
 import javafx.fxml.FXML;
@@ -24,12 +27,15 @@ public class DiagramMenuBarController {
     private Pane editingArea;
     private final DiagramModel diagramModel;
 
+    private final RemoveCommandFactory removeCommandFactory;
+
     /**
      * Constructs a new DiagramMenuBarController.
      * @param diagramModel the DiagramModel for the current diagram.
      */
-    public DiagramMenuBarController(DiagramModel diagramModel) {
+    public DiagramMenuBarController(DiagramModel diagramModel, RemoveCommandFactory removeCommandFactory) {
         this.diagramModel = diagramModel;
+        this.removeCommandFactory = removeCommandFactory;
     }
 
     /**
@@ -54,10 +60,12 @@ public class DiagramMenuBarController {
      */
     public void deleteSelectedElements() {
         List<DiagramElement> toDelete = diagramModel.getSelectedElements();
-        System.out.println("Selected element: " + toDelete);
-        editingArea.getChildren().removeAll(toDelete);
-        diagramModel.getElements().removeAll(toDelete);
-        diagramModel.getSelectedElements().clear();
+        if (!toDelete.isEmpty()) {
+            RemoveCommandArgs args = new RemoveCommandArgs(toDelete);
+            var command = removeCommandFactory.create(args);
+            command.execute();
+        }
+
     }
 
     /**
