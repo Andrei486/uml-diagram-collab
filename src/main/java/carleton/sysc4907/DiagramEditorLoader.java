@@ -23,6 +23,8 @@ import java.util.List;
 
 public class DiagramEditorLoader {
 
+    private final String TEMPLATE_FILE_PATH = "/carleton/sysc4907/templates.xml";
+
     public void load(Stage stage, String username, String roomCode) throws IOException {
         //Create dependency injector to link models and controllers
         DependencyInjector injector = new DependencyInjector();
@@ -45,7 +47,7 @@ public class DiagramEditorLoader {
         DependencyInjector elementControllerInjector = new DependencyInjector();
         ElementCreator elementCreator;
         try {
-            elementCreator = new ElementCreator(elementControllerInjector, "/carleton/sysc4907/templates.xml");
+            elementCreator = new ElementCreator(elementControllerInjector, TEMPLATE_FILE_PATH);
         } catch (ParserConfigurationException | SAXException | URISyntaxException e) {
             throw new RuntimeException(e);
         }

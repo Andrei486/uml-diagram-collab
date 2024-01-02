@@ -16,6 +16,9 @@ import java.net.URISyntaxException;
 import java.util.Collection;
 import java.util.HashMap;
 
+/**
+ * Class responsible for creating diagram elements using FXML templates.
+ */
 public class ElementCreator {
 
     private final DependencyInjector elementInjector;
@@ -23,6 +26,11 @@ public class ElementCreator {
 
     private final HashMap<String, String> typeTemplateMap;
 
+    /**
+     * Constructs a new ElementCreator.
+     * @param elementInjector the DependencyInjector to use for creating controllers
+     * @param templateFilePath the XML file that contains mappings from element type to FXML template
+     */
     public ElementCreator(DependencyInjector elementInjector, String templateFilePath) throws
             ParserConfigurationException,
             IOException,
