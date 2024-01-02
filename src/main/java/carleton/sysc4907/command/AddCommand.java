@@ -4,6 +4,7 @@ import carleton.sysc4907.DependencyInjector;
 import carleton.sysc4907.EditingAreaProvider;
 import carleton.sysc4907.command.args.AddCommandArgs;
 import carleton.sysc4907.model.DiagramModel;
+import carleton.sysc4907.processing.ElementCreator;
 import carleton.sysc4907.view.DiagramElement;
 import javafx.scene.Parent;
 import javafx.scene.layout.Pane;
@@ -17,25 +18,20 @@ public class AddCommand implements Command<AddCommandArgs> {
 
     private final AddCommandArgs args;
     private final DiagramModel diagramModel;
-    private final DependencyInjector elementInjector;
+    private final ElementCreator elementCreator;
 
-    public AddCommand(AddCommandArgs args, DiagramModel diagramModel, DependencyInjector elementInjector) {
+    public AddCommand(AddCommandArgs args, DiagramModel diagramModel, ElementCreator elementCreator) {
         this.args = args;
         this.diagramModel = diagramModel;
-        this.elementInjector = elementInjector;
+        this.elementCreator = elementCreator;
     }
 
     @Override
     public void execute() {
-        Parent obj;
         Pane editingArea = EditingAreaProvider.getEditingArea();
-        try {
-            obj = elementInjector.load(args.fxmlPath());
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-        editingArea.getChildren().add(obj);
-        DiagramElement element = (DiagramElement) obj;
+        DiagramElement element = elementCreator.create(args.elementType());
+        if (element == null) return; // If the type of element to create is not recognized
+        editingArea.getChildren().add(element);
         diagramModel.getElements().add(element);
     }
 }

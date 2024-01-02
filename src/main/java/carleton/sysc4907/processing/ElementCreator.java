@@ -13,6 +13,7 @@ import javax.xml.parsers.ParserConfigurationException;
 import java.io.File;
 import java.io.IOException;
 import java.net.URISyntaxException;
+import java.util.Collection;
 import java.util.HashMap;
 
 public class ElementCreator {
@@ -76,6 +77,15 @@ public class ElementCreator {
      * @return file path of the template used to create elements of the given type
      */
     public String resolveTypeToTemplate(String type) {
+        System.out.println(type + " " + this.typeTemplateMap.get(type));
         return this.typeTemplateMap.get(type);
+    }
+
+    /**
+     * Gets all registered element types that this object can create.
+     * @return collection containing all valid element types
+     */
+    public Collection<String> getRegisteredTypes() {
+        return this.typeTemplateMap.keySet();
     }
 }

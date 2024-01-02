@@ -9,11 +9,15 @@ import carleton.sysc4907.command.MoveCommandFactory;
 import carleton.sysc4907.controller.*;
 import carleton.sysc4907.controller.element.*;
 import carleton.sysc4907.model.*;
+import carleton.sysc4907.processing.ElementCreator;
 import carleton.sysc4907.processing.FontOptionsFinder;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
+import org.xml.sax.SAXException;
 
+import javax.xml.parsers.ParserConfigurationException;
 import java.io.IOException;
+import java.net.URISyntaxException;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -39,8 +43,14 @@ public class DiagramEditorLoader {
         MovePreviewCreator movePreviewCreator = new MovePreviewCreator();
         ResizeHandleCreator resizeHandleCreator = new ResizeHandleCreator();
         DependencyInjector elementControllerInjector = new DependencyInjector();
+        ElementCreator elementCreator;
+        try {
+            elementCreator = new ElementCreator(elementControllerInjector, "/carleton/sysc4907/templates.xml");
+        } catch (ParserConfigurationException | SAXException | URISyntaxException e) {
+            throw new RuntimeException(e);
+        }
         MoveCommandFactory moveCommandFactory = new MoveCommandFactory();
-        AddCommandFactory addCommandFactory = new AddCommandFactory(diagramModel, elementControllerInjector);
+        AddCommandFactory addCommandFactory = new AddCommandFactory(diagramModel, elementCreator);
         RemoveCommandFactory removeCommandFactory = new RemoveCommandFactory(diagramModel);
 
         // Add instantiation methods for the element injector, used to create diagram element controllers
@@ -63,7 +73,7 @@ public class DiagramEditorLoader {
         injector.addInjectionMethod(DiagramEditingAreaController.class,
                 () -> new DiagramEditingAreaController(diagramModel));
         injector.addInjectionMethod(ElementLibraryPanelController.class,
-                () -> new ElementLibraryPanelController(diagramModel, elementControllerInjector, addCommandFactory));
+                () -> new ElementLibraryPanelController(diagramModel, addCommandFactory, elementCreator));
 
         //Set up and show the scene
         Scene scene = new Scene(injector.load("view/DiagramEditorScreen.fxml"), 1280, 720);

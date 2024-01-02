@@ -2,6 +2,7 @@ package carleton.sysc4907.command;
 import carleton.sysc4907.EditingAreaProvider;
 import carleton.sysc4907.command.args.AddCommandArgs;
 import carleton.sysc4907.command.args.RemoveCommandArgs;
+import carleton.sysc4907.processing.ElementCreator;
 import carleton.sysc4907.view.DiagramElement;
 import org.junit.jupiter.api.Test;
 
@@ -46,7 +47,7 @@ public class AddCommandTest {
     private Pane mockEditingArea;
 
     @Mock
-    private DependencyInjector mockDependencyInjector;
+    private ElementCreator mockElementCreator;
 
     @Mock
     private DiagramElement mockDiagramElement;
@@ -70,11 +71,11 @@ public class AddCommandTest {
                     thenReturn(true);
             Mockito.when(mockElementsList.add(any(DiagramElement.class)))
                     .thenReturn(true);
-            Mockito.when(mockDependencyInjector.load(any(String.class)))
+            Mockito.when(mockElementCreator.create("testType"))
                     .thenReturn(mockDiagramElement);
 
-            AddCommandArgs args = new AddCommandArgs("testPath");
-            AddCommand command = new AddCommand(args, mockDiagramModel, mockDependencyInjector);
+            AddCommandArgs args = new AddCommandArgs("testType");
+            AddCommand command = new AddCommand(args, mockDiagramModel, mockElementCreator);
 
             //execute
             command.execute();
@@ -82,8 +83,6 @@ public class AddCommandTest {
             //verify
             verify(mockNodesList).add(any(Node.class));
             verify(mockElementsList).add(any(DiagramElement.class));
-        } catch (IOException e) {
-            throw new RuntimeException(e);
         }
 
     }
