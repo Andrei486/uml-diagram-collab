@@ -75,7 +75,7 @@ public class ElementCreator {
      * @param type name of the element type
      * @return file path of the template used to create elements of the given type
      */
-    private String resolveTypeToTemplate(String type) {
+    public String resolveTypeToTemplate(String type) {
         return this.typeTemplateMap.get(type);
     }
 }
