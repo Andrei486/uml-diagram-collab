@@ -1,6 +1,8 @@
 package carleton.sysc4907.controller;
 
 import carleton.sysc4907.DependencyInjector;
+import carleton.sysc4907.command.AddCommandFactory;
+import carleton.sysc4907.command.args.AddCommandArgs;
 import carleton.sysc4907.view.DiagramElement;
 import carleton.sysc4907.model.DiagramModel;
 import javafx.fxml.FXML;
@@ -20,6 +22,7 @@ import java.util.List;
  */
 public class ElementLibraryPanelController {
 
+    private final AddCommandFactory addCommandFactory;
     @FXML
     private FlowPane elementsPane;
     @FXML
@@ -34,9 +37,10 @@ public class ElementLibraryPanelController {
      * @param diagramModel the DiagramModel for the current diagram
      * @param elementInjector the DependencyInjector used to load new diagram elements from FXML
      */
-    public ElementLibraryPanelController(DiagramModel diagramModel, DependencyInjector elementInjector) {
+    public ElementLibraryPanelController(DiagramModel diagramModel, DependencyInjector elementInjector, AddCommandFactory addCommandFactory) {
         this.diagramModel = diagramModel;
         this.elementInjector = elementInjector;
+        this.addCommandFactory = addCommandFactory;
     }
 
     /**
@@ -70,17 +74,10 @@ public class ElementLibraryPanelController {
     private Button createAddButton(String elementName, String fxmlPath) {
         Button button = new Button(elementName);
         button.setOnAction(actionEvent -> {
-            Parent obj;
-            try {
-                obj = elementInjector.load(fxmlPath);
-            } catch (IOException e) {
-                throw new RuntimeException(e);
-            }
-            editingArea.getChildren().add(obj);
-            DiagramElement element = (DiagramElement) obj;
-            diagramModel.getElements().add(element);
-            diagramModel.getSelectedElements().clear();
-            diagramModel.getSelectedElements().add(element);
+            AddCommandArgs args = new AddCommandArgs(fxmlPath);
+            var command = addCommandFactory.create(args);
+            command.execute();
+
         });
         return button;
     }
