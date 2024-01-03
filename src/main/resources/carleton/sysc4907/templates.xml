@@ -1,0 +1,7 @@
+<?xml version="1.0"?>
+<templates>
+    <!-- FXML paths must be specified relative to the resources directory, with a leading slash.-->
+    <!-- Element type names should be human-readable: they are displayed on the UI! -->
+    <template type="Rectangle" fxml="/carleton/sysc4907/view/element/Rectangle.fxml"/>
+    <template type="UML Comment" fxml="/carleton/sysc4907/view/element/UmlComment.fxml"/>
+</templates>

@@ -1,5 +1,6 @@
 package carleton.sysc4907.model;
 
+import carleton.sysc4907.processing.FontOptionsFinder;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 

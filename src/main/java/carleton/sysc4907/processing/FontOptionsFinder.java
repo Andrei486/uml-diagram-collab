@@ -1,4 +1,4 @@
-package carleton.sysc4907.model;
+package carleton.sysc4907.processing;
 
 import javafx.scene.text.Font;
 

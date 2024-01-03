@@ -5,6 +5,7 @@ import carleton.sysc4907.EditingAreaProvider;
 import carleton.sysc4907.command.AddCommandFactory;
 import carleton.sysc4907.controller.ElementLibraryPanelController;
 import carleton.sysc4907.model.DiagramModel;
+import carleton.sysc4907.processing.ElementCreator;
 import javafx.collections.ObservableList;
 import javafx.scene.Node;
 import javafx.scene.Scene;
@@ -15,15 +16,14 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.MockedStatic;
 import org.mockito.Mockito;
-import org.mockito.junit.MockitoJUnitRunner;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.testfx.api.FxRobot;
 import org.testfx.framework.junit5.ApplicationExtension;
 import org.testfx.framework.junit5.Start;
 
 import java.io.IOException;
-import java.util.LinkedList;
-import java.util.List;
+import java.util.Collection;
+import java.util.HashSet;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.doNothing;
@@ -40,27 +40,33 @@ public class ElementLibraryPanelTest {
     private ObservableList<DiagramElement> mockElementsList;
 
     @Mock
-    private ObservableList<DiagramElement> mockSelectedElementsList;
-
-    @Mock
     private ObservableList<Node> mockNodesList;
 
     @Mock
     private Pane editingArea;
 
     @Mock
-    private DependencyInjector mockDependencyInjector;
+    private ElementCreator mockElementCreator;
+
+    @Mock
+    private DiagramElement mockDiagramElement;
+
     @Start
     private void start(Stage stage) throws IOException {
         try (MockedStatic<EditingAreaProvider> utilities = Mockito.mockStatic(EditingAreaProvider.class)) {
             utilities.when(EditingAreaProvider::getEditingArea).thenReturn(editingArea);
             Mockito.when(editingArea.getChildren()).thenReturn(mockNodesList);
-            Mockito.when(mockDependencyInjector.load(any(String.class))).thenReturn(new DiagramElement());
+            Collection<String> types = new HashSet<>();
+            types.add("rectangleType");
+            Mockito.when(mockElementCreator.getRegisteredTypes()).thenReturn(types);
             DependencyInjector injector = new DependencyInjector();
-            AddCommandFactory addCommandFactory = new AddCommandFactory(mockDiagramModel, mockDependencyInjector);
+            AddCommandFactory addCommandFactory = new AddCommandFactory(mockDiagramModel, mockElementCreator);
             injector.addInjectionMethod(ElementLibraryPanelController.class,
                     () -> {
-                        var controller = new ElementLibraryPanelController(mockDiagramModel, addCommandFactory);
+                        var controller = new ElementLibraryPanelController(
+                                mockDiagramModel,
+                                addCommandFactory,
+                                mockElementCreator);
                         return controller;
                     });
             Scene scene = new Scene(injector.load("view/ElementLibraryPanel.fxml"));
@@ -78,6 +84,8 @@ public class ElementLibraryPanelTest {
         Mockito.when(mockElementsList.add(any(DiagramElement.class))).thenReturn(true);
         Mockito.when(editingArea.getChildren()).thenReturn(mockNodesList);
         Mockito.when(mockNodesList.add(any(Node.class))).thenReturn(true);
+        Mockito.when(mockElementCreator.create("rectangleType"))
+                .thenReturn(mockDiagramElement);
 
         robot.clickOn("#elementsPane .button");
 

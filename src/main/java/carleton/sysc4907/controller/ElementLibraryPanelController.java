@@ -3,6 +3,7 @@ package carleton.sysc4907.controller;
 import carleton.sysc4907.DependencyInjector;
 import carleton.sysc4907.command.AddCommandFactory;
 import carleton.sysc4907.command.args.AddCommandArgs;
+import carleton.sysc4907.processing.ElementCreator;
 import carleton.sysc4907.view.DiagramElement;
 import carleton.sysc4907.model.DiagramModel;
 import javafx.fxml.FXML;
@@ -30,39 +31,39 @@ public class ElementLibraryPanelController {
 
     private final DiagramModel diagramModel;
 
+    private final ElementCreator elementCreator;
+
     /**
      * Constructs a new ElementLibraryPanelController.
      * @param diagramModel the DiagramModel for the current diagram
      */
-    public ElementLibraryPanelController(DiagramModel diagramModel, AddCommandFactory addCommandFactory) {
+    public ElementLibraryPanelController(
+            DiagramModel diagramModel,
+            AddCommandFactory addCommandFactory,
+            ElementCreator elementCreator) {
         this.diagramModel = diagramModel;
         this.addCommandFactory = addCommandFactory;
+        this.elementCreator = elementCreator;
     }
 
     @FXML
     public void initialize() {
         List<Button> buttons = new LinkedList<>();
-        buttons.add(createAddButton(
-                "Rectangle",
-                "/carleton/sysc4907/view/element/Rectangle.fxml"
-        ));
-        buttons.add(createAddButton(
-                "UML Comment",
-                "/carleton/sysc4907/view/element/UmlComment.fxml"
-        ));
+        for (String type : elementCreator.getRegisteredTypes()) {
+            buttons.add(createAddButton(type));
+        }
         elementsPane.getChildren().addAll(buttons);
     }
 
     /**
      * Create a button to add a specific kind of element to the diagram.
-     * @param elementName the human-readable name of the element
-     * @param fxmlPath the path of the FXML defining the element
+     * @param elementName the name of the element, recognizable by the ElementCreator
      * @return a Button that, when clicked, will instantiate the element and add it to the diagram
      */
-    private Button createAddButton(String elementName, String fxmlPath) {
+    private Button createAddButton(String elementName) {
         Button button = new Button(elementName);
         button.setOnAction(actionEvent -> {
-            AddCommandArgs args = new AddCommandArgs(fxmlPath);
+            AddCommandArgs args = new AddCommandArgs(elementName);
             var command = addCommandFactory.create(args);
             command.execute();
 
