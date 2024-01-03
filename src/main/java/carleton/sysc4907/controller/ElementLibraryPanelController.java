@@ -30,7 +30,6 @@ public class ElementLibraryPanelController {
     private TitledPane titledPane;
 
     private final DiagramModel diagramModel;
-    private Pane editingArea = null;
 
     private final ElementCreator elementCreator;
 
@@ -45,14 +44,6 @@ public class ElementLibraryPanelController {
         this.diagramModel = diagramModel;
         this.addCommandFactory = addCommandFactory;
         this.elementCreator = elementCreator;
-    }
-
-    /**
-     * Set the Pane to be used as the editing area when adding elements.
-     * @param editingArea the Pane to add elements to
-     */
-    public void setEditingArea(Pane editingArea) {
-        this.editingArea = editingArea;
     }
 
     @FXML

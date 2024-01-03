@@ -67,12 +67,13 @@ public class ElementLibraryPanelTest {
                                 mockDiagramModel,
                                 addCommandFactory,
                                 mockElementCreator);
-                        controller.setEditingArea(editingArea);
                         return controller;
                     });
             Scene scene = new Scene(injector.load("view/ElementLibraryPanel.fxml"));
             stage.setScene(scene);
             stage.show();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
         }
     }
 

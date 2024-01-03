@@ -1,11 +1,16 @@
 package carleton.sysc4907.controller.element;
 
 import carleton.sysc4907.command.MoveCommandFactory;
+import carleton.sysc4907.command.ResizeCommandFactory;
+import carleton.sysc4907.command.args.ResizeCommandArgs;
 import carleton.sysc4907.view.DiagramElement;
 import carleton.sysc4907.model.DiagramModel;
 import javafx.collections.ListChangeListener;
 import javafx.event.Event;
 import javafx.scene.Node;
+import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.Pane;
+
 import java.util.LinkedList;
 import java.util.List;
 
@@ -17,9 +22,14 @@ public abstract class ResizableElementController extends DiagramElementControlle
     private final List<Node> resizeHandles;
 
     private final ResizeHandleCreator resizeHandleCreator;
+    private final ResizeCommandFactory resizeCommandFactory;
+    private final ResizePreviewCreator resizePreviewCreator;
+    private Pane preview = null;
 
     private double resizeDragStartX = 0;
     private double resizeDragStartY = 0;
+    private double lastPreviewDragX = 0;
+    private double lastPreviewDragY = 0;
 
     private boolean resizeDragging = false;
 
@@ -34,9 +44,13 @@ public abstract class ResizableElementController extends DiagramElementControlle
             MovePreviewCreator previewCreator,
             MoveCommandFactory moveCommandFactory,
             DiagramModel diagramModel,
-            ResizeHandleCreator resizeHandleCreator) {
+            ResizeHandleCreator resizeHandleCreator,
+            ResizePreviewCreator resizePreviewCreator,
+            ResizeCommandFactory resizeCommandFactory) {
         super(previewCreator, moveCommandFactory, diagramModel);
         this.resizeHandleCreator = resizeHandleCreator;
+        this.resizePreviewCreator = resizePreviewCreator;
+        this.resizeCommandFactory = resizeCommandFactory;
         this.resizeHandles = new LinkedList<>();
         diagramModel.getSelectedElements().addListener((ListChangeListener<DiagramElement>) change -> {
             while (change.next()) {
@@ -63,28 +77,9 @@ public abstract class ResizableElementController extends DiagramElementControlle
             boolean isTop = i % 2 == 0;
             boolean isRight = i / 2 == 0;
             Node handle = resizeHandleCreator.createResizeHandle(element, isTop, isRight);
-            handle.setOnDragDetected(event -> {
-                resizeDragging = true;
-                resizeDragStartX = event.getSceneX();
-                resizeDragStartY = event.getSceneY();
-                event.consume();
-            });
-            handle.setOnMouseDragged(Event::consume);
-            handle.setOnMouseReleased(event -> {
-                if (!resizeDragging) {
-                    return;
-                }
-                resize(isTop,
-                        isRight,
-                        resizeDragStartX,
-                        resizeDragStartY,
-                        event.getSceneX(),
-                        event.getSceneY());
-                resizeDragging = false;
-                toggleShowResizeHandles(false);
-                toggleShowResizeHandles(true);
-                event.consume();
-            });
+            handle.setOnDragDetected(this::handleDragDetectedStartResize);
+            handle.setOnMouseDragged(event -> handleMouseDraggedResizePreview(event, isTop, isRight));
+            handle.setOnMouseReleased(event -> handleMouseReleasedResize(event, isTop, isRight));
             handle.setOnMouseClicked(Event::consume);
             resizeHandles.add(handle);
         }
@@ -101,26 +96,67 @@ public abstract class ResizableElementController extends DiagramElementControlle
         }
     }
 
-    public void resize(
-            boolean isTopAnchor,
-            boolean isRightAnchor,
-            double dragStartX,
-            double dragStartY,
-            double dragEndX,
-            double dragEndY) {
-        double widthChange = dragEndX - dragStartX;
-        widthChange = isRightAnchor ? widthChange : -widthChange;
-        widthChange = Math.max(widthChange, -element.getMaxWidth() + 20);
-        double heightChange = dragEndY - dragStartY;
-        heightChange = isTopAnchor ? -heightChange : heightChange;
-        heightChange = Math.max(heightChange, -element.getMaxHeight() + 20);
-        element.setMaxWidth(element.getMaxWidth() + widthChange);
-        element.setMaxHeight(element.getMaxHeight() + heightChange);
-        if (isTopAnchor) {
-            element.setLayoutY(element.getLayoutY() - heightChange);
+    private void handleDragDetectedStartResize(MouseEvent event) {
+        resizeDragging = true;
+        resizeDragStartX = event.getSceneX();
+        resizeDragStartY = event.getSceneY();
+        lastPreviewDragX = resizeDragStartX;
+        lastPreviewDragY = resizeDragStartY;
+        resizePreviewCreator.deleteResizePreview(element, preview);
+        element.getStyleClass().removeAll(SELECTED_STYLE_CLASS);
+        preview = resizePreviewCreator.createResizePreview(element);
+        element.getStyleClass().add(SELECTED_STYLE_CLASS);
+        event.consume();
+    }
+
+    private void handleMouseDraggedResizePreview(MouseEvent event, boolean isTop, boolean isRight) {
+        // Handle left click only
+        if (!event.isPrimaryButtonDown()) {
+            return;
         }
-        if (!isRightAnchor) {
-            element.setLayoutX(element.getLayoutX() - widthChange);
+        if (preview != null) {
+            // Reset the preview and resize it from there. This is to avoid issues where the preview becomes desynced
+            // because of the minimum size. Alternatively we could make an entirely separate command for this, since
+            // it isn't actually affecting the diagram.
+            preview.setMaxWidth(element.getMaxWidth());
+            preview.setMaxHeight(element.getMaxHeight());
+            preview.setLayoutX(element.getLayoutX());
+            preview.setLayoutY(element.getLayoutY());
+            ResizeCommandArgs args = new ResizeCommandArgs(
+                    isTop,
+                    isRight,
+                    resizeDragStartX,
+                    resizeDragStartY,
+                    event.getSceneX(),
+                    event.getSceneY(),
+                    preview
+            );
+            var command = resizeCommandFactory.create(args);
+            command.execute();
         }
+        lastPreviewDragX = event.getSceneX();
+        lastPreviewDragY = event.getSceneY();
+        event.consume();
+    }
+
+    private void handleMouseReleasedResize(MouseEvent event, boolean isTop, boolean isRight) {
+        if (!resizeDragging) {
+            return;
+        }
+        resizeDragging = false;
+        resizePreviewCreator.deleteResizePreview(element, preview);
+        var command = resizeCommandFactory.create(new ResizeCommandArgs(
+                isTop,
+                isRight,
+                resizeDragStartX,
+                resizeDragStartY,
+                event.getSceneX(),
+                event.getSceneY(),
+                element
+        ));
+        command.execute();
+        toggleShowResizeHandles(false);
+        toggleShowResizeHandles(true);
+        event.consume();
     }
 }

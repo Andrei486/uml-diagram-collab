@@ -1,5 +1,6 @@
 package carleton.sysc4907.controller.element;
 
+import carleton.sysc4907.EditingAreaProvider;
 import carleton.sysc4907.view.DiagramElement;
 import javafx.scene.image.ImageView;
 import javafx.scene.image.WritableImage;
@@ -34,7 +35,9 @@ public class MovePreviewCreator {
         preview.setOpacity(0.5);
         preview.setLayoutX(element.getLayoutX());
         preview.setLayoutY(element.getLayoutY());
-        ((Pane) element.getParent()).getChildren().add(preview);
+
+        Pane editingArea = EditingAreaProvider.getEditingArea();
+        editingArea.getChildren().add(preview);
         return preview;
     }
 

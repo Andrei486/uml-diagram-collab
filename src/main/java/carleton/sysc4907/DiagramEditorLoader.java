@@ -1,5 +1,6 @@
 package carleton.sysc4907;
 
+import carleton.sysc4907.command.ResizeCommandFactory;
 import carleton.sysc4907.command.AddCommandFactory;
 import carleton.sysc4907.command.RemoveCommandFactory;
 import carleton.sysc4907.controller.FormattingPanelController;
@@ -44,6 +45,7 @@ public class DiagramEditorLoader {
         DiagramModel diagramModel = new DiagramModel();
         MovePreviewCreator movePreviewCreator = new MovePreviewCreator();
         ResizeHandleCreator resizeHandleCreator = new ResizeHandleCreator();
+        ResizePreviewCreator resizePreviewCreator = new ResizePreviewCreator();
         DependencyInjector elementControllerInjector = new DependencyInjector();
         ElementCreator elementCreator;
         try {
@@ -52,14 +54,17 @@ public class DiagramEditorLoader {
             throw new RuntimeException(e);
         }
         MoveCommandFactory moveCommandFactory = new MoveCommandFactory();
+        ResizeCommandFactory resizeCommandFactory = new ResizeCommandFactory();
         AddCommandFactory addCommandFactory = new AddCommandFactory(diagramModel, elementCreator);
         RemoveCommandFactory removeCommandFactory = new RemoveCommandFactory(diagramModel);
 
         // Add instantiation methods for the element injector, used to create diagram element controllers
         elementControllerInjector.addInjectionMethod(RectangleController.class,
-                () -> new RectangleController(movePreviewCreator, moveCommandFactory, diagramModel, resizeHandleCreator));
+                () -> new RectangleController(movePreviewCreator, moveCommandFactory, diagramModel,
+                        resizeHandleCreator, resizePreviewCreator, resizeCommandFactory));
         elementControllerInjector.addInjectionMethod(UmlCommentController.class,
-                () -> new UmlCommentController(movePreviewCreator, moveCommandFactory, diagramModel, resizeHandleCreator));
+                () -> new UmlCommentController(movePreviewCreator, moveCommandFactory, diagramModel,
+                        resizeHandleCreator, resizePreviewCreator, resizeCommandFactory));
         elementControllerInjector.addInjectionMethod(EditableLabelController.class,
                 EditableLabelController::new);
 
