@@ -29,26 +29,14 @@ public class ElementLibraryPanelController {
     private TitledPane titledPane;
 
     private final DiagramModel diagramModel;
-    private final DependencyInjector elementInjector;
-    private Pane editingArea = null;
 
     /**
      * Constructs a new ElementLibraryPanelController.
      * @param diagramModel the DiagramModel for the current diagram
-     * @param elementInjector the DependencyInjector used to load new diagram elements from FXML
      */
-    public ElementLibraryPanelController(DiagramModel diagramModel, DependencyInjector elementInjector, AddCommandFactory addCommandFactory) {
+    public ElementLibraryPanelController(DiagramModel diagramModel, AddCommandFactory addCommandFactory) {
         this.diagramModel = diagramModel;
-        this.elementInjector = elementInjector;
         this.addCommandFactory = addCommandFactory;
-    }
-
-    /**
-     * Set the Pane to be used as the editing area when adding elements.
-     * @param editingArea the Pane to add elements to
-     */
-    public void setEditingArea(Pane editingArea) {
-        this.editingArea = editingArea;
     }
 
     @FXML

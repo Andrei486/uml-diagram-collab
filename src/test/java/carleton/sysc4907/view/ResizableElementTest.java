@@ -1,6 +1,8 @@
 package carleton.sysc4907.view;
 
+import carleton.sysc4907.command.ResizeCommandFactory;
 import carleton.sysc4907.controller.element.ResizeHandleCreator;
+import carleton.sysc4907.controller.element.ResizePreviewCreator;
 import javafx.scene.shape.Rectangle;
 import javafx.stage.Stage;
 import org.junit.jupiter.api.Test;
@@ -14,9 +16,16 @@ import static org.junit.jupiter.api.Assertions.*;
 
 public abstract class ResizableElementTest extends DiagramElementTest {
 
+    protected ResizeHandleCreator resizeHandleCreator;
+    protected ResizePreviewCreator resizePreviewCreator;
+    protected ResizeCommandFactory resizeCommandFactory;
+
     @Start
     @Override
     protected void start(Stage stage) throws IOException {
+        resizeHandleCreator = new ResizeHandleCreator();
+        resizePreviewCreator = new ResizePreviewCreator();
+        resizeCommandFactory = new ResizeCommandFactory();
         super.start(stage);
     }
 

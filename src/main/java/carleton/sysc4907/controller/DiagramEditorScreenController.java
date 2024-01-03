@@ -26,12 +26,4 @@ public class DiagramEditorScreenController {
     @FXML
     private DiagramEditingAreaController diagramEditingAreaController;
 
-    /**
-     * Initializes the view, updating references to the editing area.
-     */
-    @FXML
-    public void initialize() {
-        elementLibraryPanelController.setEditingArea(diagramEditingAreaController.getEditingArea());
-        diagramMenuController.setEditingArea(diagramEditingAreaController.getEditingArea());
-    }
 }
