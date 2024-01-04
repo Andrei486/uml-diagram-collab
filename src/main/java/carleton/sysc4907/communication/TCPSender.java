@@ -42,7 +42,8 @@ public class TCPSender implements Runnable {
                     try {
                         connectionManager.getConnectionById(id).writeObject(message);
                     } catch (IOException e) {
-                        throw new RuntimeException(e);
+                        // IO exception will occur if the connection is closed, so remove it
+                        connectionManager.removeConnectionById(id);
                     }
                 }
             }

@@ -40,6 +40,15 @@ public class TCPConnectionManager implements Runnable {
         return outputStreams.values();
     }
 
+    public void removeConnectionById(long id) {
+        try {
+            this.outputStreams.get(id).close();
+        } catch (IOException e) {
+            // Exception will happen if the stream is already closed, so this is fine
+        }
+        this.outputStreams.remove(id);
+    }
+
     public Set<Long> getIds() {
         return outputStreams.keySet();
     }
