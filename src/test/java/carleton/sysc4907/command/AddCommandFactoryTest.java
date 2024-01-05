@@ -16,7 +16,7 @@ public class AddCommandFactoryTest {
         String fxmlPath = "TestPath";
         DiagramModel diagramModel = new DiagramModel();
         ElementCreator mockElementCreator = Mockito.mock(ElementCreator.class);
-        AddCommandArgs args = new AddCommandArgs(fxmlPath);
+        AddCommandArgs args = new AddCommandArgs(fxmlPath, 0);
         AddCommandFactory factory = new AddCommandFactory(diagramModel, mockElementCreator);
 
         var command = factory.create(args);

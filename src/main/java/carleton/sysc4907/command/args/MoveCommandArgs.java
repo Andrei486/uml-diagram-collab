@@ -8,8 +8,8 @@ import javafx.scene.Node;
  * @param startY the starting Y coordinate of the element
  * @param endX the ending X coordinate of the element
  * @param endY the ending Y coordinate of the element
- * @param element the element to be moved
+ * @param elementId the ID of the element to be moved
  */
-public record MoveCommandArgs(double startX, double startY, double endX, double endY, Node element) {
+public record MoveCommandArgs(double startX, double startY, double endX, double endY, long elementId) {
 
 }

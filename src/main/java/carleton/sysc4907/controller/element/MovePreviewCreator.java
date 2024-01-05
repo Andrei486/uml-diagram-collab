@@ -1,6 +1,7 @@
 package carleton.sysc4907.controller.element;
 
 import carleton.sysc4907.EditingAreaProvider;
+import carleton.sysc4907.processing.ElementIdManager;
 import carleton.sysc4907.view.DiagramElement;
 import javafx.scene.image.ImageView;
 import javafx.scene.image.WritableImage;
@@ -11,11 +12,13 @@ import javafx.scene.layout.Pane;
  */
 public class MovePreviewCreator {
 
+    private final ElementIdManager elementIdManager;
+
     /**
      * Constructs a new MovePreviewCreator.
      */
-    public MovePreviewCreator() {
-
+    public MovePreviewCreator(ElementIdManager elementIdManager) {
+        this.elementIdManager = elementIdManager;
     }
 
     /**
@@ -28,8 +31,8 @@ public class MovePreviewCreator {
     public ImageView createMovePreview(DiagramElement element, double dragStartX, double dragStartY) {
         // create preview
         WritableImage img = element.snapshot(null, new WritableImage(
-                (int) element.getBoundsInParent().getWidth(),
-                (int) element.getBoundsInParent().getHeight()));
+                (int) element.getBoundsInParent().getWidth() + 2,
+                (int) element.getBoundsInParent().getHeight() + 2));
 
         ImageView preview = new ImageView(img);
         preview.setOpacity(0.5);
@@ -38,6 +41,7 @@ public class MovePreviewCreator {
 
         Pane editingArea = EditingAreaProvider.getEditingArea();
         editingArea.getChildren().add(preview);
+        preview.setUserData(elementIdManager.getNewId());
         return preview;
     }
 

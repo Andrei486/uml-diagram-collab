@@ -142,7 +142,7 @@ public abstract class DiagramElementController {
             MoveCommandArgs args = new MoveCommandArgs(
                     dragStartX, dragStartY,
                     dragEndX, dragEndY,
-                    preview);
+                    (Long) preview.getUserData());
             var command = moveCommandFactory.create(args);
             command.execute();
         }
@@ -160,7 +160,7 @@ public abstract class DiagramElementController {
         MoveCommandArgs args = new MoveCommandArgs(
                 dragStartX, dragStartY,
                 dragEndX, dragEndY,
-                element);
+                element.getElementId());
         var command = moveCommandFactory.create(args);
         command.execute();
     }
