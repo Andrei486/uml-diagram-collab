@@ -6,6 +6,8 @@ import carleton.sysc4907.controller.element.ResizePreviewCreator;
 import javafx.scene.shape.Rectangle;
 import javafx.stage.Stage;
 import org.junit.jupiter.api.Test;
+import org.mockito.Mock;
+import org.mockito.Mockito;
 import org.testfx.api.FxRobot;
 import org.testfx.framework.junit5.Start;
 
@@ -17,15 +19,18 @@ import static org.junit.jupiter.api.Assertions.*;
 public abstract class ResizableElementTest extends DiagramElementTest {
 
     protected ResizeHandleCreator resizeHandleCreator;
+
+    @Mock
     protected ResizePreviewCreator resizePreviewCreator;
     protected ResizeCommandFactory resizeCommandFactory;
+
+    protected long testResizePreviewId = 14L;
 
     @Start
     @Override
     protected void start(Stage stage) throws IOException {
         resizeHandleCreator = new ResizeHandleCreator();
-        resizePreviewCreator = new ResizePreviewCreator();
-        resizeCommandFactory = new ResizeCommandFactory();
+        resizeCommandFactory = new ResizeCommandFactory(elementIdManager);
         super.start(stage);
     }
 
@@ -35,6 +40,7 @@ public abstract class ResizableElementTest extends DiagramElementTest {
      */
     @Test
     protected void testResizeOnHandleDragBottomRight(FxRobot robot) {
+        Mockito.when(elementIdManager.getElementById(testId)).thenReturn(element);
         var selectedElements = diagramModel.getSelectedElements();
         assertEquals(0, selectedElements.size());
         assertFalse(element.getStyleClass().contains(SELECTED_STYLE_CLASS));
@@ -69,6 +75,7 @@ public abstract class ResizableElementTest extends DiagramElementTest {
      */
     @Test
     protected void testResizeOnHandleDragTopLeftMinSize(FxRobot robot) {
+        Mockito.when(elementIdManager.getElementById(testId)).thenReturn(element);
         var selectedElements = diagramModel.getSelectedElements();
         assertEquals(0, selectedElements.size());
         assertFalse(element.getStyleClass().contains(SELECTED_STYLE_CLASS));

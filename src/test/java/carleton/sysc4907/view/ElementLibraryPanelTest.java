@@ -6,6 +6,7 @@ import carleton.sysc4907.command.AddCommandFactory;
 import carleton.sysc4907.controller.ElementLibraryPanelController;
 import carleton.sysc4907.model.DiagramModel;
 import carleton.sysc4907.processing.ElementCreator;
+import carleton.sysc4907.processing.ElementIdManager;
 import javafx.collections.ObservableList;
 import javafx.scene.Node;
 import javafx.scene.Scene;
@@ -51,6 +52,9 @@ public class ElementLibraryPanelTest {
     @Mock
     private DiagramElement mockDiagramElement;
 
+    @Mock
+    private ElementIdManager mockElementIdManager;
+
     @Start
     private void start(Stage stage) throws IOException {
         try (MockedStatic<EditingAreaProvider> utilities = Mockito.mockStatic(EditingAreaProvider.class)) {
@@ -66,7 +70,8 @@ public class ElementLibraryPanelTest {
                         var controller = new ElementLibraryPanelController(
                                 mockDiagramModel,
                                 addCommandFactory,
-                                mockElementCreator);
+                                mockElementCreator,
+                                mockElementIdManager);
                         return controller;
                     });
             Scene scene = new Scene(injector.load("view/ElementLibraryPanel.fxml"));
@@ -79,13 +84,15 @@ public class ElementLibraryPanelTest {
 
     @Test
     void addRectangle(FxRobot robot) {
+        long testId = 12L;
         EditingAreaProvider.init(editingArea);
         Mockito.when(mockDiagramModel.getElements()).thenReturn(mockElementsList);
         Mockito.when(mockElementsList.add(any(DiagramElement.class))).thenReturn(true);
         Mockito.when(editingArea.getChildren()).thenReturn(mockNodesList);
         Mockito.when(mockNodesList.add(any(Node.class))).thenReturn(true);
-        Mockito.when(mockElementCreator.create("rectangleType"))
+        Mockito.when(mockElementCreator.create("rectangleType", testId))
                 .thenReturn(mockDiagramElement);
+        Mockito.when(mockElementIdManager.getNewId()).thenReturn(testId);
 
         robot.clickOn("#elementsPane .button");
 

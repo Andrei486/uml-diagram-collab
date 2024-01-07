@@ -7,4 +7,7 @@ import javafx.scene.layout.Pane;
  */
 public class DiagramElement extends Pane {
 
+    public long getElementId() {
+        return (Long) getUserData();
+    }
 }

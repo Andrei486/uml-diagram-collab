@@ -11,6 +11,7 @@ import carleton.sysc4907.controller.*;
 import carleton.sysc4907.controller.element.*;
 import carleton.sysc4907.model.*;
 import carleton.sysc4907.processing.ElementCreator;
+import carleton.sysc4907.processing.ElementIdManager;
 import carleton.sysc4907.processing.FontOptionsFinder;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
@@ -41,11 +42,12 @@ public class DiagramEditorLoader {
         User hostUser = userFactory.createHostUser(username);
         SessionModel sessionModel = new SessionModel(roomCode, hostUser);
         guestUsers.forEach(sessionModel::addUser);
+        ElementIdManager elementIdManager = new ElementIdManager(sessionModel);
         TextFormattingModel textFormattingModel = new TextFormattingModel(fontOptionsFinder);
         DiagramModel diagramModel = new DiagramModel();
-        MovePreviewCreator movePreviewCreator = new MovePreviewCreator();
+        MovePreviewCreator movePreviewCreator = new MovePreviewCreator(elementIdManager);
         ResizeHandleCreator resizeHandleCreator = new ResizeHandleCreator();
-        ResizePreviewCreator resizePreviewCreator = new ResizePreviewCreator();
+        ResizePreviewCreator resizePreviewCreator = new ResizePreviewCreator(elementIdManager);
         DependencyInjector elementControllerInjector = new DependencyInjector();
         ElementCreator elementCreator;
         try {
@@ -53,10 +55,10 @@ public class DiagramEditorLoader {
         } catch (ParserConfigurationException | SAXException | URISyntaxException e) {
             throw new RuntimeException(e);
         }
-        MoveCommandFactory moveCommandFactory = new MoveCommandFactory();
-        ResizeCommandFactory resizeCommandFactory = new ResizeCommandFactory();
+        MoveCommandFactory moveCommandFactory = new MoveCommandFactory(elementIdManager);
+        ResizeCommandFactory resizeCommandFactory = new ResizeCommandFactory(elementIdManager);
         AddCommandFactory addCommandFactory = new AddCommandFactory(diagramModel, elementCreator);
-        RemoveCommandFactory removeCommandFactory = new RemoveCommandFactory(diagramModel);
+        RemoveCommandFactory removeCommandFactory = new RemoveCommandFactory(diagramModel, elementIdManager);
 
         // Add instantiation methods for the element injector, used to create diagram element controllers
         elementControllerInjector.addInjectionMethod(RectangleController.class,
@@ -80,7 +82,7 @@ public class DiagramEditorLoader {
         injector.addInjectionMethod(DiagramEditingAreaController.class,
                 () -> new DiagramEditingAreaController(diagramModel));
         injector.addInjectionMethod(ElementLibraryPanelController.class,
-                () -> new ElementLibraryPanelController(diagramModel, addCommandFactory, elementCreator));
+                () -> new ElementLibraryPanelController(diagramModel, addCommandFactory, elementCreator, elementIdManager));
 
         //Set up and show the scene
         Scene scene = new Scene(injector.load("view/DiagramEditorScreen.fxml"), 1280, 720);
