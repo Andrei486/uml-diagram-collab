@@ -9,8 +9,7 @@
 <?import javafx.scene.shape.Rectangle?>
 <DialogPane xmlns="http://javafx.com/javafx"
             xmlns:fx="http://javafx.com/fxml"
-            fx:controller="carleton.sysc4907.controller.DirectConnectionDialogController"
-            prefHeight="400.0" prefWidth="600.0">
+            prefHeight="325.0" prefWidth="550.0">
 
     <content>
         <HBox alignment="CENTER">
