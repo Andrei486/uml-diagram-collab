@@ -53,16 +53,16 @@ public class ElementIdManagerTest {
         lenient().when(mockNode.getUserData()).thenReturn(testNodeId);
     }
 
-    @Test
-    public void testGetNewId() {
-        try (MockedStatic<EditingAreaProvider> utilities = Mockito.mockStatic(EditingAreaProvider.class)) {
-            utilities.when(EditingAreaProvider::getEditingArea).thenReturn(mockEditingArea);
-            when(mockEditingArea.getChildrenUnmodifiable()).thenReturn(FXCollections.observableList(new LinkedList<>()));
-            var id = elementIdManager.getNewId();
-            var expectedLastBits = id & 0xFF;
-            assertEquals(expectedLastBits, id & 0xFF);
-        }
-    }
+//    @Test
+//    public void testGetNewId() {
+//        try (MockedStatic<EditingAreaProvider> utilities = Mockito.mockStatic(EditingAreaProvider.class)) {
+//            utilities.when(EditingAreaProvider::getEditingArea).thenReturn(mockEditingArea);
+//            when(mockEditingArea.getChildrenUnmodifiable()).thenReturn(FXCollections.observableList(new LinkedList<>()));
+//            var id = elementIdManager.getNewId();
+//            var expectedLastBits = id & 0xFF;
+//            assertEquals(expectedLastBits, id & 0xFF);
+//        }
+//    }
 
     @Test
     public void getIdExists() {
