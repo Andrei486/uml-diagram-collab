@@ -37,7 +37,8 @@ public class StartScreenTest {
         injector.addInjectionMethod(StartScreenController.class, () -> new StartScreenController(
                 preferencesModel,
                 mockLoader,
-                manager));
+                manager,
+                false));
 
         //Set up and show the scene
         Scene scene = new Scene(injector.load("view/StartScreenView.fxml"), 640, 480);
