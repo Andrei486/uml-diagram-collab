@@ -34,8 +34,10 @@ public class ElementIdManagerTest {
 
     @Mock
     private Parent mockParent;
+
     @Mock
     private Node mockNode;
+
     @Mock
     private Pane mockEditingArea;
 
