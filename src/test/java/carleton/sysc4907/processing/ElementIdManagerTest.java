@@ -40,7 +40,7 @@ public class ElementIdManagerTest {
     private Pane mockEditingArea;
 
     private String testUserId = "testlongid";
-    private long testNodeId = 1L;
+    private final long testNodeId = 1L;
 
     private ElementIdManager elementIdManager;
 
