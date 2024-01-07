@@ -87,7 +87,6 @@ public class ElementCreator {
      * @return file path of the template used to create elements of the given type
      */
     public String resolveTypeToTemplate(String type) {
-        System.out.println(type + " " + this.typeTemplateMap.get(type));
         return this.typeTemplateMap.get(type);
     }
 
