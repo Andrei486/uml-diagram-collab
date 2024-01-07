@@ -14,7 +14,6 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.MockedStatic;
 import org.mockito.Mockito;
-import org.mockito.MockitoAnnotations;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.LinkedList;
@@ -52,9 +51,6 @@ public class ElementIdManagerTest {
         lenient().when(mockSessionModel.getLocalUser()).thenReturn(mockUser);
         lenient().when(mockUser.getUsername()).thenReturn(testUserId);
         lenient().when(mockNode.getUserData()).thenReturn(testNodeId);
-        var nodesList = new LinkedList<Node>();
-        nodesList.add(mockNode);
-        lenient().when(mockParent.getChildrenUnmodifiable()).thenReturn(FXCollections.observableList(nodesList));
     }
 
     @Test
@@ -91,12 +87,15 @@ public class ElementIdManagerTest {
     }
 
     @Test
-    public void getElementByIdExistNested() {
+    public void getElementByIdExistsNested() {
         try (MockedStatic<EditingAreaProvider> utilities = Mockito.mockStatic(EditingAreaProvider.class)) {
             utilities.when(EditingAreaProvider::getEditingArea).thenReturn(mockEditingArea);
             ObservableList<Node> nodes = FXCollections.observableList(new LinkedList<>());
             nodes.add(mockParent);
             when(mockEditingArea.getChildrenUnmodifiable()).thenReturn(nodes);
+            var nodesList = new LinkedList<Node>();
+            nodesList.add(mockNode);
+            when(mockParent.getChildrenUnmodifiable()).thenReturn(FXCollections.observableList(nodesList));
             assertEquals(mockNode, elementIdManager.getElementById(testNodeId));
         }
     }
