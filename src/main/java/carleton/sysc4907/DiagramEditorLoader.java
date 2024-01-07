@@ -47,7 +47,7 @@ public class DiagramEditorLoader {
         DiagramModel diagramModel = new DiagramModel();
         MovePreviewCreator movePreviewCreator = new MovePreviewCreator(elementIdManager);
         ResizeHandleCreator resizeHandleCreator = new ResizeHandleCreator();
-        ResizePreviewCreator resizePreviewCreator = new ResizePreviewCreator();
+        ResizePreviewCreator resizePreviewCreator = new ResizePreviewCreator(elementIdManager);
         DependencyInjector elementControllerInjector = new DependencyInjector();
         ElementCreator elementCreator;
         try {
@@ -56,9 +56,9 @@ public class DiagramEditorLoader {
             throw new RuntimeException(e);
         }
         MoveCommandFactory moveCommandFactory = new MoveCommandFactory(elementIdManager);
-        ResizeCommandFactory resizeCommandFactory = new ResizeCommandFactory();
+        ResizeCommandFactory resizeCommandFactory = new ResizeCommandFactory(elementIdManager);
         AddCommandFactory addCommandFactory = new AddCommandFactory(diagramModel, elementCreator);
-        RemoveCommandFactory removeCommandFactory = new RemoveCommandFactory(diagramModel);
+        RemoveCommandFactory removeCommandFactory = new RemoveCommandFactory(diagramModel, elementIdManager);
 
         // Add instantiation methods for the element injector, used to create diagram element controllers
         elementControllerInjector.addInjectionMethod(RectangleController.class,

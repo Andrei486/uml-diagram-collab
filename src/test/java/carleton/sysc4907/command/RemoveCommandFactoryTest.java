@@ -1,29 +1,29 @@
 package carleton.sysc4907.command;
 
-import carleton.sysc4907.DependencyInjector;
-import carleton.sysc4907.command.args.AddCommandArgs;
-import carleton.sysc4907.command.args.MoveCommandArgs;
 import carleton.sysc4907.command.args.RemoveCommandArgs;
 import carleton.sysc4907.model.DiagramModel;
-import carleton.sysc4907.view.DiagramElement;
-import javafx.scene.Node;
+import carleton.sysc4907.processing.ElementIdManager;
 import org.junit.jupiter.api.Test;
-import org.mockito.Mockito;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.mockito.Mockito.doNothing;
 
+@ExtendWith(MockitoExtension.class)
 public class RemoveCommandFactoryTest {
 
+    @Mock
+    private ElementIdManager mockElementIdManager;
     @Test
     void createCommand() {
-        List<DiagramElement> elems = new ArrayList<>();
-        RemoveCommandArgs args = new RemoveCommandArgs(elems);
+        List<Long> ids = new ArrayList<>();
+        RemoveCommandArgs args = new RemoveCommandArgs(ids);
         DiagramModel diagramModel = new DiagramModel();
-        RemoveCommandFactory factory = new RemoveCommandFactory(diagramModel);
+        RemoveCommandFactory factory = new RemoveCommandFactory(diagramModel, mockElementIdManager);
 
         var command = factory.create(args);
 

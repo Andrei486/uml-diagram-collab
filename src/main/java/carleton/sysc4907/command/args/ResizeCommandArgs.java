@@ -8,6 +8,6 @@ public record ResizeCommandArgs(boolean isTopAnchor,
                                 double dragStartY,
                                 double dragEndX,
                                 double dragEndY,
-                                Pane element) {
+                                long elementId) {
 
 }

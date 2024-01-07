@@ -56,6 +56,8 @@ public abstract class DiagramElementTest {
 
     protected DiagramElement element;
 
+    protected long testId = 12L;
+
     @Mock
     protected ElementIdManager elementIdManager;
 
@@ -67,8 +69,6 @@ public abstract class DiagramElementTest {
     @Start
     protected void start(Stage stage) throws IOException {
         diagramModel = new DiagramModel();
-        Mockito.when(movePreviewCreator.createMovePreview(any(DiagramElement.class), any(Double.class), any(Double.class))).thenReturn(new ImageView());
-        doNothing().when(movePreviewCreator).deleteMovePreview(any(), any());
         moveCommandFactory = new MoveCommandFactory(elementIdManager);
         initializeDependencyInjector();
         // Load the scroll pane and get the editing area from it
@@ -76,6 +76,7 @@ public abstract class DiagramElementTest {
         editingArea = (Pane) root.getContent();
         // Load the element and add it
         element = loadElement();
+        element.setUserData(12L);
         editingArea.getChildren().add(element);
         diagramModel.getElements().add(element);
         // Show the scene
@@ -139,6 +140,7 @@ public abstract class DiagramElementTest {
      */
     @Test
     protected void testDragMove(FxRobot robot) {
+        Mockito.when(elementIdManager.getElementById(testId)).thenReturn(element);
         var x = element.getLayoutX();
         var y = element.getLayoutY();
         robot.drag(element).dropBy(100, 150);

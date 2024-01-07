@@ -1,6 +1,7 @@
 package carleton.sysc4907.controller.element;
 
 import carleton.sysc4907.EditingAreaProvider;
+import carleton.sysc4907.processing.ElementIdManager;
 import carleton.sysc4907.view.DiagramElement;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
@@ -15,11 +16,13 @@ import java.io.IOException;
  */
 public class ResizePreviewCreator {
 
+    private final ElementIdManager elementIdManager;
+
     /**
      * Constructs a new ResizePreviewCreator.
      */
-    public ResizePreviewCreator() {
-
+    public ResizePreviewCreator(ElementIdManager elementIdManager) {
+        this.elementIdManager = elementIdManager;
     }
 
     public Pane createResizePreview(DiagramElement element) {
@@ -37,6 +40,7 @@ public class ResizePreviewCreator {
         preview.setLayoutY(element.getLayoutY());
         Pane editingArea = EditingAreaProvider.getEditingArea();
         editingArea.getChildren().add(preview);
+        preview.setUserData(elementIdManager.getNewId());
         return preview;
     }
 
