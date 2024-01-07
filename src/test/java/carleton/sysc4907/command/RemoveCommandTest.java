@@ -87,9 +87,7 @@ public class RemoveCommandTest {
             List<DiagramElement> elemList = new ArrayList<>();
             elemList.add(mockDiagramElement1);
             elemList.add(mockDiagramElement2);
-            List<Long> idList = new ArrayList<>();
-            idList.add(mockDiagramElement1.getElementId());
-            idList.add(mockDiagramElement2.getElementId());
+            long[] idList = new long[] {mockDiagramElement1.getElementId(), mockDiagramElement2.getElementId()};
 
             RemoveCommandArgs args = new RemoveCommandArgs(idList);
             RemoveCommand command = new RemoveCommand(args, mockDiagramModel, mockElementIdManager);

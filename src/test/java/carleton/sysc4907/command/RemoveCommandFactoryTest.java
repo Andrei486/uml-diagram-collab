@@ -20,7 +20,7 @@ public class RemoveCommandFactoryTest {
     private ElementIdManager mockElementIdManager;
     @Test
     void createCommand() {
-        List<Long> ids = new ArrayList<>();
+        long[] ids = new long[0];
         RemoveCommandArgs args = new RemoveCommandArgs(ids);
         DiagramModel diagramModel = new DiagramModel();
         RemoveCommandFactory factory = new RemoveCommandFactory(diagramModel, mockElementIdManager);

@@ -51,7 +51,7 @@ public class DiagramMenuBarController {
     public void deleteSelectedElements() {
         List<Long> toDelete = diagramModel.getSelectedElements().stream().map(DiagramElement::getElementId).toList();
         if (!toDelete.isEmpty()) {
-            RemoveCommandArgs args = new RemoveCommandArgs(toDelete);
+            RemoveCommandArgs args = new RemoveCommandArgs(toDelete.stream().mapToLong(l -> l).toArray());
             var command = removeCommandFactory.create(args);
             command.execute();
         }
