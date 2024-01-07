@@ -3,14 +3,11 @@ package carleton.sysc4907.processing;
 import carleton.sysc4907.EditingAreaProvider;
 import carleton.sysc4907.model.SessionModel;
 import carleton.sysc4907.model.User;
-import javafx.beans.property.SimpleListProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.layout.Pane;
-import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
@@ -47,8 +44,7 @@ public class ElementIdManagerTest {
 
     private ElementIdManager elementIdManager;
 
-    @BeforeEach
-    public void setup() {
+    private void setup() {
         lenient().when(mockSessionModel.getLocalUser()).thenReturn(mockUser);
         lenient().when(mockUser.getUsername()).thenReturn(testUserId);
         lenient().when(mockNode.getUserData()).thenReturn(testNodeId);
@@ -60,6 +56,7 @@ public class ElementIdManagerTest {
 
     @Test
     public void testGetNewId() {
+        setup();
         try (MockedStatic<EditingAreaProvider> utilities = Mockito.mockStatic(EditingAreaProvider.class)) {
             utilities.when(EditingAreaProvider::getEditingArea).thenReturn(mockEditingArea);
             when(mockEditingArea.getChildrenUnmodifiable()).thenReturn(FXCollections.observableList(new LinkedList<>()));
@@ -71,6 +68,7 @@ public class ElementIdManagerTest {
 
     @Test
     public void getIdExists() {
+        setup();
         try (MockedStatic<EditingAreaProvider> utilities = Mockito.mockStatic(EditingAreaProvider.class)) {
             utilities.when(EditingAreaProvider::getEditingArea).thenReturn(mockEditingArea);
             ObservableList<Node> nodes = FXCollections.observableList(new LinkedList<>());
@@ -82,6 +80,7 @@ public class ElementIdManagerTest {
 
     @Test
     public void getElementByIdExists() {
+        setup();
         try (MockedStatic<EditingAreaProvider> utilities = Mockito.mockStatic(EditingAreaProvider.class)) {
             utilities.when(EditingAreaProvider::getEditingArea).thenReturn(mockEditingArea);
             ObservableList<Node> nodes = FXCollections.observableList(new LinkedList<>());
@@ -93,6 +92,7 @@ public class ElementIdManagerTest {
 
     @Test
     public void getElementByIdExistNested() {
+        setup();
         try (MockedStatic<EditingAreaProvider> utilities = Mockito.mockStatic(EditingAreaProvider.class)) {
             utilities.when(EditingAreaProvider::getEditingArea).thenReturn(mockEditingArea);
             ObservableList<Node> nodes = FXCollections.observableList(new LinkedList<>());
@@ -104,6 +104,7 @@ public class ElementIdManagerTest {
 
     @Test
     public void getIdDoesNotExist() {
+        setup();
         try (MockedStatic<EditingAreaProvider> utilities = Mockito.mockStatic(EditingAreaProvider.class)) {
             utilities.when(EditingAreaProvider::getEditingArea).thenReturn(mockEditingArea);
             ObservableList<Node> nodes = FXCollections.observableList(new LinkedList<>());
@@ -115,6 +116,7 @@ public class ElementIdManagerTest {
 
     @Test
     public void getElementByIdDoesNotExist() {
+        setup();
         try (MockedStatic<EditingAreaProvider> utilities = Mockito.mockStatic(EditingAreaProvider.class)) {
             utilities.when(EditingAreaProvider::getEditingArea).thenReturn(mockEditingArea);
             ObservableList<Node> nodes = FXCollections.observableList(new LinkedList<>());
