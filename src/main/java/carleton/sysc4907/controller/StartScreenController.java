@@ -101,9 +101,14 @@ public class StartScreenController {
             directConnectDialog.showAndWait().ifPresent(address -> {
                 ipPort = address;
                 try {
+                    //TODO:
                     //use these later in this method to call a class that will make the connection
                     directConnectIp = ipPortParser.getIp(ipPort);
                     directConnectPort = ipPortParser.getPort(ipPort);
+
+                    //for now, just open the editor with a random room code
+                    Stage stage = (Stage) ((Node) actionEvent.getSource()).getScene().getWindow();
+                    openEditor(roomCodeManager.getNewRoomCode(), preferences.getUsername(), stage);
                 }
                 catch (IllegalArgumentException e) {
                     Alert alert = new Alert(Alert.AlertType.ERROR);
