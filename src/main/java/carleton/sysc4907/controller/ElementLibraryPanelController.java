@@ -4,6 +4,7 @@ import carleton.sysc4907.DependencyInjector;
 import carleton.sysc4907.command.AddCommandFactory;
 import carleton.sysc4907.command.args.AddCommandArgs;
 import carleton.sysc4907.processing.ElementCreator;
+import carleton.sysc4907.processing.ElementIdManager;
 import carleton.sysc4907.view.DiagramElement;
 import carleton.sysc4907.model.DiagramModel;
 import javafx.fxml.FXML;
@@ -32,6 +33,7 @@ public class ElementLibraryPanelController {
     private final DiagramModel diagramModel;
 
     private final ElementCreator elementCreator;
+    private final ElementIdManager elementIdManager;
 
     /**
      * Constructs a new ElementLibraryPanelController.
@@ -40,10 +42,12 @@ public class ElementLibraryPanelController {
     public ElementLibraryPanelController(
             DiagramModel diagramModel,
             AddCommandFactory addCommandFactory,
-            ElementCreator elementCreator) {
+            ElementCreator elementCreator,
+            ElementIdManager elementIdManager) {
         this.diagramModel = diagramModel;
         this.addCommandFactory = addCommandFactory;
         this.elementCreator = elementCreator;
+        this.elementIdManager = elementIdManager;
     }
 
     @FXML
@@ -63,7 +67,7 @@ public class ElementLibraryPanelController {
     private Button createAddButton(String elementName) {
         Button button = new Button(elementName);
         button.setOnAction(actionEvent -> {
-            AddCommandArgs args = new AddCommandArgs(elementName);
+            AddCommandArgs args = new AddCommandArgs(elementName, elementIdManager.getNewId());
             var command = addCommandFactory.create(args);
             command.execute();
 

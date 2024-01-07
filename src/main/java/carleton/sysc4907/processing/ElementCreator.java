@@ -45,9 +45,10 @@ public class ElementCreator {
     /**
      * Creates a new diagram element of the given type.
      * @param type the type of diagram element to create
+     * @param elementId the ID to assign to the element
      * @return the created diagram element, or null if none could be created
      */
-    public DiagramElement create(String type) {
+    public DiagramElement create(String type, long elementId) {
         String path = resolveTypeToTemplate(type);
         if (path == null) { // Type not recognized
             return null;
@@ -59,6 +60,7 @@ public class ElementCreator {
             throw new RuntimeException(e);
         }
         DiagramElement element = (DiagramElement) obj;
+        element.setUserData(elementId);
         return element;
     }
 
@@ -85,7 +87,6 @@ public class ElementCreator {
      * @return file path of the template used to create elements of the given type
      */
     public String resolveTypeToTemplate(String type) {
-        System.out.println(type + " " + this.typeTemplateMap.get(type));
         return this.typeTemplateMap.get(type);
     }
 

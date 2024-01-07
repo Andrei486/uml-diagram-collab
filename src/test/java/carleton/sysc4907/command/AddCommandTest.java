@@ -71,10 +71,10 @@ public class AddCommandTest {
                     thenReturn(true);
             Mockito.when(mockElementsList.add(any(DiagramElement.class)))
                     .thenReturn(true);
-            Mockito.when(mockElementCreator.create("testType"))
+            Mockito.when(mockElementCreator.create(eq("testType"), anyLong()))
                     .thenReturn(mockDiagramElement);
 
-            AddCommandArgs args = new AddCommandArgs("testType");
+            AddCommandArgs args = new AddCommandArgs("testType", 2L);
             AddCommand command = new AddCommand(args, mockDiagramModel, mockElementCreator);
 
             //execute

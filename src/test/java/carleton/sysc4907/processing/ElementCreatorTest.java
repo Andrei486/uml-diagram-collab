@@ -46,8 +46,8 @@ public class ElementCreatorTest {
         Mockito.when(mockElementInjector.load("/carleton/sysc4907/view/element/Rectangle.fxml")).thenReturn(element1);
         Mockito.when(mockElementInjector.load("/carleton/sysc4907/view/element/UmlComment.fxml")).thenReturn(element2);
 
-        assertEquals(element1, elementCreator.create("rectangle"));
-        assertEquals(element2, elementCreator.create("uml-comment"));
+        assertEquals(element1, elementCreator.create("rectangle", 0L));
+        assertEquals(element2, elementCreator.create("uml-comment", 0L));
         Mockito.verify(mockElementInjector).load("/carleton/sysc4907/view/element/Rectangle.fxml");
         Mockito.verify(mockElementInjector).load("/carleton/sysc4907/view/element/UmlComment.fxml");
     }

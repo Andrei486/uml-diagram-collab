@@ -26,6 +26,8 @@ public abstract class ResizableElementController extends DiagramElementControlle
     private final ResizePreviewCreator resizePreviewCreator;
     private Pane preview = null;
 
+
+
     private double resizeDragStartX = 0;
     private double resizeDragStartY = 0;
     private double lastPreviewDragX = 0;
@@ -129,7 +131,7 @@ public abstract class ResizableElementController extends DiagramElementControlle
                     resizeDragStartY,
                     event.getSceneX(),
                     event.getSceneY(),
-                    preview
+                    (long) preview.getUserData()
             );
             var command = resizeCommandFactory.create(args);
             command.execute();
@@ -152,7 +154,7 @@ public abstract class ResizableElementController extends DiagramElementControlle
                 resizeDragStartY,
                 event.getSceneX(),
                 event.getSceneY(),
-                element
+                element.getElementId()
         ));
         command.execute();
         toggleShowResizeHandles(false);

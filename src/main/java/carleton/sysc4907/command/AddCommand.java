@@ -29,7 +29,7 @@ public class AddCommand implements Command<AddCommandArgs> {
     @Override
     public void execute() {
         Pane editingArea = EditingAreaProvider.getEditingArea();
-        DiagramElement element = elementCreator.create(args.elementType());
+        DiagramElement element = elementCreator.create(args.elementType(), args.elementId());
         if (element == null) return; // If the type of element to create is not recognized
         editingArea.getChildren().add(element);
         diagramModel.getElements().add(element);
