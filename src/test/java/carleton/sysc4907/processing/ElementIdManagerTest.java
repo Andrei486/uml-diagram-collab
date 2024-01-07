@@ -47,7 +47,7 @@ public class ElementIdManagerTest {
 
     private ElementIdManager elementIdManager;
 
-    @BeforeAll
+    @BeforeEach
     public void setup() {
         lenient().when(mockSessionModel.getLocalUser()).thenReturn(mockUser);
         lenient().when(mockUser.getUsername()).thenReturn(testUserId);
@@ -62,7 +62,7 @@ public class ElementIdManagerTest {
     public void testGetNewId() {
         try (MockedStatic<EditingAreaProvider> utilities = Mockito.mockStatic(EditingAreaProvider.class)) {
             utilities.when(EditingAreaProvider::getEditingArea).thenReturn(mockEditingArea);
-            when(mockEditingArea.getChildrenUnmodifiable()).thenReturn(new SimpleListProperty<>());
+            when(mockEditingArea.getChildrenUnmodifiable()).thenReturn(FXCollections.observableList(new LinkedList<>()));
             var id = elementIdManager.getNewId();
             var expectedLastBits = id & 0xFF;
             assertEquals(expectedLastBits, id & 0xFF);
