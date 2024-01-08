@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import java.util.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<?import javafx.scene.shape.Rectangle?>
+<DialogPane xmlns="http://javafx.com/javafx"
+            xmlns:fx="http://javafx.com/fxml"
+            prefHeight="325.0" prefWidth="550.0">
+
+    <content>
+        <HBox alignment="CENTER">
+            <VBox alignment="CENTER_LEFT">
+                <Label text="Enter an IP and port" styleClass="label-subtitle" />
+                <Rectangle height="3"/>
+                <Label text="Enter an IP address and port separated by a colon" styleClass="label-paragraph" wrapText="true"/>
+                <Rectangle height="25"/>
+                <VBox>
+                    <Label text="IP and port:" styleClass="label-textfield"/>
+                    <TextField fx:id="ipPortField" styleClass="text-field-1" maxWidth="250" promptText="ex. 1.2.3.4:1234"/>
+                </VBox>
+            </VBox>
+        </HBox>
+    </content>
+    <ButtonType fx:id="connectButtonType" text="Connect" buttonData="OK_DONE"/>
+    <ButtonType fx:id="cancelButtonType" text="Cancel" buttonData="CANCEL_CLOSE"/>
+
+</DialogPane>
