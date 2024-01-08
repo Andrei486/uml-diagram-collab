@@ -113,8 +113,8 @@ public class StartScreenController {
                 catch (IllegalArgumentException e) {
                     Alert alert = new Alert(Alert.AlertType.ERROR);
                     alert.setTitle("Invalid address");
-                    alert.setHeaderText("Error: Invalid IP or port");
-                    alert.setContentText("");
+                    alert.setHeaderText("Error: Invalid format");
+                    alert.setContentText("The address you entered is not formatted correctly. The format is 'IP:PORT'");
                     alert.getDialogPane().setMinHeight(Region.USE_PREF_SIZE);
                     alert.getDialogPane().setMinWidth(Region.USE_PREF_SIZE);
                     alert.showAndWait();

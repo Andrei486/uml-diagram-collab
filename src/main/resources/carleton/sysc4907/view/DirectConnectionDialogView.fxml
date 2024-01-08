@@ -19,7 +19,7 @@
                 <Label text="Enter an IP address and port separated by a colon" styleClass="label-paragraph" wrapText="true"/>
                 <Rectangle height="25"/>
                 <VBox>
-                    <Label text="Room code:" styleClass="label-textfield"/>
+                    <Label text="IP and port:" styleClass="label-textfield"/>
                     <TextField fx:id="ipPortField" styleClass="text-field-1" maxWidth="250" promptText="ex. 1.2.3.4:1234"/>
                 </VBox>
             </VBox>
