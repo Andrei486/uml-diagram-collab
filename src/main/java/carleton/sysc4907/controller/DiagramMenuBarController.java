@@ -49,9 +49,9 @@ public class DiagramMenuBarController {
      * Deletes all selected elements from the diagram.
      */
     public void deleteSelectedElements() {
-        List<DiagramElement> toDelete = diagramModel.getSelectedElements();
+        List<Long> toDelete = diagramModel.getSelectedElements().stream().map(DiagramElement::getElementId).toList();
         if (!toDelete.isEmpty()) {
-            RemoveCommandArgs args = new RemoveCommandArgs(toDelete);
+            RemoveCommandArgs args = new RemoveCommandArgs(toDelete.stream().mapToLong(l -> l).toArray());
             var command = removeCommandFactory.create(args);
             command.execute();
         }

@@ -2,6 +2,7 @@ package carleton.sysc4907.command;
 
 import carleton.sysc4907.EditingAreaProvider;
 import carleton.sysc4907.command.args.RemoveCommandArgs;
+import carleton.sysc4907.processing.ElementIdManager;
 import carleton.sysc4907.view.DiagramElement;
 import org.junit.jupiter.api.Test;
 
@@ -52,6 +53,9 @@ public class RemoveCommandTest {
     @Mock
     private DiagramElement mockDiagramElement2;
 
+    @Mock
+    private ElementIdManager mockElementIdManager;
+
     @Test
     void executeRemoves() {
     /* test that these are called:
@@ -61,8 +65,14 @@ public class RemoveCommandTest {
         diagramModel.getSelectedElements().clear();
     */
         //setup
+        long id1 = 1L;
+        long id2 = 2L;
         try (MockedStatic<EditingAreaProvider> utilities = Mockito.mockStatic(EditingAreaProvider.class)) {
             utilities.when(EditingAreaProvider::getEditingArea).thenReturn(mockEditingArea);
+            Mockito.when(mockDiagramElement1.getElementId()).thenReturn(id1);
+            Mockito.when(mockDiagramElement2.getElementId()).thenReturn(id2);
+            Mockito.when(mockElementIdManager.getElementById(id1)).thenReturn(mockDiagramElement1);
+            Mockito.when(mockElementIdManager.getElementById(id2)).thenReturn(mockDiagramElement2);
             Mockito.when(mockDiagramModel.getElements())
                     .thenReturn(mockElementsList);
             Mockito.when(mockDiagramModel.getSelectedElements())
@@ -77,9 +87,10 @@ public class RemoveCommandTest {
             List<DiagramElement> elemList = new ArrayList<>();
             elemList.add(mockDiagramElement1);
             elemList.add(mockDiagramElement2);
+            long[] idList = new long[] {mockDiagramElement1.getElementId(), mockDiagramElement2.getElementId()};
 
-            RemoveCommandArgs args = new RemoveCommandArgs(elemList);
-            RemoveCommand command = new RemoveCommand(args, mockDiagramModel);
+            RemoveCommandArgs args = new RemoveCommandArgs(idList);
+            RemoveCommand command = new RemoveCommand(args, mockDiagramModel, mockElementIdManager);
 
             //execute
             command.execute();

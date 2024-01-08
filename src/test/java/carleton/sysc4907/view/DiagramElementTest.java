@@ -6,6 +6,7 @@ import carleton.sysc4907.controller.DiagramEditingAreaController;
 import carleton.sysc4907.controller.element.MovePreviewCreator;
 import carleton.sysc4907.model.DiagramModel;
 import carleton.sysc4907.controller.element.RectangleController;
+import carleton.sysc4907.processing.ElementIdManager;
 import carleton.sysc4907.view.DiagramElement;
 import carleton.sysc4907.model.TextFormattingModel;
 import javafx.collections.ObservableList;
@@ -20,7 +21,9 @@ import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.Mock;
 import org.mockito.Mockito;
+import org.mockito.junit.jupiter.MockitoExtension;
 import org.testfx.api.FxRobot;
 import org.testfx.framework.junit5.ApplicationExtension;
 import org.testfx.framework.junit5.Start;
@@ -35,12 +38,14 @@ import static org.mockito.Mockito.doNothing;
 /**
  * Base class for UI tests on diagram elements within an editing area.
  */
+@ExtendWith(MockitoExtension.class)
 @ExtendWith(ApplicationExtension.class)
 public abstract class DiagramElementTest {
 
     protected final String SELECTED_STYLE_CLASS = "selected-element";
     protected DiagramModel diagramModel;
 
+    @Mock
     protected MovePreviewCreator movePreviewCreator;
 
     protected MoveCommandFactory moveCommandFactory;
@@ -51,6 +56,11 @@ public abstract class DiagramElementTest {
 
     protected DiagramElement element;
 
+    protected long testId = 12L;
+
+    @Mock
+    protected ElementIdManager elementIdManager;
+
     /**
      * Sets up the scene before each test, loading an editing area and adding the element inside it.
      * @param stage Stage used for testing
@@ -59,16 +69,14 @@ public abstract class DiagramElementTest {
     @Start
     protected void start(Stage stage) throws IOException {
         diagramModel = new DiagramModel();
-        movePreviewCreator = Mockito.mock(MovePreviewCreator.class);
-        Mockito.when(movePreviewCreator.createMovePreview(any(DiagramElement.class), any(Double.class), any(Double.class))).thenReturn(new ImageView());
-        doNothing().when(movePreviewCreator).deleteMovePreview(any(), any());
-        moveCommandFactory = new MoveCommandFactory();
+        moveCommandFactory = new MoveCommandFactory(elementIdManager);
         initializeDependencyInjector();
         // Load the scroll pane and get the editing area from it
         ScrollPane root = (ScrollPane) dependencyInjector.load("view/DiagramEditingArea.fxml");
         editingArea = (Pane) root.getContent();
         // Load the element and add it
         element = loadElement();
+        element.setUserData(12L);
         editingArea.getChildren().add(element);
         diagramModel.getElements().add(element);
         // Show the scene
@@ -132,6 +140,7 @@ public abstract class DiagramElementTest {
      */
     @Test
     protected void testDragMove(FxRobot robot) {
+        Mockito.when(elementIdManager.getElementById(testId)).thenReturn(element);
         var x = element.getLayoutX();
         var y = element.getLayoutY();
         robot.drag(element).dropBy(100, 150);

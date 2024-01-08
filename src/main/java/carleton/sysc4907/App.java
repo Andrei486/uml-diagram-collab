@@ -23,6 +23,11 @@ import java.util.List;
  */
 public class App extends Application {
 
+    //true if the direct connection dialog should be used when joining a diagram
+    //Direct connection uses an IP address and port to connection. It is for testing only.
+    //Otherwise, the dialog to enter a room code will be used
+    final boolean USE_DIRECT_CONNECTION = true;
+
     /**
      * Starts the application.
      * @param stage the Stage to show the application in
@@ -40,7 +45,8 @@ public class App extends Application {
         injector.addInjectionMethod(StartScreenController.class, () -> new StartScreenController(
                 preferencesModel,
                 loader,
-                roomCodeManager));
+                roomCodeManager,
+                USE_DIRECT_CONNECTION));
 
         //Set up and show the scene
         Scene scene = new Scene(injector.load("view/StartScreenView.fxml"), 640, 480);

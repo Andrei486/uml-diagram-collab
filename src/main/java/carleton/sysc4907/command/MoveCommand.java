@@ -2,6 +2,7 @@ package carleton.sysc4907.command;
 
 import carleton.sysc4907.command.args.MoveCommandArgs;
 import carleton.sysc4907.model.DiagramModel;
+import carleton.sysc4907.processing.ElementIdManager;
 
 /**
  * Command for the move element operation
@@ -9,14 +10,17 @@ import carleton.sysc4907.model.DiagramModel;
 public class MoveCommand implements Command<MoveCommandArgs> {
 
     private final MoveCommandArgs args;
+    private final ElementIdManager elementIdManager;
 
-    public MoveCommand(MoveCommandArgs args) {
+    public MoveCommand(MoveCommandArgs args, ElementIdManager elementIdManager) {
         this.args = args;
+        this.elementIdManager = elementIdManager;
     }
 
     @Override
     public void execute() {
-        var element = args.element();
+        var element = elementIdManager.getElementById(args.elementId());
+        if (element == null) return;
         element.setLayoutX(args.endX() - args.startX());
         element.setLayoutY(args.endY() - args.startY());
     }
