@@ -49,6 +49,7 @@ public class ElementIdManager {
         boolean foundId = false;
         while (!foundId) {
             id = getNewId();
+            if (Long.MAX_VALUE - id <= length * 0xFFL) continue; // Avoid overflows
             boolean noIdConflicts = true;
             for (int i = 1; i <= length; i++) {
                 if (existsWithId(getNextId(id, i))) {
