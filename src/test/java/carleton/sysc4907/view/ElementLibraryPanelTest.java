@@ -90,7 +90,7 @@ public class ElementLibraryPanelTest {
         Mockito.when(mockElementsList.add(any(DiagramElement.class))).thenReturn(true);
         Mockito.when(editingArea.getChildren()).thenReturn(mockNodesList);
         Mockito.when(mockNodesList.add(any(Node.class))).thenReturn(true);
-        Mockito.when(mockElementCreator.create("rectangleType", testId))
+        Mockito.when(mockElementCreator.create("rectangleType", testId, true))
                 .thenReturn(mockDiagramElement);
         Mockito.when(mockElementIdManager.getNewId()).thenReturn(testId);
 

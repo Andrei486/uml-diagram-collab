@@ -38,6 +38,39 @@ public class ElementIdManager {
     }
 
     /**
+     * Returns a new ID that can be allocated to a newly created element with `length` sub-elements. This ID
+     * is guaranteed to not be used yet on any element currently in the diagram, and the following `length` IDs are
+     * also guaranteed to not be used yet, so they can be applied to sub-elements sequentially.
+     * @param length the number of IDs past the first that need to be reserved for sub-elements
+     * @return a new unique ID for the element
+     */
+    public Long getNewIdRange(int length) {
+        long id = 0L;
+        boolean foundId = false;
+        while (!foundId) {
+            id = getNewId();
+            boolean noIdConflicts = true;
+            for (int i = 1; i <= length; i++) {
+                if (existsWithId(getNextId(id, i))) {
+                    noIdConflicts = false;
+                }
+            }
+            if (noIdConflicts) foundId = true;
+        }
+        return id;
+    }
+
+    /**
+     * Returns the next ID for the same user. Used for getting consecutive IDs for sub-elements.
+     * @param id the previous ID
+     * @param steps the number of "next" steps to take from the original ID
+     * @return the new ID
+     */
+    public Long getNextId(long id, int steps) {
+        return id + steps * 0x100L;
+    }
+
+    /**
      * Checks whether there is already an element in the diagram with the given ID.
      * @param id the ID to check
      * @return true if such an element exists, false otherwise

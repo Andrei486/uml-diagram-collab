@@ -1,15 +1,11 @@
 package carleton.sysc4907.command;
 
-import carleton.sysc4907.DependencyInjector;
 import carleton.sysc4907.EditingAreaProvider;
 import carleton.sysc4907.command.args.AddCommandArgs;
 import carleton.sysc4907.model.DiagramModel;
 import carleton.sysc4907.processing.ElementCreator;
 import carleton.sysc4907.view.DiagramElement;
-import javafx.scene.Parent;
 import javafx.scene.layout.Pane;
-
-import java.io.IOException;
 
 /**
  * Command for the add element operation
@@ -29,7 +25,7 @@ public class AddCommand implements Command<AddCommandArgs> {
     @Override
     public void execute() {
         Pane editingArea = EditingAreaProvider.getEditingArea();
-        DiagramElement element = elementCreator.create(args.elementType(), args.elementId());
+        DiagramElement element = elementCreator.create(args.elementType(), args.elementId(), true);
         if (element == null) return; // If the type of element to create is not recognized
         editingArea.getChildren().add(element);
         diagramModel.getElements().add(element);
