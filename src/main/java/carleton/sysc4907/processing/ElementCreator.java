@@ -129,7 +129,9 @@ public class ElementCreator {
      */
     public int countIdSubElements(String type) {
         if (this.subElementCountMap.isEmpty()) populateSubElementCountMap();
-        return this.subElementCountMap.get(type);
+        var result = this.subElementCountMap.get(type);
+        if (result == null) throw new IllegalArgumentException(type + " is not a recognized element type");
+        return result;
     }
 
     private List<Node> getSubElements(Parent parent) {

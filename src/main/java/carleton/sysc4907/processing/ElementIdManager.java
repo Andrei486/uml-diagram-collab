@@ -31,7 +31,7 @@ public class ElementIdManager {
         Random rng = new Random();
         long id;
         do {
-            id = rng.nextLong() >> 8 << 8; // The shifts will unset the last 8 bits, so we can use them for user ID
+            id = (rng.nextLong() >> 8) << 8; // The shifts will unset the last 8 bits, so we can use them for user ID
             id = id | (sessionModel.getLocalUser().getId() & 0xFF); // Set the last 8 bits to the last 8 bits of the user's ID
         } while (existsWithId(id)); // Chance of collisions is low enough that one attempt is practically always enough
         return id;
