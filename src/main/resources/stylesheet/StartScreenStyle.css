@@ -30,21 +30,23 @@
 }
 
 .label-textfield {
-    -fx-font-size: 12px;
+    -fx-font-size: 14px;
     -fx-font-family: "Segoe UI";
     -fx-text-fill: #000000;
 }
 
 .label-title {
     -fx-font-size: 40px;
-    -fx-font-family: "Sylfaen";
+    -fx-font-family: "Segoe UI";
     -fx-text-fill: #000000;
+    -fx-font-weight: bold;
 }
 
 .label-subtitle {
     -fx-font-size: 26px;
-    -fx-font-family: "Sylfaen";
+    -fx-font-family: "Segoe UI";
     -fx-text-fill: #000000;
+    -fx-font-weight: bold;
 }
 
 .text-field-1 {
@@ -60,7 +62,7 @@
 }
 
 .label-paragraph {
-    -fx-font-size: 14px;
+    -fx-font-size: 15px;
     -fx-font-family: "Segoe UI";
     -fx-text-fill: #000000;
 }
