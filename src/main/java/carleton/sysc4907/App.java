@@ -10,12 +10,14 @@ import carleton.sysc4907.model.*;
 import carleton.sysc4907.processing.RoomCodeManager;
 import javafx.application.Application;
 import javafx.scene.Scene;
+import javafx.scene.image.Image;
 import javafx.stage.Stage;
 import jdk.jshell.Diag;
 
 import java.io.IOException;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Objects;
 
 /**
  * The main JavaFX application. Cannot be run directly unless JavaFX is installed or unless using the Maven javafx:run
@@ -53,6 +55,13 @@ public class App extends Application {
         scene.getStylesheets().add("stylesheet/StartScreenStyle.css");
         stage.setScene(scene);
         stage.setTitle("Collaborative UML Diagram Tool");
+        try {
+            stage.getIcons().add(new Image(Objects.requireNonNull(App.class.getResourceAsStream("/icons/app_icon.png"))));
+        }
+        catch (NullPointerException e) {
+            //this means the app icon was unable to load, continue without loading it
+        }
+
         stage.show();
     }
 
