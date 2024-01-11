@@ -115,7 +115,11 @@ public class EditableLabelController {
         editableText.setVisible(editable);
         editableText.setDisable(!editable);
         editableText.setEditable(editable);
-        if (editable) editableText.selectAll();
+        if (editable) {
+            editableText.setText(label.getText());
+            editableText.selectAll();
+
+        }
         label.setText(editableText.getText());
     }
 }

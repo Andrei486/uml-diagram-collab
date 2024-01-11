@@ -31,10 +31,44 @@ public class ElementIdManager {
         Random rng = new Random();
         long id;
         do {
-            id = rng.nextLong() >> 8 << 8; // The shifts will unset the last 8 bits, so we can use them for user ID
+            id = (rng.nextLong() >> 8) << 8; // The shifts will unset the last 8 bits, so we can use them for user ID
             id = id | (sessionModel.getLocalUser().getId() & 0xFF); // Set the last 8 bits to the last 8 bits of the user's ID
         } while (existsWithId(id)); // Chance of collisions is low enough that one attempt is practically always enough
         return id;
+    }
+
+    /**
+     * Returns a new ID that can be allocated to a newly created element with `length` sub-elements. This ID
+     * is guaranteed to not be used yet on any element currently in the diagram, and the following `length` IDs are
+     * also guaranteed to not be used yet, so they can be applied to sub-elements sequentially.
+     * @param length the number of IDs past the first that need to be reserved for sub-elements
+     * @return a new unique ID for the element
+     */
+    public Long getNewIdRange(int length) {
+        long id = 0L;
+        boolean foundId = false;
+        while (!foundId) {
+            id = getNewId();
+            if (Long.MAX_VALUE - id <= length * 0xFFL) continue; // Avoid overflows
+            boolean noIdConflicts = true;
+            for (int i = 1; i <= length; i++) {
+                if (existsWithId(getNextId(id, i))) {
+                    noIdConflicts = false;
+                }
+            }
+            if (noIdConflicts) foundId = true;
+        }
+        return id;
+    }
+
+    /**
+     * Returns the next ID for the same user. Used for getting consecutive IDs for sub-elements.
+     * @param id the previous ID
+     * @param steps the number of "next" steps to take from the original ID
+     * @return the new ID
+     */
+    public Long getNextId(long id, int steps) {
+        return id + steps * 0x100L;
     }
 
     /**
