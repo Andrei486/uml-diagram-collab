@@ -1,7 +1,8 @@
-package carleton.sysc4907.view;
+package carleton.sysc4907.ui.view;
 
 import carleton.sysc4907.controller.element.EditableLabelController;
 import carleton.sysc4907.controller.element.UmlCommentController;
+import carleton.sysc4907.view.DiagramElement;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextArea;
 import javafx.scene.input.KeyCode;

@@ -1,4 +1,4 @@
-package carleton.sysc4907.view;
+package carleton.sysc4907.ui.view;
 
 import carleton.sysc4907.DependencyInjector;
 import carleton.sysc4907.EditingAreaProvider;
@@ -7,6 +7,7 @@ import carleton.sysc4907.controller.ElementLibraryPanelController;
 import carleton.sysc4907.model.DiagramModel;
 import carleton.sysc4907.processing.ElementCreator;
 import carleton.sysc4907.processing.ElementIdManager;
+import carleton.sysc4907.view.DiagramElement;
 import javafx.collections.ObservableList;
 import javafx.scene.Node;
 import javafx.scene.Scene;

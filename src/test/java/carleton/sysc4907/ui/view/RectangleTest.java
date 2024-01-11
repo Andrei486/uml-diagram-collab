@@ -1,6 +1,7 @@
-package carleton.sysc4907.view;
+package carleton.sysc4907.ui.view;
 
 import carleton.sysc4907.controller.element.RectangleController;
+import carleton.sysc4907.view.DiagramElement;
 import javafx.stage.Stage;
 import org.testfx.framework.junit5.Start;
 
