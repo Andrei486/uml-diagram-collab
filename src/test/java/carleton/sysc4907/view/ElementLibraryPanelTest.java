@@ -27,6 +27,7 @@ import java.util.Collection;
 import java.util.HashSet;
 
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.verify;
 
@@ -92,7 +93,7 @@ public class ElementLibraryPanelTest {
         Mockito.when(mockNodesList.add(any(Node.class))).thenReturn(true);
         Mockito.when(mockElementCreator.create("rectangleType", testId, true))
                 .thenReturn(mockDiagramElement);
-        Mockito.when(mockElementIdManager.getNewId()).thenReturn(testId);
+        Mockito.when(mockElementIdManager.getNewIdRange(anyInt())).thenReturn(testId);
 
         robot.clickOn("#elementsPane .button");
 
