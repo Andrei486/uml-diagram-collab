@@ -1,4 +1,4 @@
-package carleton.sysc4907.ui;
+package carleton.sysc4907.ui.command;
 import carleton.sysc4907.EditingAreaProvider;
 import carleton.sysc4907.command.AddCommand;
 import carleton.sysc4907.command.args.AddCommandArgs;
