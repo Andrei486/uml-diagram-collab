@@ -25,4 +25,8 @@ public class HostManager extends Manager {
     }
 
 
+    @Override
+    public void getClientOutputStreams() {
+        clientList.getOutputStreams();
+    }
 }

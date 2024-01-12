@@ -23,4 +23,8 @@ public class ClientData {
     public ObjectOutputStream getOutputStream() {
         return outputStream;
     }
+
+    public int getId() {
+        return id;
+    }
 }

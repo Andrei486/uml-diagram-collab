@@ -5,5 +5,7 @@ abstract class Manager {
 
     }
 
+    public abstract void getClientOutputStreams();
+
 
 }
