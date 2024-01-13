@@ -1,6 +1,7 @@
-package carleton.sysc4907.command;
+package carleton.sysc4907.ui.command;
 
 import carleton.sysc4907.EditingAreaProvider;
+import carleton.sysc4907.command.RemoveCommand;
 import carleton.sysc4907.command.args.RemoveCommandArgs;
 import carleton.sysc4907.processing.ElementIdManager;
 import carleton.sysc4907.view.DiagramElement;

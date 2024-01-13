@@ -1,4 +1,4 @@
-package carleton.sysc4907.view;
+package carleton.sysc4907.ui.view;
 
 import carleton.sysc4907.DependencyInjector;
 import carleton.sysc4907.controller.FormattingPanelController;

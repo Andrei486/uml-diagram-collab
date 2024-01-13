@@ -1,4 +1,4 @@
-package carleton.sysc4907.view;
+package carleton.sysc4907.ui.view;
 import carleton.sysc4907.DependencyInjector;
 import carleton.sysc4907.DiagramEditorLoader;
 import carleton.sysc4907.controller.StartScreenController;
@@ -16,6 +16,7 @@ import org.testfx.api.FxRobot;
 import org.testfx.framework.junit5.ApplicationExtension;
 import org.testfx.framework.junit5.Start;
 import java.io.IOException;
+import java.util.concurrent.TimeUnit;
 
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
@@ -81,13 +82,14 @@ public class StartScreenTest {
     }
 
     @Test
-    public void joinButtonClickedWithUsername(FxRobot robot) throws IOException {
+    public void joinButtonClickedWithUsername(FxRobot robot) throws IOException, InterruptedException {
         Mockito.doNothing().when(mockLoader).load(Mockito.any(Stage.class), Mockito.any(String.class), Mockito.matches("111111111111"));
         robot.clickOn("#usernameField");
         robot.type(KeyCode.T, KeyCode.E, KeyCode.S, KeyCode.T);
         robot.clickOn("#joinBtn");
         robot.clickOn("#roomCodeField");
         for (int i = 0; i < 12; i++) robot.type(KeyCode.DIGIT1);
+        TimeUnit.MILLISECONDS.sleep(500);
         robot.clickOn(".button");
         Mockito.verify(mockLoader).load(Mockito.any(Stage.class), Mockito.any(String.class), Mockito.matches("111111111111"));
     }
