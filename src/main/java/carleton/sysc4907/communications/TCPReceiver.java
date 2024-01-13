@@ -12,6 +12,7 @@ public class TCPReceiver implements Runnable {
     public TCPReceiver(Socket socket, MessageInterpreter interpreter) throws IOException {
         this.socketInput = new ObjectInputStream(socket.getInputStream());
         this.interpreter = interpreter;
+        System.out.println("Receiver Created");
     }
 
     @Override

@@ -12,6 +12,7 @@ public class HostConnectionManager implements Runnable{
     public HostConnectionManager(int port, ClientList clients, HostManager hostManager) throws IOException {
         this.hostManager = hostManager;
         this.serverSocket = new ServerSocket(port);
+        this.clients = clients;
     }
 
     public void addClient(Socket socket) {
@@ -27,7 +28,8 @@ public class HostConnectionManager implements Runnable{
         try {
             while (true) {
                 Socket socket = serverSocket.accept();
-               addClient(socket);
+                System.out.println("Connection Made");
+                addClient(socket);
             }
 
         } catch (IOException e) {

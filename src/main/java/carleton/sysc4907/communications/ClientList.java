@@ -8,25 +8,43 @@ import java.util.HashMap;
 
 public class ClientList {
 
-    private HashMap<Integer, ClientData> clients;
+    private HashMap<Long, ClientData> clients;
+    private MessageInterpreter messageInterpreter;
 
-    public ClientList() {
+    public ClientList(MessageInterpreter messageInterpreter) {
         clients = new HashMap<>();
+        this.messageInterpreter =  messageInterpreter;
     }
 
-    public HashMap<Integer, ClientData> getClients() {
+    public HashMap<Long, ClientData> getClients() {
         return clients;
     }
 
     public void addClient(Socket socket) throws IOException {
-        clients.put(socket.getPort(), new ClientData(socket.getPort(), socket));
+        clients.put((long) socket.getPort(), new ClientData(socket.getPort(), socket, this.messageInterpreter));
     }
 
-    public HashMap<Integer, ObjectOutputStream> getOutputStreams() {
-        HashMap<Integer, ObjectOutputStream> outputs = new HashMap<>();
+    public void removeClient(long id) {
+        clients.remove(id);
+    }
+
+    public HashMap<Long, ObjectOutputStream> getOutputStreams() {
+        HashMap<Long, ObjectOutputStream> outputs = new HashMap<>();
 
         for (ClientData client: clients.values()) {
             outputs.put(client.getId(), client.getOutputStream());
+        }
+
+        return outputs;
+    }
+
+    public HashMap<Long, ObjectOutputStream> getValidOutputStreams() {
+        HashMap<Long, ObjectOutputStream> outputs = new HashMap<>();
+
+        for (ClientData client: clients.values()) {
+            if(client.getValid()) {
+                outputs.put((long) client.getId(), client.getOutputStream());
+            }
         }
 
         return outputs;

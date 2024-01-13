@@ -5,29 +5,26 @@ import carleton.sysc4907.processing.ElementCreator;
 import carleton.sysc4907.processing.ElementIdManager;
 
 import java.io.IOException;
-import java.net.Socket;
 import java.util.concurrent.LinkedBlockingQueue;
 
-public class HostManager extends Manager {
+public class ClientManager extends Manager{
+
     private ClientList clientList;
     private TCPSender sender;
-    private HostConnectionManager hostConnectionManager;
+    private ClientConnectionManager clientConnectionManger;
 
-
-
-    public HostManager(
+    public ClientManager(
             int port,
+            String ip,
             DiagramModel diagramModel,
             ElementCreator elementCreator,
             ElementIdManager elementIdManager)
-            throws IOException
-    {
+            throws IOException {
         this.clientList = new ClientList(makeMessageInterpreter(diagramModel, elementCreator, elementIdManager));
-        this.hostConnectionManager = new HostConnectionManager(port, this.clientList, this);
+        this.clientConnectionManger = new ClientConnectionManager(ip, port, this.clientList);
         this.sendingQueue = new LinkedBlockingQueue<TargetedMessage>();
         this.sender = new TCPSender(this.sendingQueue, this.clientList, this);
 
-        new Thread(hostConnectionManager).start();
         new Thread(sender).start();
     }
 }

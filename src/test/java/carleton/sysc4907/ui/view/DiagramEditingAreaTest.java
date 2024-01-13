@@ -1,8 +1,9 @@
-package carleton.sysc4907.view;
+package carleton.sysc4907.ui.view;
 
 import carleton.sysc4907.DependencyInjector;
 import carleton.sysc4907.controller.DiagramEditingAreaController;
 import carleton.sysc4907.model.DiagramModel;
+import carleton.sysc4907.view.DiagramElement;
 import javafx.collections.ObservableList;
 import javafx.scene.Scene;
 import javafx.scene.control.ScrollPane;
