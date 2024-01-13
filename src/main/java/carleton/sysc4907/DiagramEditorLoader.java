@@ -51,7 +51,7 @@ public class DiagramEditorLoader {
         DependencyInjector elementControllerInjector = new DependencyInjector();
         ElementCreator elementCreator;
         try {
-            elementCreator = new ElementCreator(elementControllerInjector, TEMPLATE_FILE_PATH);
+            elementCreator = new ElementCreator(elementControllerInjector, TEMPLATE_FILE_PATH, elementIdManager);
         } catch (ParserConfigurationException | SAXException | URISyntaxException e) {
             throw new RuntimeException(e);
         }

@@ -67,7 +67,8 @@ public class ElementLibraryPanelController {
     private Button createAddButton(String elementName) {
         Button button = new Button(elementName);
         button.setOnAction(actionEvent -> {
-            AddCommandArgs args = new AddCommandArgs(elementName, elementIdManager.getNewId());
+            int subElementCount = elementCreator.countIdSubElements(elementName);
+            AddCommandArgs args = new AddCommandArgs(elementName, elementIdManager.getNewIdRange(subElementCount));
             var command = addCommandFactory.create(args);
             command.execute();
 
