@@ -6,9 +6,11 @@ import java.util.concurrent.BlockingQueue;
 public class TCPSender implements Runnable{
     private final BlockingQueue<TargetedMessage> sendQueue;
     private final Manager manager;
+    private ClientList clients;
 
-    public TCPSender(BlockingQueue<TargetedMessage> sendQueue, Manager manager) {
+    public TCPSender(BlockingQueue<TargetedMessage> sendQueue, ClientList clients, Manager manager) {
         this.sendQueue = sendQueue;
+        this.clients = clients;
         this.manager = manager;
     }
 

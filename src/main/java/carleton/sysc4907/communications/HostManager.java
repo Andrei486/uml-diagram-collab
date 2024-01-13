@@ -12,17 +12,11 @@ public class HostManager extends Manager {
 
     public HostManager(int port) throws IOException {
         this.clientList = new ClientList();
-        this.hostConnectionManager = new HostConnectionManager(port, this);
-        this.sender = new TCPSender(new LinkedBlockingQueue<TargetedMessage>(), this);
+        this.hostConnectionManager = new HostConnectionManager(port, this.clientList, this);
+        this.sender = new TCPSender(new LinkedBlockingQueue<TargetedMessage>(), this.clientList, this);
     }
 
-    public void addClient(Socket socket) {
-        try {
-            clientList.addClient(socket);
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-    }
+
 
 
     @Override
