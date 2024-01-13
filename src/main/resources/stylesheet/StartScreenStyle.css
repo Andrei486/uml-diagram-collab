@@ -1,6 +1,6 @@
 
 .button {
-    -fx-font-size: 14px;
+    -fx-font-size: 15px;
     -fx-font-family: "Segoe UI";
     -fx-text-fill: #000000;
     -fx-background-color: #D9D9D9;
@@ -36,7 +36,7 @@
 }
 
 .label-title {
-    -fx-font-size: 40px;
+    -fx-font-size: 24px;
     -fx-font-family: "Segoe UI";
     -fx-text-fill: #000000;
     -fx-font-weight: bold;
@@ -50,7 +50,7 @@
 }
 
 .text-field-1 {
-    -fx-font-size: 14px;
+    -fx-font-size: 15px;
     -fx-font-family: "Segoe UI";
     -fx-background-color: #EDEDED;
     -fx-text-fill: #000000;

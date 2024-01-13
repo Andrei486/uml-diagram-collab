@@ -54,7 +54,7 @@ public class App extends Application {
         Scene scene = new Scene(injector.load("view/StartScreenView.fxml"), 640, 480);
         scene.getStylesheets().add("stylesheet/StartScreenStyle.css");
         stage.setScene(scene);
-        stage.setTitle("Collaborative UML Diagram Tool");
+        stage.setTitle("UML Collaboration Tool");
         try {
             stage.getIcons().add(new Image(Objects.requireNonNull(App.class.getResourceAsStream("/icons/app_icon.png"))));
         }
