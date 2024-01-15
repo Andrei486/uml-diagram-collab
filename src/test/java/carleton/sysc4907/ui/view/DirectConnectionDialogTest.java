@@ -58,12 +58,12 @@ public class DirectConnectionDialogTest {
         robot.clickOn("#ipPortField");
         robot.type(KeyCode.A);
         robot.clickOn(".button");
-        Mockito.verify(mockLoader, Mockito.never()).load(Mockito.any(Stage.class), Mockito.any(String.class), Mockito.any(String.class));
+        Mockito.verify(mockLoader, Mockito.never()).createAndLoad(Mockito.any(Stage.class), Mockito.any(String.class), Mockito.any(String.class));
     }
 
     @Test
     public void joinButtonClickedWithUsername(FxRobot robot) throws IOException, InterruptedException {
-        Mockito.doNothing().when(mockLoader).load(Mockito.any(Stage.class), Mockito.any(String.class), Mockito.any(String.class));
+        Mockito.doNothing().when(mockLoader).createAndLoad(Mockito.any(Stage.class), Mockito.any(String.class), Mockito.any(String.class));
         robot.clickOn("#usernameField");
         robot.type(KeyCode.T, KeyCode.E, KeyCode.S, KeyCode.T);
         robot.clickOn("#joinBtn");
@@ -77,7 +77,7 @@ public class DirectConnectionDialogTest {
 
         TimeUnit.MILLISECONDS.sleep(500);
         robot.clickOn(".button");
-        Mockito.verify(mockLoader).load(Mockito.any(Stage.class), Mockito.any(String.class), Mockito.any(String.class));
+        Mockito.verify(mockLoader).createAndLoad(Mockito.any(Stage.class), Mockito.any(String.class), Mockito.any(String.class));
     }
 
 

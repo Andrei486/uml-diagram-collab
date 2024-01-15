@@ -108,7 +108,7 @@ public class StartScreenController {
 
                     //for now, just open the editor with a random room code
                     Stage stage = (Stage) ((Node) actionEvent.getSource()).getScene().getWindow();
-                    openEditor(roomCodeManager.getNewRoomCode(), preferences.getUsername(), stage);
+                    joinEditor(directConnectIp, Integer.parseInt(directConnectPort), preferences.getUsername(), stage);
                 }
                 catch (IllegalArgumentException e) {
                     Alert alert = new Alert(Alert.AlertType.ERROR);
@@ -156,7 +156,21 @@ public class StartScreenController {
 
     private void openEditor(String roomCode, String username, Stage stage) {
         try {
-            loader.load(stage, preferences.getUsername(), roomCode);
+            loader.createAndLoad(stage, preferences.getUsername(), roomCode);
+        } catch (IOException e) {
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("Error");
+            alert.setHeaderText("Application error");
+            alert.setContentText("The application has encountered an error creating a new diagram, please try again.");
+            alert.getDialogPane().setMinHeight(Region.USE_PREF_SIZE);
+            alert.getDialogPane().setMinWidth(Region.USE_PREF_SIZE);
+            alert.showAndWait();
+        }
+    }
+
+    private void joinEditor(String host, int port, String username, Stage stage) {
+        try {
+            loader.loadJoin(stage, preferences.getUsername(), host, port);
         } catch (IOException e) {
             Alert alert = new Alert(Alert.AlertType.ERROR);
             alert.setTitle("Error");
