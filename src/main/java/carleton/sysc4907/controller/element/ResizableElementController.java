@@ -133,6 +133,8 @@ public abstract class ResizableElementController extends DiagramElementControlle
                     event.getSceneY(),
                     (long) preview.getUserData()
             );
+            // this is not a tracked command because it's the preview,
+            // we do not want to send it over TCP or add it to the command stack
             var command = resizeCommandFactory.create(args);
             command.execute();
         }
@@ -147,7 +149,7 @@ public abstract class ResizableElementController extends DiagramElementControlle
         }
         resizeDragging = false;
         resizePreviewCreator.deleteResizePreview(element, preview);
-        var command = resizeCommandFactory.create(new ResizeCommandArgs(
+        var command = resizeCommandFactory.createTracked(new ResizeCommandArgs(
                 isTop,
                 isRight,
                 resizeDragStartX,

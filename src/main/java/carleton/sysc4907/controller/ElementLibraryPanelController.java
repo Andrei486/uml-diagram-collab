@@ -69,7 +69,7 @@ public class ElementLibraryPanelController {
         button.setOnAction(actionEvent -> {
             int subElementCount = elementCreator.countIdSubElements(elementName);
             AddCommandArgs args = new AddCommandArgs(elementName, elementIdManager.getNewIdRange(subElementCount));
-            var command = addCommandFactory.create(args);
+            var command = addCommandFactory.createTracked(args);
             command.execute();
 
         });
