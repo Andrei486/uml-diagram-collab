@@ -35,4 +35,8 @@ public class ClientData {
     public Boolean getValid() {
         return isValid;
     }
+
+    public void close() throws IOException {
+        socket.close();
+    }
 }

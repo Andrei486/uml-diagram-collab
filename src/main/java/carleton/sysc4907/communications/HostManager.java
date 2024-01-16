@@ -12,9 +12,7 @@ public class HostManager extends Manager {
     private ClientList clientList;
     private TCPSender sender;
     private HostConnectionManager hostConnectionManager;
-
-
-
+    private Thread senderThread;
     public HostManager(
             int port,
             MessageInterpreter messageInterpreter)
@@ -26,6 +24,21 @@ public class HostManager extends Manager {
         this.sender = new TCPSender(this.sendingQueue, this.clientList, this);
 
         new Thread(hostConnectionManager).start();
-        new Thread(sender).start();
+        this.senderThread = new Thread(sender);
+        this.senderThread.start();
+    }
+
+    public void close() {
+        sendingQueue.clear();
+        long[] ids = clientList.getClients().keySet().stream().mapToLong(x -> (long) x).toArray();
+        send(new TargetedMessage(ids, true, true,
+                new Message(MessageType.CLOSE, "I have been Closed")));
+        try {
+            hostConnectionManager.close();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+
+        senderThread.interrupt();
     }
 }

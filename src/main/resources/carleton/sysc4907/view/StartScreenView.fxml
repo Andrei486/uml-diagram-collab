@@ -14,10 +14,12 @@
 <HBox xmlns="http://javafx.com/javafx"
       xmlns:fx="http://javafx.com/fxml"
       fx:controller="carleton.sysc4907.controller.StartScreenController"
-      prefHeight="400.0" prefWidth="600.0" alignment="CENTER">
+      prefHeight="700" prefWidth="600.0" alignment="CENTER">
 
     <VBox alignment="CENTER">
-        <Label text="Welcome!" styleClass="label-title"/>
+        <ImageView fx:id="iconIV" fitWidth="165" fitHeight="165" />
+        <Rectangle height="25"/>
+        <Label text="UML Collaboration Tool" styleClass="label-title"/>
         <Rectangle height="5"/>
         <Label text="Enter a username, then open, create, or join a diagram." styleClass="label-paragraph"/>
         <Rectangle height="30"/>

@@ -71,7 +71,7 @@ public class ComClientMain {
         MessageInterpreter messageInterpreter = new MessageInterpreter(addCommandFactory, removeCommandFactory, moveCommandFactory, resizeCommandFactory);
 
         ClientManager clientManager = new ClientManager(4000, "localhost", messageInterpreter);
-        clientManager.send(new TargetedMessage(new long[0], true, new Message(MessageType.JOIN_REQUEST, "hello world")));
+        clientManager.send(new TargetedMessage(new long[0], true, true, new Message(MessageType.JOIN_REQUEST, "hello world")));
 
 
     }
