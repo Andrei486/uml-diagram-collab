@@ -1,10 +1,7 @@
 package carleton.sysc4907.communications;
 
 import carleton.sysc4907.command.*;
-import carleton.sysc4907.command.args.AddCommandArgs;
-import carleton.sysc4907.command.args.MoveCommandArgs;
-import carleton.sysc4907.command.args.RemoveCommandArgs;
-import carleton.sysc4907.command.args.ResizeCommandArgs;
+import carleton.sysc4907.command.args.*;
 import javafx.application.Platform;
 import javafx.scene.Parent;
 
@@ -20,13 +17,15 @@ public class MessageInterpreter {
         AddCommandFactory addCommandFactory,
         RemoveCommandFactory removeCommandFactory,
         MoveCommandFactory moveCommandFactory,
-        ResizeCommandFactory resizeCommandFactory
+        ResizeCommandFactory resizeCommandFactory,
+        EditTextCommandFactory editTextCommandFactory
     ) {
         this.commandFactories = new HashMap<>();
         commandFactories.put(AddCommandArgs.class, addCommandFactory);
         commandFactories.put(RemoveCommandArgs.class, removeCommandFactory);
         commandFactories.put(MoveCommandArgs.class, moveCommandFactory);
         commandFactories.put(ResizeCommandArgs.class, resizeCommandFactory);
+        commandFactories.put(EditTextCommandArgs.class, editTextCommandFactory);
     }
 
     public void interpret(Message message) {

@@ -26,7 +26,8 @@ abstract class Manager {
                 new AddCommandFactory(diagramModel, elementCreator),
                 new RemoveCommandFactory(diagramModel, elementIdManager),
                 new MoveCommandFactory(elementIdManager),
-                new ResizeCommandFactory(elementIdManager));
+                new ResizeCommandFactory(elementIdManager),
+                new EditTextCommandFactory(elementIdManager));
     }
 
 

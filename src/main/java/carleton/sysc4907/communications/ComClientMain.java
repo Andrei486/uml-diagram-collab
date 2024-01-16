@@ -1,10 +1,7 @@
 package carleton.sysc4907.communications;
 
 import carleton.sysc4907.DependencyInjector;
-import carleton.sysc4907.command.AddCommandFactory;
-import carleton.sysc4907.command.MoveCommandFactory;
-import carleton.sysc4907.command.RemoveCommandFactory;
-import carleton.sysc4907.command.ResizeCommandFactory;
+import carleton.sysc4907.command.*;
 import carleton.sysc4907.controller.element.*;
 import carleton.sysc4907.model.*;
 import carleton.sysc4907.processing.ElementCreator;
@@ -55,6 +52,7 @@ public class ComClientMain {
         ResizeCommandFactory resizeCommandFactory = new ResizeCommandFactory(elementIdManager);
         AddCommandFactory addCommandFactory = new AddCommandFactory(diagramModel, elementCreator);
         RemoveCommandFactory removeCommandFactory = new RemoveCommandFactory(diagramModel, elementIdManager);
+        EditTextCommandFactory editTextCommandFactory = new EditTextCommandFactory(elementIdManager);
 
         // Add instantiation methods for the element injector, used to create diagram element controllers
         elementControllerInjector.addInjectionMethod(RectangleController.class,
@@ -64,7 +62,7 @@ public class ComClientMain {
                 () -> new UmlCommentController(movePreviewCreator, moveCommandFactory, diagramModel,
                         resizeHandleCreator, resizePreviewCreator, resizeCommandFactory));
         elementControllerInjector.addInjectionMethod(EditableLabelController.class,
-                EditableLabelController::new);
+                () -> new EditableLabelController(editTextCommandFactory));
 
         ClientManager clientManager = new ClientManager(4000, "localhost", diagramModel, elementCreator, elementIdManager);
         clientManager.send(new TargetedMessage(new long[0], true, new Message(MessageType.JOIN_REQUEST, "hello world")));
