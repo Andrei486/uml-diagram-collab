@@ -39,6 +39,7 @@ public class TrackedCommand<TArgs> implements Command<TArgs>{
         TargetedMessage message = new TargetedMessage(
                 new long[0],
                 true,
+                false,
                 new Message(MessageType.UPDATE, command.getArgs())
         );
         manager.send(message);
