@@ -1,5 +1,6 @@
 package carleton.sysc4907.controller;
 
+import carleton.sysc4907.App;
 import carleton.sysc4907.DiagramEditorLoader;
 import carleton.sysc4907.model.PreferencesModel;
 import carleton.sysc4907.processing.FileLoader;
@@ -9,14 +10,19 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
 import javafx.scene.control.*;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.Region;
+import javafx.scene.layout.VBox;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import javafx.stage.Window;
 
 //import javax.swing.event.ChangeListener;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
+import java.util.Objects;
 
 public class StartScreenController {
     public Button openBtn;
@@ -27,6 +33,8 @@ public class StartScreenController {
     public DirectConnectionDialogController directConnectDialog;
 
     public TextField usernameField;
+
+    public ImageView iconIV;
 
     private String roomCode;
 
@@ -72,6 +80,14 @@ public class StartScreenController {
                 enableButtons();
             }
         });
+        try {
+            Image img = new Image(Objects.requireNonNull(App.class.getResourceAsStream("/icons/app_icon_495x495.png")));
+            iconIV.setImage(img);
+        }
+        catch (NullPointerException e) {
+            //this means the app icon was unable to load, continue without loading it
+        }
+
     }
 
     @FXML
