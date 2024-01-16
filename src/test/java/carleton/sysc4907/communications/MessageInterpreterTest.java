@@ -27,7 +27,7 @@ public class MessageInterpreterTest {
     private ResizeCommandFactory resizeCommandFactory;
 
     @Mock
-    private Command<?> mockCommand;
+    private Command<MoveCommandArgs> mockCommand;
 
     @Test
     public void interpretUpdateMoveCommand() {
