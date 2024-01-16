@@ -17,12 +17,10 @@ public class HostManager extends Manager {
 
     public HostManager(
             int port,
-            DiagramModel diagramModel,
-            ElementCreator elementCreator,
-            ElementIdManager elementIdManager)
+            MessageInterpreter messageInterpreter)
             throws IOException
     {
-        this.clientList = new ClientList(makeMessageInterpreter(diagramModel, elementCreator, elementIdManager));
+        this.clientList = new ClientList(messageInterpreter);
         this.hostConnectionManager = new HostConnectionManager(port, this.clientList, this);
         this.sendingQueue = new LinkedBlockingQueue<TargetedMessage>();
         this.sender = new TCPSender(this.sendingQueue, this.clientList, this);

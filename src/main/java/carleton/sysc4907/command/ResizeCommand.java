@@ -1,5 +1,6 @@
 package carleton.sysc4907.command;
 
+import carleton.sysc4907.command.args.AddCommandArgs;
 import carleton.sysc4907.command.args.ResizeCommandArgs;
 import carleton.sysc4907.processing.ElementIdManager;
 import carleton.sysc4907.view.DiagramElement;
@@ -42,5 +43,10 @@ public class ResizeCommand implements Command<ResizeCommandArgs> {
         if (!isRightAnchor) {
             element.setLayoutX(element.getLayoutX() - widthChange);
         }
+    }
+
+    @Override
+    public ResizeCommandArgs getArgs() {
+        return args;
     }
 }

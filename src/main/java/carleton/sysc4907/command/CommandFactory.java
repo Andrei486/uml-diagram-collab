@@ -12,5 +12,7 @@ public interface CommandFactory<T extends Command<TArgs>, TArgs> {
      * @param args the arguments for the command
      * @return a command of the specified type
      */
-    Command create(TArgs args);
+    Command<TArgs> create(TArgs args);
+
+    Command<TArgs> createTracked(TArgs args);
 }

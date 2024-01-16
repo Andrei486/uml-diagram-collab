@@ -16,11 +16,10 @@ public class ClientManager extends Manager{
     public ClientManager(
             int port,
             String ip,
-            DiagramModel diagramModel,
-            ElementCreator elementCreator,
-            ElementIdManager elementIdManager)
+            MessageInterpreter messageInterpreter)
             throws IOException {
-        this.clientList = new ClientList(makeMessageInterpreter(diagramModel, elementCreator, elementIdManager));
+        //TODO
+        this.clientList = new ClientList(messageInterpreter);
         this.clientConnectionManger = new ClientConnectionManager(ip, port, this.clientList);
         this.sendingQueue = new LinkedBlockingQueue<TargetedMessage>();
         this.sender = new TCPSender(this.sendingQueue, this.clientList, this);
