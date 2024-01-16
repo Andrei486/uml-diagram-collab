@@ -12,6 +12,7 @@ public class ClientManager extends Manager{
     private ClientList clientList;
     private TCPSender sender;
     private ClientConnectionManager clientConnectionManger;
+    private Thread senderThread;
 
     public ClientManager(
             int port,
@@ -25,6 +26,16 @@ public class ClientManager extends Manager{
         this.sendingQueue = new LinkedBlockingQueue<TargetedMessage>();
         this.sender = new TCPSender(this.sendingQueue, this.clientList, this);
 
-        new Thread(sender).start();
+        this.senderThread = new Thread(sender);
+        this.senderThread.start();
+    }
+
+    public void close() {
+        sendingQueue.clear();
+        long[] ids = clientList.getClients().keySet().stream().mapToLong(x -> (long) x).toArray();
+        send(new TargetedMessage(ids, true, true,
+                new Message(MessageType.CLOSE, "I have been Closed")));
+
+        senderThread.interrupt();
     }
 }

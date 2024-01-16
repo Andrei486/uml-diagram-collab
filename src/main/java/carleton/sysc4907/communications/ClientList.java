@@ -25,7 +25,14 @@ public class ClientList {
     }
 
     public void removeClient(long id) {
+        System.out.println("Closing Client: " + id);
+        ClientData client = clients.get(id);
         clients.remove(id);
+        try {
+            client.close();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     public HashMap<Long, ObjectOutputStream> getOutputStreams() {
