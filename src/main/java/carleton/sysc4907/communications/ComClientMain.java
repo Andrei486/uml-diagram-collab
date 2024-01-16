@@ -67,7 +67,7 @@ public class ComClientMain {
                 EditableLabelController::new);
 
         ClientManager clientManager = new ClientManager(4000, "localhost", diagramModel, elementCreator, elementIdManager);
-        clientManager.send(new TargetedMessage(new long[0], true, new Message(MessageType.JOIN_REQUEST, "hello world")));
+        clientManager.send(new TargetedMessage(new long[0], true, true, new Message(MessageType.JOIN_REQUEST, "hello world")));
 
 
     }

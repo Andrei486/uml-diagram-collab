@@ -23,6 +23,10 @@ public class HostConnectionManager implements Runnable{
         }
     }
 
+    public void close() throws IOException {
+        serverSocket.close();
+    }
+
     @Override
     public void run() {
         try {
