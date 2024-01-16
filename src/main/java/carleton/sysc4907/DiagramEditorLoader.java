@@ -5,6 +5,8 @@ import carleton.sysc4907.command.AddCommandFactory;
 import carleton.sysc4907.command.RemoveCommandFactory;
 import carleton.sysc4907.communications.ClientManager;
 import carleton.sysc4907.communications.HostManager;
+import carleton.sysc4907.communications.Manager;
+import carleton.sysc4907.communications.MessageInterpreter;
 import carleton.sysc4907.controller.FormattingPanelController;
 import carleton.sysc4907.controller.SessionInfoBarController;
 import carleton.sysc4907.controller.SessionUsersMenuController;
@@ -30,23 +32,20 @@ public class DiagramEditorLoader {
     private final String TEMPLATE_FILE_PATH = "/carleton/sysc4907/templates.xml";
 
     private DependencyInjector injector;
-    private DiagramModel diagramModel;
-    private ElementCreator elementCreator;
-    private ElementIdManager elementIdManager;
 
     public void createAndLoad(Stage stage, String username, String roomCode) throws IOException {
-        load(stage, username, roomCode);
-        initializeTCPHost(diagramModel, elementCreator, elementIdManager);
+        var manager = initializeTCPHost();
+        load(stage, username, roomCode, manager);
         showScene(stage, injector);
     }
 
     public void loadJoin(Stage stage, String username, String host, int port) throws IOException {
-        initializeTCPClient(diagramModel, elementCreator, elementIdManager, host, port);
-        load(stage, username, "111111111111");
+        var manager = initializeTCPClient(host, port);
+        load(stage, username, "111111111111", manager);
         showScene(stage, injector);
     }
 
-    private void load(Stage stage, String username, String roomCode) {
+    private void load(Stage stage, String username, String roomCode, Manager manager) {
         //Create dependency injector to link models and controllers
         injector = new DependencyInjector();
         //Create the models and supporting classes
@@ -61,13 +60,14 @@ public class DiagramEditorLoader {
         User hostUser = userFactory.createHostUser(username);
         SessionModel sessionModel = new SessionModel(roomCode, hostUser);
         guestUsers.forEach(sessionModel::addUser);
-        elementIdManager = new ElementIdManager(sessionModel);
+        ElementIdManager elementIdManager = new ElementIdManager(sessionModel);
         TextFormattingModel textFormattingModel = new TextFormattingModel(fontOptionsFinder);
-        diagramModel = new DiagramModel();
+        DiagramModel diagramModel = new DiagramModel();
         MovePreviewCreator movePreviewCreator = new MovePreviewCreator(elementIdManager);
         ResizeHandleCreator resizeHandleCreator = new ResizeHandleCreator();
         ResizePreviewCreator resizePreviewCreator = new ResizePreviewCreator(elementIdManager);
         DependencyInjector elementControllerInjector = new DependencyInjector();
+        ElementCreator elementCreator;
         try {
             elementCreator = new ElementCreator(elementControllerInjector, TEMPLATE_FILE_PATH, elementIdManager);
         } catch (ParserConfigurationException | SAXException | URISyntaxException e) {
@@ -75,10 +75,15 @@ public class DiagramEditorLoader {
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
-        MoveCommandFactory moveCommandFactory = new MoveCommandFactory(elementIdManager);
-        ResizeCommandFactory resizeCommandFactory = new ResizeCommandFactory(elementIdManager);
-        AddCommandFactory addCommandFactory = new AddCommandFactory(diagramModel, elementCreator);
-        RemoveCommandFactory removeCommandFactory = new RemoveCommandFactory(diagramModel, elementIdManager);
+        //TODO once the issue for passing the factories into the manager is resolved, change null to manager
+        MoveCommandFactory moveCommandFactory = new MoveCommandFactory(elementIdManager, manager);
+        ResizeCommandFactory resizeCommandFactory = new ResizeCommandFactory(elementIdManager, manager);
+        AddCommandFactory addCommandFactory = new AddCommandFactory(diagramModel, elementCreator, manager);
+        RemoveCommandFactory removeCommandFactory = new RemoveCommandFactory(diagramModel, elementIdManager, manager);
+        MessageInterpreter interpreter = new MessageInterpreter(
+                addCommandFactory, removeCommandFactory, moveCommandFactory, resizeCommandFactory);
+        // Add message interpreter to manager: avoids circular dependencies
+        manager.setMessageInterpreter(interpreter);
 
         // Add instantiation methods for the element injector, used to create diagram element controllers
         elementControllerInjector.addInjectionMethod(RectangleController.class,
@@ -115,19 +120,13 @@ public class DiagramEditorLoader {
         stage.show();
     }
 
-    private void initializeTCPHost(
-            DiagramModel diagramModel,
-            ElementCreator elementCreator,
-            ElementIdManager elementIdManager) throws IOException {
-        HostManager hostManager = new HostManager(4000, diagramModel, elementCreator, elementIdManager);
+    private Manager initializeTCPHost() throws IOException {
+        return new HostManager(4000, null);
     }
 
-    private void initializeTCPClient(
-            DiagramModel diagramModel,
-            ElementCreator elementCreator,
-            ElementIdManager elementIdManager,
+    private Manager initializeTCPClient(
             String host,
             int port) throws IOException {
-        ClientManager clientManager = new ClientManager(port, host, diagramModel, elementCreator, elementIdManager);
+        return new ClientManager(port, host, null);
     }
 }
