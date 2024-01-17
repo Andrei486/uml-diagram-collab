@@ -22,4 +22,6 @@ public abstract class Manager {
     public void send(TargetedMessage targetedMessage) {
         sendingQueue.add(targetedMessage);
     }
+
+    public abstract void close();
 }

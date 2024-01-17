@@ -17,8 +17,10 @@ import carleton.sysc4907.model.*;
 import carleton.sysc4907.processing.ElementCreator;
 import carleton.sysc4907.processing.ElementIdManager;
 import carleton.sysc4907.processing.FontOptionsFinder;
+import javafx.event.EventHandler;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
+import javafx.stage.WindowEvent;
 import org.xml.sax.SAXException;
 
 import javax.xml.parsers.ParserConfigurationException;
@@ -38,13 +40,13 @@ public class DiagramEditorLoader {
     public void createAndLoad(Stage stage, String username, String roomCode) throws IOException {
         var manager = initializeTCPHost();
         load(stage, username, roomCode, manager);
-        showScene(stage, injector);
+        showScene(stage, injector, manager);
     }
 
     public void loadJoin(Stage stage, String username, String host, int port) throws IOException {
         var manager = initializeTCPClient(host, port);
         load(stage, username, "111111111111", manager);
-        showScene(stage, injector);
+        showScene(stage, injector, manager);
     }
 
     private void load(Stage stage, String username, String roomCode, Manager manager) {
@@ -115,13 +117,14 @@ public class DiagramEditorLoader {
                 () -> new ElementLibraryPanelController(diagramModel, addCommandFactory, elementCreator, elementIdManager));
     }
 
-    private void showScene(Stage stage, DependencyInjector injector) throws IOException {
+    private void showScene(Stage stage, DependencyInjector injector, Manager manager) throws IOException {
         //Set up and show the scene
         Scene scene = new Scene(injector.load("view/DiagramEditorScreen.fxml"), 1280, 720);
         scene.getStylesheets().add("stylesheet/DiagramEditorScreenStyle.css");
         stage.setScene(scene);
         stage.setMaximized(true);
         stage.setTitle("Diagram Editor");
+        stage.getScene().getWindow().addEventFilter(WindowEvent.WINDOW_CLOSE_REQUEST, windowEvent -> manager.close());
         stage.show();
     }
 

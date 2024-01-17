@@ -48,6 +48,7 @@ public class MessageInterpreter {
         System.out.println(message.type() + " - " + message.payload());
         switch (message.type()) {
             case UPDATE -> interpretUpdate(message);
+            default -> System.out.println(message);
         }
     }
 

@@ -29,6 +29,7 @@ public class ClientManager extends Manager{
         this.senderThread.start();
     }
 
+    @Override
     public void close() {
         sendingQueue.clear();
         long[] ids = clientList.getClients().keySet().stream().mapToLong(x -> (long) x).toArray();

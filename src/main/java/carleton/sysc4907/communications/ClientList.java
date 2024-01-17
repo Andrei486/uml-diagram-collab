@@ -27,11 +27,14 @@ public class ClientList {
     public void removeClient(long id) {
         System.out.println("Closing Client: " + id);
         ClientData client = clients.get(id);
+        if (client == null) {
+            return;
+        }
         clients.remove(id);
         try {
             client.close();
         } catch (IOException e) {
-            throw new RuntimeException(e);
+            // client already closed
         }
     }
 
