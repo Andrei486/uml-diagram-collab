@@ -171,8 +171,6 @@ public abstract class ResizableElementController extends DiagramElementControlle
                 element.getElementId()
         ));
         command.execute();
-        toggleShowResizeHandles(false);
-        toggleShowResizeHandles(true);
         event.consume();
     }
 }
