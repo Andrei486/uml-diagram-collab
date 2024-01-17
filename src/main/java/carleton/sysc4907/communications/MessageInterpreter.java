@@ -6,9 +6,7 @@ import carleton.sysc4907.command.args.MoveCommandArgs;
 import carleton.sysc4907.command.args.RemoveCommandArgs;
 import carleton.sysc4907.command.args.ResizeCommandArgs;
 import javafx.application.Platform;
-import javafx.scene.Parent;
 
-import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -57,9 +55,6 @@ public class MessageInterpreter {
         Object args = message.payload();
         Class<?> argType = args.getClass();
         System.out.println("Looking for type " + argType);
-        for (var key : commandFactories.keySet()) {
-            System.out.println(key);
-        }
         var factory = commandFactories.get(argType);
         if (factory == null) {
             throw new IllegalArgumentException("The given message did not correspond to a known type of command arguments.");
