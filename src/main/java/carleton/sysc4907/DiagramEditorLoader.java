@@ -33,6 +33,8 @@ public class DiagramEditorLoader {
 
     private DependencyInjector injector;
 
+    private MessageInterpreter interpreter;
+
     public void createAndLoad(Stage stage, String username, String roomCode) throws IOException {
         var manager = initializeTCPHost();
         load(stage, username, roomCode, manager);
@@ -80,10 +82,13 @@ public class DiagramEditorLoader {
         ResizeCommandFactory resizeCommandFactory = new ResizeCommandFactory(elementIdManager, manager);
         AddCommandFactory addCommandFactory = new AddCommandFactory(diagramModel, elementCreator, manager);
         RemoveCommandFactory removeCommandFactory = new RemoveCommandFactory(diagramModel, elementIdManager, manager);
-        MessageInterpreter interpreter = new MessageInterpreter(
-                addCommandFactory, removeCommandFactory, moveCommandFactory, resizeCommandFactory);
-        // Add message interpreter to manager: avoids circular dependencies
-        manager.setMessageInterpreter(interpreter);
+        // Add factories to message interpreter: avoids circular dependencies
+        interpreter.addFactories(
+                addCommandFactory,
+                removeCommandFactory,
+                moveCommandFactory,
+                resizeCommandFactory
+        );
 
         // Add instantiation methods for the element injector, used to create diagram element controllers
         elementControllerInjector.addInjectionMethod(RectangleController.class,
@@ -121,12 +126,14 @@ public class DiagramEditorLoader {
     }
 
     private Manager initializeTCPHost() throws IOException {
-        return new HostManager(4000, null);
+        interpreter = new MessageInterpreter();
+        return new HostManager(4000, interpreter);
     }
 
     private Manager initializeTCPClient(
             String host,
             int port) throws IOException {
-        return new ClientManager(port, host, null);
+        interpreter = new MessageInterpreter();
+        return new ClientManager(port, host, interpreter);
     }
 }

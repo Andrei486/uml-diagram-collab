@@ -16,13 +16,30 @@ public class MessageInterpreter {
 
     private final Map<Class<?>, CommandFactory> commandFactories;
 
+    public MessageInterpreter() {
+        this.commandFactories = new HashMap<>();
+    }
+
     public MessageInterpreter(
         AddCommandFactory addCommandFactory,
         RemoveCommandFactory removeCommandFactory,
         MoveCommandFactory moveCommandFactory,
         ResizeCommandFactory resizeCommandFactory
     ) {
-        this.commandFactories = new HashMap<>();
+        this();
+        addFactories(
+                addCommandFactory,
+                removeCommandFactory,
+                moveCommandFactory,
+                resizeCommandFactory);
+    }
+
+    public void addFactories(
+            AddCommandFactory addCommandFactory,
+            RemoveCommandFactory removeCommandFactory,
+            MoveCommandFactory moveCommandFactory,
+            ResizeCommandFactory resizeCommandFactory
+    ) {
         commandFactories.put(AddCommandArgs.class, addCommandFactory);
         commandFactories.put(RemoveCommandArgs.class, removeCommandFactory);
         commandFactories.put(MoveCommandArgs.class, moveCommandFactory);
@@ -39,6 +56,10 @@ public class MessageInterpreter {
     private void interpretUpdate(Message message) {
         Object args = message.payload();
         Class<?> argType = args.getClass();
+        System.out.println("Looking for type " + argType);
+        for (var key : commandFactories.keySet()) {
+            System.out.println(key);
+        }
         var factory = commandFactories.get(argType);
         if (factory == null) {
             throw new IllegalArgumentException("The given message did not correspond to a known type of command arguments.");
