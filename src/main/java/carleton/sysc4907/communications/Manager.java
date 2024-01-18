@@ -17,6 +17,8 @@ abstract class Manager {
         sendingQueue.add(targetedMessage);
     }
 
+    abstract public void close();
+
     public MessageInterpreter makeMessageInterpreter
             (DiagramModel diagramModel,
              ElementCreator elementCreator,
