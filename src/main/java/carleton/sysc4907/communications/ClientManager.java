@@ -17,13 +17,15 @@ public class ClientManager extends Manager{
     public ClientManager(
             int port,
             String ip,
-            MessageInterpreter messageInterpreter)
+            MessageInterpreter messageInterpreter,
+            MessageConstructor messageConstructor)
             throws IOException {
 
         this.clientList = new ClientList(messageInterpreter);
         this.clientConnectionManger = new ClientConnectionManager(ip, port, this.clientList);
         this.sendingQueue = new LinkedBlockingQueue<TargetedMessage>();
         this.sender = new TCPSender(this.sendingQueue, this.clientList, this);
+        messageConstructor.setManager(this, clientList);
 
         this.senderThread = new Thread(sender);
         this.senderThread.start();

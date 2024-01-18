@@ -3,10 +3,7 @@ package carleton.sysc4907;
 import carleton.sysc4907.command.ResizeCommandFactory;
 import carleton.sysc4907.command.AddCommandFactory;
 import carleton.sysc4907.command.RemoveCommandFactory;
-import carleton.sysc4907.communications.ClientManager;
-import carleton.sysc4907.communications.HostManager;
-import carleton.sysc4907.communications.Manager;
-import carleton.sysc4907.communications.MessageInterpreter;
+import carleton.sysc4907.communications.*;
 import carleton.sysc4907.controller.FormattingPanelController;
 import carleton.sysc4907.controller.SessionInfoBarController;
 import carleton.sysc4907.controller.SessionUsersMenuController;
@@ -35,6 +32,7 @@ public class DiagramEditorLoader {
     private DependencyInjector injector;
 
     private MessageInterpreter interpreter;
+    private MessageConstructor constructor;
 
     /**
      * Creates a new diagram room and loads the editor. This method is to be used for hosting a diagram.
@@ -161,8 +159,9 @@ public class DiagramEditorLoader {
      * @throws IOException when the host manager could not be initialized
      */
     private Manager initializeTCPHost() throws IOException {
-        interpreter = new MessageInterpreter();
-        return new HostManager(4000, interpreter);
+        constructor = new MessageConstructor();
+        interpreter = new MessageInterpreter(constructor);
+        return new HostManager(4000, interpreter, constructor);
     }
 
     /**
@@ -175,7 +174,8 @@ public class DiagramEditorLoader {
     private Manager initializeTCPClient(
             String host,
             int port) throws IOException {
-        interpreter = new MessageInterpreter();
-        return new ClientManager(port, host, interpreter);
+        constructor = new MessageConstructor();
+        interpreter = new MessageInterpreter(new MessageConstructor());
+        return new ClientManager(port, host, interpreter, constructor);
     }
 }

@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 
 public class ClientList {
@@ -58,5 +59,17 @@ public class ClientList {
         }
 
         return outputs;
+    }
+
+    public long[] getClientIds(long[] idsToBeRemove) {
+        ArrayList<Long> ids = new ArrayList<>();
+
+        for (long id : clients.keySet()) {
+            if (!(Arrays.binarySearch(idsToBeRemove, id) >= 0)) {
+                ids.add(id);
+            }
+        }
+
+        return Arrays.stream(ids.toArray()).mapToLong(x -> (long) x).toArray();
     }
 }

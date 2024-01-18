@@ -13,18 +13,26 @@ import java.util.Map;
 public class MessageInterpreter {
 
     private final Map<Class<?>, CommandFactory> commandFactories;
+    private Manager manager;
+    private MessageConstructor messageConstructor;
 
-    public MessageInterpreter() {
+    public MessageInterpreter(MessageConstructor messageConstructor) {
         this.commandFactories = new HashMap<>();
+        this.messageConstructor = messageConstructor;
+    }
+
+    public void setManager(Manager manager) {
+        this.manager = manager;
     }
 
     public MessageInterpreter(
         AddCommandFactory addCommandFactory,
         RemoveCommandFactory removeCommandFactory,
         MoveCommandFactory moveCommandFactory,
-        ResizeCommandFactory resizeCommandFactory
+        ResizeCommandFactory resizeCommandFactory,
+        MessageConstructor messageConstructor
     ) {
-        this();
+        this(messageConstructor);
         addFactories(
                 addCommandFactory,
                 removeCommandFactory,
@@ -44,15 +52,15 @@ public class MessageInterpreter {
         commandFactories.put(ResizeCommandArgs.class, resizeCommandFactory);
     }
 
-    public void interpret(Message message) {
+    public void interpret(Message message, long userId) {
         System.out.println(message.type() + " - " + message.payload());
         switch (message.type()) {
-            case UPDATE -> interpretUpdate(message);
+            case UPDATE -> interpretUpdate(message, userId);
             default -> System.out.println(message);
         }
     }
 
-    private void interpretUpdate(Message message) {
+    private void interpretUpdate(Message message, long userId) {
         Object args = message.payload();
         Class<?> argType = args.getClass();
         System.out.println("Looking for type " + argType);
@@ -63,5 +71,7 @@ public class MessageInterpreter {
         Command<?> command = factory.create(argType.cast(args));
 
         Platform.runLater(command::execute);
+
+        messageConstructor.sendAllBut(message, userId);
     }
 }
