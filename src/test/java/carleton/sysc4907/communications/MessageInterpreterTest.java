@@ -29,7 +29,7 @@ public class MessageInterpreterTest {
     private EditTextCommandFactory editTextCommandFactory;
 
     @Mock
-    private Command<?> mockCommand;
+    private Command<MoveCommandArgs> mockCommand;
 
     @Test
     public void interpretUpdateMoveCommand() {

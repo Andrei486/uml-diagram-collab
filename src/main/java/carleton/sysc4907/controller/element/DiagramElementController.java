@@ -143,6 +143,7 @@ public abstract class DiagramElementController {
                     dragStartX, dragStartY,
                     dragEndX, dragEndY,
                     (Long) preview.getUserData());
+            //This is not a tracked command, the preview is local only
             var command = moveCommandFactory.create(args);
             command.execute();
         }
@@ -161,7 +162,7 @@ public abstract class DiagramElementController {
                 dragStartX, dragStartY,
                 dragEndX, dragEndY,
                 element.getElementId());
-        var command = moveCommandFactory.create(args);
+        var command = moveCommandFactory.createTracked(args);
         command.execute();
     }
 }

@@ -1,5 +1,6 @@
 package carleton.sysc4907.command;
 
+import carleton.sysc4907.command.args.AddCommandArgs;
 import carleton.sysc4907.command.args.MoveCommandArgs;
 import carleton.sysc4907.model.DiagramModel;
 import carleton.sysc4907.processing.ElementIdManager;
@@ -23,5 +24,10 @@ public class MoveCommand implements Command<MoveCommandArgs> {
         if (element == null) return;
         element.setLayoutX(args.endX() - args.startX());
         element.setLayoutY(args.endY() - args.startY());
+    }
+
+    @Override
+    public MoveCommandArgs getArgs() {
+        return args;
     }
 }

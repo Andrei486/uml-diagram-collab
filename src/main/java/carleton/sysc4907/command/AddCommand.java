@@ -30,4 +30,9 @@ public class AddCommand implements Command<AddCommandArgs> {
         editingArea.getChildren().add(element);
         diagramModel.getElements().add(element);
     }
+
+    @Override
+    public AddCommandArgs getArgs() {
+        return args;
+    }
 }

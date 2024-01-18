@@ -5,6 +5,8 @@ import carleton.sysc4907.command.ResizeCommandFactory;
 import carleton.sysc4907.command.args.ResizeCommandArgs;
 import carleton.sysc4907.view.DiagramElement;
 import carleton.sysc4907.model.DiagramModel;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.collections.ListChangeListener;
 import javafx.event.Event;
 import javafx.scene.Node;
@@ -68,6 +70,16 @@ public abstract class ResizableElementController extends DiagramElementControlle
     @Override
     public void initialize() {
         super.initialize();
+        element.maxWidthProperty().addListener((observableValue, number, t1) -> {
+            boolean showHandles = diagramModel.getSelectedElements().contains(element);
+            toggleShowResizeHandles(!showHandles);
+            toggleShowResizeHandles(showHandles);
+        });
+        element.maxHeightProperty().addListener((observableValue, number, t1) -> {
+            boolean showHandles = diagramModel.getSelectedElements().contains(element);
+            toggleShowResizeHandles(!showHandles);
+            toggleShowResizeHandles(showHandles);
+        });
     }
 
     private void createResizeHandles() {
@@ -133,6 +145,8 @@ public abstract class ResizableElementController extends DiagramElementControlle
                     event.getSceneY(),
                     (long) preview.getUserData()
             );
+            // this is not a tracked command because it's the preview,
+            // we do not want to send it over TCP or add it to the command stack
             var command = resizeCommandFactory.create(args);
             command.execute();
         }
@@ -147,7 +161,7 @@ public abstract class ResizableElementController extends DiagramElementControlle
         }
         resizeDragging = false;
         resizePreviewCreator.deleteResizePreview(element, preview);
-        var command = resizeCommandFactory.create(new ResizeCommandArgs(
+        var command = resizeCommandFactory.createTracked(new ResizeCommandArgs(
                 isTop,
                 isRight,
                 resizeDragStartX,
@@ -157,8 +171,6 @@ public abstract class ResizableElementController extends DiagramElementControlle
                 element.getElementId()
         ));
         command.execute();
-        toggleShowResizeHandles(false);
-        toggleShowResizeHandles(true);
         event.consume();
     }
 }

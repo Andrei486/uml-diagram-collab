@@ -12,22 +12,34 @@ public class HostManager extends Manager {
     private ClientList clientList;
     private TCPSender sender;
     private HostConnectionManager hostConnectionManager;
-
-
-
+    private Thread senderThread;
     public HostManager(
             int port,
-            DiagramModel diagramModel,
-            ElementCreator elementCreator,
-            ElementIdManager elementIdManager)
+            MessageInterpreter messageInterpreter)
             throws IOException
     {
-        this.clientList = new ClientList(makeMessageInterpreter(diagramModel, elementCreator, elementIdManager));
+        this.clientList = new ClientList(messageInterpreter);
         this.hostConnectionManager = new HostConnectionManager(port, this.clientList, this);
         this.sendingQueue = new LinkedBlockingQueue<TargetedMessage>();
         this.sender = new TCPSender(this.sendingQueue, this.clientList, this);
 
         new Thread(hostConnectionManager).start();
-        new Thread(sender).start();
+        this.senderThread = new Thread(sender);
+        this.senderThread.start();
+    }
+
+    @Override
+    public void close() {
+        sendingQueue.clear();
+        long[] ids = clientList.getClients().keySet().stream().mapToLong(x -> (long) x).toArray();
+        send(new TargetedMessage(ids, true, true,
+                new Message(MessageType.CLOSE, "I have been Closed")));
+        try {
+            hostConnectionManager.close();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+
+        senderThread.interrupt();
     }
 }

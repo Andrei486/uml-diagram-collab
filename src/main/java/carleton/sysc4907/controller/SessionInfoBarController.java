@@ -28,8 +28,6 @@ public class SessionInfoBarController {
      */
     @FXML
     public void initialize() {
-        // make a text property for the room code on the session object, subscribe to changed on the property
-        // set the initial value here
-        roomCode.setText("Room code: " + sessionModel.getRoomCode());
+        roomCode.textProperty().bind(sessionModel.roomCodeProperty());
     }
 }

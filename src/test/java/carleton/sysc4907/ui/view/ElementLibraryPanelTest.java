@@ -3,6 +3,7 @@ package carleton.sysc4907.ui.view;
 import carleton.sysc4907.DependencyInjector;
 import carleton.sysc4907.EditingAreaProvider;
 import carleton.sysc4907.command.AddCommandFactory;
+import carleton.sysc4907.communications.Manager;
 import carleton.sysc4907.controller.ElementLibraryPanelController;
 import carleton.sysc4907.model.DiagramModel;
 import carleton.sysc4907.processing.ElementCreator;
@@ -66,7 +67,9 @@ public class ElementLibraryPanelTest {
             types.add("rectangleType");
             Mockito.when(mockElementCreator.getRegisteredTypes()).thenReturn(types);
             DependencyInjector injector = new DependencyInjector();
-            AddCommandFactory addCommandFactory = new AddCommandFactory(mockDiagramModel, mockElementCreator);
+
+            Manager mockManager = Mockito.mock(Manager.class);
+            AddCommandFactory addCommandFactory = new AddCommandFactory(mockDiagramModel, mockElementCreator, mockManager);
             injector.addInjectionMethod(ElementLibraryPanelController.class,
                     () -> {
                         var controller = new ElementLibraryPanelController(
