@@ -19,7 +19,7 @@ public class ClientManager extends Manager{
             String ip,
             MessageInterpreter messageInterpreter)
             throws IOException {
-        //TODO
+
         this.clientList = new ClientList(messageInterpreter);
         this.clientConnectionManger = new ClientConnectionManager(ip, port, this.clientList);
         this.sendingQueue = new LinkedBlockingQueue<TargetedMessage>();

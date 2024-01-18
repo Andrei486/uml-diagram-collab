@@ -24,6 +24,9 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.Objects;
 
+/**
+ * Controller for the start screen
+ */
 public class StartScreenController {
     public Button openBtn;
     public Button newBtn;
@@ -117,12 +120,11 @@ public class StartScreenController {
             directConnectDialog.showAndWait().ifPresent(address -> {
                 ipPort = address;
                 try {
-                    //TODO:
-                    //use these later in this method to call a class that will make the connection
+                    //parse IP and port
                     directConnectIp = ipPortParser.getIp(ipPort);
                     directConnectPort = ipPortParser.getPort(ipPort);
 
-                    //for now, just open the editor with a random room code
+                    //connect
                     Stage stage = (Stage) ((Node) actionEvent.getSource()).getScene().getWindow();
                     joinEditor(directConnectIp, Integer.parseInt(directConnectPort), preferences.getUsername(), stage);
                 }
@@ -170,6 +172,12 @@ public class StartScreenController {
         }
     }
 
+    /**
+     * Open a new diagram with a room code.
+     * @param roomCode the room code to use
+     * @param username the username to use
+     * @param stage the application stage
+     */
     private void openEditor(String roomCode, String username, Stage stage) {
         try {
             loader.createAndLoad(stage, preferences.getUsername(), roomCode);
@@ -184,26 +192,39 @@ public class StartScreenController {
         }
     }
 
+    /**
+     * Attempt to join a room via direct connection and open the editor.
+     * @param host the host user's IP
+     * @param port the port to connect to
+     * @param username the username to use
+     * @param stage the application stage
+     */
     private void joinEditor(String host, int port, String username, Stage stage) {
         try {
             loader.loadJoin(stage, preferences.getUsername(), host, port);
         } catch (IOException e) {
             Alert alert = new Alert(Alert.AlertType.ERROR);
             alert.setTitle("Error");
-            alert.setHeaderText("Application error");
-            alert.setContentText("The application has encountered an error creating a new diagram, please try again.");
+            alert.setHeaderText("Join error");
+            alert.setContentText("The application has encountered an error joining the diagram, please try again.");
             alert.getDialogPane().setMinHeight(Region.USE_PREF_SIZE);
             alert.getDialogPane().setMinWidth(Region.USE_PREF_SIZE);
             alert.showAndWait();
         }
     }
 
+    /**
+     * Disables the open, new, and join buttons
+     */
     private void disableButtons() {
         openBtn.setDisable(true);
         newBtn.setDisable(true);
         joinBtn.setDisable(true);
     }
 
+    /**
+     * Enables the open, new, and join buttons
+     */
     private void enableButtons() {
         openBtn.setDisable(false);
         newBtn.setDisable(false);

@@ -17,7 +17,6 @@ import carleton.sysc4907.model.*;
 import carleton.sysc4907.processing.ElementCreator;
 import carleton.sysc4907.processing.ElementIdManager;
 import carleton.sysc4907.processing.FontOptionsFinder;
-import javafx.event.EventHandler;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
@@ -37,19 +36,40 @@ public class DiagramEditorLoader {
 
     private MessageInterpreter interpreter;
 
+    /**
+     * Creates a new diagram room and loads the editor. This method is to be used for hosting a diagram.
+     * @param stage the stage
+     * @param username the username to use
+     * @param roomCode the room code generated
+     * @throws IOException when an error has occurred loading the editor or initializing TCP
+     */
     public void createAndLoad(Stage stage, String username, String roomCode) throws IOException {
         var manager = initializeTCPHost();
-        load(stage, username, roomCode, manager);
+        load(username, roomCode, manager);
         showScene(stage, injector, manager);
     }
 
+    /**
+     * Connects to the diagram as a client and loads the editor
+     * @param stage the stage
+     * @param username the username to join with
+     * @param host the IP of the host to join
+     * @param port the port number on the host
+     * @throws IOException when an error has occurred loading the editor or initializing TCP
+     */
     public void loadJoin(Stage stage, String username, String host, int port) throws IOException {
         var manager = initializeTCPClient(host, port);
-        load(stage, username, "111111111111", manager);
+        load(username, "111111111111", manager);
         showScene(stage, injector, manager);
     }
 
-    private void load(Stage stage, String username, String roomCode, Manager manager) {
+    /**
+     * Load required resources for the scene and instantiate required objects
+     * @param username the username to use
+     * @param roomCode the room code of the room to load
+     * @param manager the TCP manager
+     */
+    private void load(String username, String roomCode, Manager manager) {
         //Create dependency injector to link models and controllers
         injector = new DependencyInjector();
         //Create the models and supporting classes
@@ -79,7 +99,7 @@ public class DiagramEditorLoader {
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
-        //TODO once the issue for passing the factories into the manager is resolved, change null to manager
+
         MoveCommandFactory moveCommandFactory = new MoveCommandFactory(elementIdManager, manager);
         ResizeCommandFactory resizeCommandFactory = new ResizeCommandFactory(elementIdManager, manager);
         AddCommandFactory addCommandFactory = new AddCommandFactory(diagramModel, elementCreator, manager);
@@ -117,6 +137,13 @@ public class DiagramEditorLoader {
                 () -> new ElementLibraryPanelController(diagramModel, addCommandFactory, elementCreator, elementIdManager));
     }
 
+    /**
+     * Opens the editor screen.
+     * @param stage the stage to open on.
+     * @param injector the dependancy injector
+     * @param manager the TCP manager
+     * @throws IOException when loading the resources required for the scene fails
+     */
     private void showScene(Stage stage, DependencyInjector injector, Manager manager) throws IOException {
         //Set up and show the scene
         Scene scene = new Scene(injector.load("view/DiagramEditorScreen.fxml"), 1280, 720);
@@ -128,11 +155,23 @@ public class DiagramEditorLoader {
         stage.show();
     }
 
+    /**
+     * Initializes TCP for the host user
+     * @return the TCP host manager for the user
+     * @throws IOException when the host manager could not be initialized
+     */
     private Manager initializeTCPHost() throws IOException {
         interpreter = new MessageInterpreter();
         return new HostManager(4000, interpreter);
     }
 
+    /**
+     *
+     * @param host the IP address of the host
+     * @param port the port on the host
+     * @return the TCP client manager for the user
+     * @throws IOException when the client manager could not be initialized
+     */
     private Manager initializeTCPClient(
             String host,
             int port) throws IOException {
