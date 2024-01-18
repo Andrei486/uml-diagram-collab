@@ -130,8 +130,7 @@ public class EditableLabelController {
             if (!(id instanceof Long)) {
                 label.setText(editableText.getText());
             } else {
-                //TODO make this a tracked command
-                var command = editTextCommandFactory.create(new EditTextCommandArgs(
+                var command = editTextCommandFactory.createTracked(new EditTextCommandArgs(
                         editableText.getText(), (Long) id));
                 command.execute();
             }

@@ -104,13 +104,14 @@ public class DiagramEditorLoader {
         ResizeCommandFactory resizeCommandFactory = new ResizeCommandFactory(elementIdManager, manager);
         AddCommandFactory addCommandFactory = new AddCommandFactory(diagramModel, elementCreator, manager);
         RemoveCommandFactory removeCommandFactory = new RemoveCommandFactory(diagramModel, elementIdManager, manager);
-        EditTextCommandFactory editTextCommandFactory = new EditTextCommandFactory(elementIdManager);
+        EditTextCommandFactory editTextCommandFactory = new EditTextCommandFactory(elementIdManager, manager);
         // Add factories to message interpreter: avoids circular dependencies
         interpreter.addFactories(
                 addCommandFactory,
                 removeCommandFactory,
                 moveCommandFactory,
-                resizeCommandFactory
+                resizeCommandFactory,
+                editTextCommandFactory
         );
 
         // Add instantiation methods for the element injector, used to create diagram element controllers

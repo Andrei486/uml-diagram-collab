@@ -38,7 +38,7 @@ public class UmlCommentTest extends ResizableElementTest {
                         resizePreviewCreator,
                         resizeCommandFactory));
         dependencyInjector.addInjectionMethod(EditableLabelController.class,
-                () -> new EditableLabelController(new EditTextCommandFactory(elementIdManager)));
+                () -> new EditableLabelController(new EditTextCommandFactory(elementIdManager, mockManager)));
     }
 
     @Override

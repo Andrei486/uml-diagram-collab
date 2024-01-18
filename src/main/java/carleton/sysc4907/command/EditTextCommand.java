@@ -32,4 +32,9 @@ public class EditTextCommand implements Command<EditTextCommandArgs> {
         Label label = (Label) element;
         label.setText(args.text());
     }
+
+    @Override
+    public EditTextCommandArgs getArgs() {
+        return args;
+    }
 }

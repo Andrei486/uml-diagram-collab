@@ -27,14 +27,16 @@ public class MessageInterpreter {
                 addCommandFactory,
                 removeCommandFactory,
                 moveCommandFactory,
-                resizeCommandFactory);
+                resizeCommandFactory,
+                editTextCommandFactory);
     }
 
     public void addFactories(
             AddCommandFactory addCommandFactory,
             RemoveCommandFactory removeCommandFactory,
             MoveCommandFactory moveCommandFactory,
-            ResizeCommandFactory resizeCommandFactory
+            ResizeCommandFactory resizeCommandFactory,
+            EditTextCommandFactory editTextCommandFactory
     ) {
         commandFactories.put(AddCommandArgs.class, addCommandFactory);
         commandFactories.put(RemoveCommandArgs.class, removeCommandFactory);
