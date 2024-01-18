@@ -16,10 +16,10 @@ public class MessageConstructor {
 
 
     public void send(Message message) {
-        manager.send(new TargetedMessage(new long[0], false, false, message));
+        manager.send(new TargetedMessage(new long[0], true, false, message));
     }
 
     public void sendAllBut(Message message, long id) {
-        manager.send(new TargetedMessage(clients.getClientIds(new long[]{id}), false, false, message));
+        manager.send(new TargetedMessage(clients.getClientIds(new long[]{id}), true, false, message));
     }
 }
