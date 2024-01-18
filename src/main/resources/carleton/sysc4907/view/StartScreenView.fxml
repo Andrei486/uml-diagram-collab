@@ -34,6 +34,7 @@
             <Button fx:id="newBtn" text="New" styleClass="button-main" onAction="#onNewBtnClicked"/>
             <Rectangle width="5"/>
             <Button fx:id="joinBtn" text="Join" styleClass="button-main" onAction="#onJoinBtnClicked"/>
+            <Button fx:id="testBtn" text="test" styleClass="button-main" onAction="#onTestBtnClicked"/>
         </HBox>
     </VBox>
 </HBox>
