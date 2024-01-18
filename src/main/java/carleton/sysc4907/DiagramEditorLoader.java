@@ -166,7 +166,7 @@ public class DiagramEditorLoader {
     }
 
     /**
-     *
+     * Initializes TCP for the client user
      * @param host the IP address of the host
      * @param port the port on the host
      * @return the TCP client manager for the user
