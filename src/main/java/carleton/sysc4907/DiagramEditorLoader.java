@@ -175,7 +175,7 @@ public class DiagramEditorLoader {
             String host,
             int port) throws IOException {
         constructor = new MessageConstructor();
-        interpreter = new MessageInterpreter(new MessageConstructor());
+        interpreter = new MessageInterpreter(constructor);
         return new ClientManager(port, host, interpreter, constructor);
     }
 }
