@@ -10,25 +10,18 @@ import carleton.sysc4907.processing.ElementIdManager;
 
 import java.util.concurrent.LinkedBlockingQueue;
 
-abstract class Manager {
+public abstract class Manager {
 
     protected LinkedBlockingQueue<TargetedMessage> sendingQueue;
+    protected MessageInterpreter messageInterpreter;
+
+    public void setMessageInterpreter(MessageInterpreter messageInterpreter) {
+        this.messageInterpreter = messageInterpreter;
+    }
+
     public void send(TargetedMessage targetedMessage) {
         sendingQueue.add(targetedMessage);
     }
 
-    public MessageInterpreter makeMessageInterpreter
-            (DiagramModel diagramModel,
-             ElementCreator elementCreator,
-             ElementIdManager elementIdManager)
-    {
-        return new MessageInterpreter(
-                new AddCommandFactory(diagramModel, elementCreator),
-                new RemoveCommandFactory(diagramModel, elementIdManager),
-                new MoveCommandFactory(elementIdManager),
-                new ResizeCommandFactory(elementIdManager));
-    }
-
-
-
+    public abstract void close();
 }

@@ -10,4 +10,5 @@ public interface Command<TArgs> {
      * Executes the command
      */
     public void execute();
+    public TArgs getArgs();
 }

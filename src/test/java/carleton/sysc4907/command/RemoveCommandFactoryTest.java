@@ -1,11 +1,13 @@
 package carleton.sysc4907.command;
 
 import carleton.sysc4907.command.args.RemoveCommandArgs;
+import carleton.sysc4907.communications.Manager;
 import carleton.sysc4907.model.DiagramModel;
 import carleton.sysc4907.processing.ElementIdManager;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
+import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.ArrayList;
@@ -23,7 +25,8 @@ public class RemoveCommandFactoryTest {
         long[] ids = new long[0];
         RemoveCommandArgs args = new RemoveCommandArgs(ids);
         DiagramModel diagramModel = new DiagramModel();
-        RemoveCommandFactory factory = new RemoveCommandFactory(diagramModel, mockElementIdManager);
+        Manager mockManager = Mockito.mock(Manager.class);
+        RemoveCommandFactory factory = new RemoveCommandFactory(diagramModel, mockElementIdManager, mockManager);
 
         var command = factory.create(args);
 

@@ -1,6 +1,7 @@
 package carleton.sysc4907.ui.view;
 
 import carleton.sysc4907.command.ResizeCommandFactory;
+import carleton.sysc4907.communications.Manager;
 import carleton.sysc4907.controller.element.ResizeHandleCreator;
 import carleton.sysc4907.controller.element.ResizePreviewCreator;
 import javafx.scene.shape.Rectangle;
@@ -30,7 +31,8 @@ public abstract class ResizableElementTest extends DiagramElementTest {
     @Override
     protected void start(Stage stage) throws IOException {
         resizeHandleCreator = new ResizeHandleCreator();
-        resizeCommandFactory = new ResizeCommandFactory(elementIdManager);
+        Manager mockManager = Mockito.mock(Manager.class);
+        resizeCommandFactory = new ResizeCommandFactory(elementIdManager, mockManager);
         super.start(stage);
     }
 

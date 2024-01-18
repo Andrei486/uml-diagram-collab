@@ -51,10 +51,12 @@ public class ComClientMain {
         } catch (ParserConfigurationException | SAXException | URISyntaxException e) {
             throw new RuntimeException(e);
         }
-        MoveCommandFactory moveCommandFactory = new MoveCommandFactory(elementIdManager);
-        ResizeCommandFactory resizeCommandFactory = new ResizeCommandFactory(elementIdManager);
-        AddCommandFactory addCommandFactory = new AddCommandFactory(diagramModel, elementCreator);
-        RemoveCommandFactory removeCommandFactory = new RemoveCommandFactory(diagramModel, elementIdManager);
+
+        //TODO
+        MoveCommandFactory moveCommandFactory = new MoveCommandFactory(elementIdManager, null);
+        ResizeCommandFactory resizeCommandFactory = new ResizeCommandFactory(elementIdManager, null);
+        AddCommandFactory addCommandFactory = new AddCommandFactory(diagramModel, elementCreator, null);
+        RemoveCommandFactory removeCommandFactory = new RemoveCommandFactory(diagramModel, elementIdManager, null);
 
         // Add instantiation methods for the element injector, used to create diagram element controllers
         elementControllerInjector.addInjectionMethod(RectangleController.class,
@@ -66,7 +68,9 @@ public class ComClientMain {
         elementControllerInjector.addInjectionMethod(EditableLabelController.class,
                 EditableLabelController::new);
 
-        ClientManager clientManager = new ClientManager(4000, "localhost", diagramModel, elementCreator, elementIdManager);
+        MessageInterpreter messageInterpreter = new MessageInterpreter(addCommandFactory, removeCommandFactory, moveCommandFactory, resizeCommandFactory);
+
+        ClientManager clientManager = new ClientManager(4000, "localhost", messageInterpreter);
         clientManager.send(new TargetedMessage(new long[0], true, true, new Message(MessageType.JOIN_REQUEST, "hello world")));
 
 

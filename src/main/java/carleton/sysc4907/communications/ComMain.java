@@ -53,10 +53,12 @@ public class ComMain {
         } catch (ParserConfigurationException | SAXException | URISyntaxException e) {
             throw new RuntimeException(e);
         }
-        MoveCommandFactory moveCommandFactory = new MoveCommandFactory(elementIdManager);
-        ResizeCommandFactory resizeCommandFactory = new ResizeCommandFactory(elementIdManager);
-        AddCommandFactory addCommandFactory = new AddCommandFactory(diagramModel, elementCreator);
-        RemoveCommandFactory removeCommandFactory = new RemoveCommandFactory(diagramModel, elementIdManager);
+
+        //TODO
+        MoveCommandFactory moveCommandFactory = new MoveCommandFactory(elementIdManager, null);
+        ResizeCommandFactory resizeCommandFactory = new ResizeCommandFactory(elementIdManager, null);
+        AddCommandFactory addCommandFactory = new AddCommandFactory(diagramModel, elementCreator, null);
+        RemoveCommandFactory removeCommandFactory = new RemoveCommandFactory(diagramModel, elementIdManager, null);
 
         // Add instantiation methods for the element injector, used to create diagram element controllers
         elementControllerInjector.addInjectionMethod(RectangleController.class,
@@ -68,7 +70,9 @@ public class ComMain {
         elementControllerInjector.addInjectionMethod(EditableLabelController.class,
                 EditableLabelController::new);
 
-        HostManager hostManager = new HostManager(4000, diagramModel, elementCreator, elementIdManager);
+        MessageInterpreter messageInterpreter = new MessageInterpreter(addCommandFactory, removeCommandFactory, moveCommandFactory, resizeCommandFactory);
+
+        HostManager hostManager = new HostManager(4000, messageInterpreter);
 
     }
 }

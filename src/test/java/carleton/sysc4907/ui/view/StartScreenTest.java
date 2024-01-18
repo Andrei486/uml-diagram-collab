@@ -52,17 +52,17 @@ public class StartScreenTest {
     @Test
     public void newButtonClickedWithoutUsername(FxRobot robot) throws IOException {
         robot.clickOn("#newBtn");
-        Mockito.verify(mockLoader, Mockito.never()).load(Mockito.any(Stage.class), Mockito.any(String.class), Mockito.any(String.class));
+        Mockito.verify(mockLoader, Mockito.never()).createAndLoad(Mockito.any(Stage.class), Mockito.any(String.class), Mockito.any(String.class));
         assertTrue(robot.lookup("#newBtn").queryButton().isDisable());
     }
 
     @Test
     public void newButtonClickedWithUsername(FxRobot robot) throws IOException {
-        Mockito.doNothing().when(mockLoader).load(Mockito.any(Stage.class), Mockito.any(String.class), Mockito.any(String.class));
+        Mockito.doNothing().when(mockLoader).createAndLoad(Mockito.any(Stage.class), Mockito.any(String.class), Mockito.any(String.class));
         robot.clickOn("#usernameField");
         robot.type(KeyCode.T, KeyCode.E, KeyCode.S, KeyCode.T);
         robot.clickOn("#newBtn");
-        Mockito.verify(mockLoader).load(Mockito.any(Stage.class), Mockito.any(String.class), Mockito.any(String.class));
+        Mockito.verify(mockLoader).createAndLoad(Mockito.any(Stage.class), Mockito.any(String.class), Mockito.any(String.class));
     }
 
     @Test
@@ -70,20 +70,20 @@ public class StartScreenTest {
         robot.clickOn("#usernameField");
         robot.type(KeyCode.SPACE);
         robot.clickOn("#joinBtn");
-        Mockito.verify(mockLoader, Mockito.never()).load(Mockito.any(Stage.class), Mockito.any(String.class), Mockito.any(String.class));
+        Mockito.verify(mockLoader, Mockito.never()).createAndLoad(Mockito.any(Stage.class), Mockito.any(String.class), Mockito.any(String.class));
         assertTrue(robot.lookup("#joinBtn").queryButton().isDisable());
     }
 
     @Test
     public void joinButtonClickedWithoutUsername(FxRobot robot) throws IOException {
         robot.clickOn("#joinBtn");
-        Mockito.verify(mockLoader, Mockito.never()).load(Mockito.any(Stage.class), Mockito.any(String.class), Mockito.any(String.class));
+        Mockito.verify(mockLoader, Mockito.never()).createAndLoad(Mockito.any(Stage.class), Mockito.any(String.class), Mockito.any(String.class));
         assertTrue(robot.lookup("#joinBtn").queryButton().isDisable());
     }
 
     @Test
     public void joinButtonClickedWithUsername(FxRobot robot) throws IOException, InterruptedException {
-        Mockito.doNothing().when(mockLoader).load(Mockito.any(Stage.class), Mockito.any(String.class), Mockito.matches("111111111111"));
+        Mockito.doNothing().when(mockLoader).createAndLoad(Mockito.any(Stage.class), Mockito.any(String.class), Mockito.matches("111111111111"));
         robot.clickOn("#usernameField");
         robot.type(KeyCode.T, KeyCode.E, KeyCode.S, KeyCode.T);
         robot.clickOn("#joinBtn");
@@ -91,7 +91,7 @@ public class StartScreenTest {
         for (int i = 0; i < 12; i++) robot.type(KeyCode.DIGIT1);
         TimeUnit.MILLISECONDS.sleep(500);
         robot.clickOn(".button");
-        Mockito.verify(mockLoader).load(Mockito.any(Stage.class), Mockito.any(String.class), Mockito.matches("111111111111"));
+        Mockito.verify(mockLoader).createAndLoad(Mockito.any(Stage.class), Mockito.any(String.class), Mockito.matches("111111111111"));
     }
 
     @Test
@@ -102,6 +102,6 @@ public class StartScreenTest {
         robot.clickOn("#roomCodeField");
         for (int i = 0; i < 13; i++) robot.type(KeyCode.DIGIT1); // Code too long
         robot.clickOn(".button");
-        Mockito.verify(mockLoader, Mockito.never()).load(Mockito.any(Stage.class), Mockito.any(String.class), Mockito.any(String.class));
+        Mockito.verify(mockLoader, Mockito.never()).createAndLoad(Mockito.any(Stage.class), Mockito.any(String.class), Mockito.any(String.class));
     }
 }

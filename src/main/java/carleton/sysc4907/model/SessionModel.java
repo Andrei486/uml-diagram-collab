@@ -10,9 +10,9 @@ import javafx.collections.ObservableList;
  */
 public class SessionModel {
 
-    private final String roomCode; // If we reuse a SessionModel across rooms, this should become a property.
+    private final StringProperty roomCode = new SimpleStringProperty(); // This may need to be populated from a TCP message.
 
-    private final User localUser; // Same thing: if reused across rooms this must be a property.
+    private final User localUser; // This can always be populated immediately.
     private ObservableList<User> users = FXCollections.observableArrayList();
 
     /**
@@ -27,7 +27,7 @@ public class SessionModel {
         if (localUser == null) {
             throw new IllegalArgumentException("Local user for a room cannot be null.");
         }
-        this.roomCode = roomCode;
+        setRoomCode(roomCode);
         this.localUser = localUser;
         getUsers().add(localUser);
     }
@@ -37,8 +37,15 @@ public class SessionModel {
      * @return the current room's room code
      */
     public String getRoomCode() {
-        return roomCode;
+        return roomCode.get();
     }
+
+    /**
+     * Sets the current room's room code.
+     * @param val the new room code
+     */
+    public void setRoomCode(String val) {roomCode.set(val);}
+    public StringProperty roomCodeProperty() {return roomCode;}
 
     /**
      * Gets the local user for this application.

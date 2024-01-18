@@ -17,11 +17,10 @@ public class ClientManager extends Manager{
     public ClientManager(
             int port,
             String ip,
-            DiagramModel diagramModel,
-            ElementCreator elementCreator,
-            ElementIdManager elementIdManager)
+            MessageInterpreter messageInterpreter)
             throws IOException {
-        this.clientList = new ClientList(makeMessageInterpreter(diagramModel, elementCreator, elementIdManager));
+
+        this.clientList = new ClientList(messageInterpreter);
         this.clientConnectionManger = new ClientConnectionManager(ip, port, this.clientList);
         this.sendingQueue = new LinkedBlockingQueue<TargetedMessage>();
         this.sender = new TCPSender(this.sendingQueue, this.clientList, this);
@@ -30,6 +29,7 @@ public class ClientManager extends Manager{
         this.senderThread.start();
     }
 
+    @Override
     public void close() {
         sendingQueue.clear();
         long[] ids = clientList.getClients().keySet().stream().mapToLong(x -> (long) x).toArray();
