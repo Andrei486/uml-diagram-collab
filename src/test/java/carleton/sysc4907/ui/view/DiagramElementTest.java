@@ -57,6 +57,9 @@ public abstract class DiagramElementTest {
 
     protected DiagramElement element;
 
+    @Mock
+    protected Manager mockManager;
+
     protected long testId = 12L;
 
     @Mock
@@ -70,7 +73,6 @@ public abstract class DiagramElementTest {
     @Start
     protected void start(Stage stage) throws IOException {
         diagramModel = new DiagramModel();
-        Manager mockManager = Mockito.mock(Manager.class);
         moveCommandFactory = new MoveCommandFactory(elementIdManager, mockManager);
         initializeDependencyInjector();
         // Load the scroll pane and get the editing area from it
