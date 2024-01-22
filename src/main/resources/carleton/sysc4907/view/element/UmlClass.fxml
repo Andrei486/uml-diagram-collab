@@ -17,15 +17,15 @@
         <Rectangle styleClass="diagram-background-element" fx:id="background"/>
         <VBox>
             <StackPane>
-                <Rectangle styleClass="diagram-background-element" fx:id="titleRectangle"/>
+                <Rectangle styleClass="diagram-background-element" fx:id="titleRectangle" width="${element.maxWidth}"/>
                 <fx:include source="EditableLabel.fxml" fx:id="titleLabel"/>
             </StackPane>
             <StackPane>
-                <Rectangle styleClass="diagram-background-element" fx:id="fieldsRectangle"/>
+                <Rectangle styleClass="diagram-background-element" fx:id="fieldsRectangle" width="${element.maxWidth}"/>
                 <fx:include source="EditableLabel.fxml" fx:id="fieldsLabel"/>
             </StackPane>
             <StackPane>
-                <Rectangle styleClass="diagram-background-element" fx:id="methodsRectangle"/>
+                <Rectangle styleClass="diagram-background-element" fx:id="methodsRectangle" width="${element.maxWidth}"/>
                 <fx:include source="EditableLabel.fxml" fx:id="methodsLabel"/>
 
             </StackPane>
