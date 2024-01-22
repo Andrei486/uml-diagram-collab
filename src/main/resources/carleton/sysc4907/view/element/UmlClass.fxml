@@ -12,7 +12,7 @@
 <DiagramElement xmlns="http://javafx.com/javafx" fx:id="element"
                 xmlns:fx="http://javafx.com/fxml"
                 fx:controller="carleton.sysc4907.controller.element.UmlClassController"
-                maxHeight="400" maxWidth="200">
+                maxHeight="200" maxWidth="150">
     <StackPane fx:id="bgStackPane">
         <Rectangle styleClass="diagram-background-element" fx:id="background"/>
         <VBox>
@@ -22,18 +22,13 @@
             </StackPane>
             <StackPane>
                 <Rectangle styleClass="diagram-background-element" fx:id="fieldsRectangle"/>
-                <!--
                 <fx:include source="EditableLabel.fxml" fx:id="fieldsLabel"/>
-                -->
             </StackPane>
             <StackPane>
                 <Rectangle styleClass="diagram-background-element" fx:id="methodsRectangle"/>
-                <!--
                 <fx:include source="EditableLabel.fxml" fx:id="methodsLabel"/>
-                -->
 
             </StackPane>
         </VBox>
-
     </StackPane>
 </DiagramElement>

@@ -21,8 +21,13 @@ public class UmlClassController extends ResizableElementController{
     @FXML
     public Group methodsLabel;
     @FXML
-    private EditableLabelController editableLabelController;
-
+    public Group titleLabel;
+    @FXML
+    private EditableLabelController titleLabelController;
+    @FXML
+    private EditableLabelController methodsLabelController;
+    @FXML
+    private EditableLabelController fieldsLabelController;
     @FXML
     private Rectangle background;
 
@@ -54,23 +59,61 @@ public class UmlClassController extends ResizableElementController{
         super.initialize();
         background.widthProperty().bind(element.maxWidthProperty());
         background.heightProperty().bind(element.maxHeightProperty());
+
         bgStackPane.maxWidthProperty().bind(element.maxWidthProperty());
         bgStackPane.maxHeightProperty().bind(element.maxHeightProperty());
-        editableLabelController.getHeightProperty().bind(element.maxHeightProperty());
-        editableLabelController.getWidthProperty().bind(element.maxWidthProperty());
-        setText("UML Class");
+
+        titleRectangle.heightProperty().bind(element.maxHeightProperty().multiply(0.2));
+        titleLabelController.getHeightProperty().bind(titleRectangle.heightProperty());
+        titleLabelController.getWidthProperty().bind(element.maxWidthProperty());
+
+        fieldsRectangle.heightProperty().bind(element.maxHeightProperty().multiply(0.4));
+        fieldsLabelController.getHeightProperty().bind(fieldsRectangle.heightProperty());
+        fieldsLabelController.getWidthProperty().bind(element.maxWidthProperty());
+
+        methodsRectangle.heightProperty().bind(element.maxHeightProperty().multiply(0.4));
+        methodsLabelController.getHeightProperty().bind(methodsRectangle.heightProperty());
+        methodsLabelController.getWidthProperty().bind(element.maxWidthProperty());
+
+        setTitleText("UML Class");
+        setFieldsText("Fields");
+        setMethodsText("Methods");
     }
 
-    public StringProperty getTextProperty() {
-        return editableLabelController.getTextProperty();
+    public StringProperty getTitleTextProperty() {
+        return titleLabelController.getTextProperty();
     }
 
-    public String getText() {
-        return editableLabelController.getText();
+    public String getTitleText() {
+        return titleLabelController.getText();
     }
 
-    public void setText(String text) {
-        editableLabelController.setText(text);
+    public void setTitleText(String text) {
+        titleLabelController.setText(text);
+    }
+
+    public StringProperty getMethodsTextProperty() {
+        return methodsLabelController.getTextProperty();
+    }
+
+    public String getMethodsText() {
+        return methodsLabelController.getText();
+    }
+
+    public void setMethodsText(String text) {
+        methodsLabelController.setText(text);
+    }
+
+    public StringProperty getFieldsTextProperty() {
+        return fieldsLabelController.getTextProperty();
+    }
+
+    public String getFieldsText() {
+        return fieldsLabelController.getText();
+    }
+
+    public void setFieldsText(String text) {
+        fieldsLabelController.setText(text);
     }
 }
 
