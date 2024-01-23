@@ -123,6 +123,8 @@ public class DiagramEditorLoader {
                         resizeHandleCreator, resizePreviewCreator, resizeCommandFactory));
         elementControllerInjector.addInjectionMethod(EditableLabelController.class,
                 () -> new EditableLabelController(editTextCommandFactory));
+        elementControllerInjector.addInjectionMethod(ConnectorElementController.class,
+                () -> new ConnectorElementController(movePreviewCreator, moveCommandFactory, diagramModel));
 
         // Add instantiation methods to the main dependency injector, used to create UI elements
         injector.addInjectionMethod(SessionInfoBarController.class,

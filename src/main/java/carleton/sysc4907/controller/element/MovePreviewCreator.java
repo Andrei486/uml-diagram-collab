@@ -3,9 +3,11 @@ package carleton.sysc4907.controller.element;
 import carleton.sysc4907.EditingAreaProvider;
 import carleton.sysc4907.processing.ElementIdManager;
 import carleton.sysc4907.view.DiagramElement;
+import javafx.scene.SnapshotParameters;
 import javafx.scene.image.ImageView;
 import javafx.scene.image.WritableImage;
 import javafx.scene.layout.Pane;
+import javafx.scene.paint.Color;
 
 /**
  * Class responsible for creating and deleting previews when a diagram element is dragged in the diagram.
@@ -30,7 +32,9 @@ public class MovePreviewCreator {
      */
     public ImageView createMovePreview(DiagramElement element, double dragStartX, double dragStartY) {
         // create preview
-        WritableImage img = element.snapshot(null, new WritableImage(
+        SnapshotParameters parameters = new SnapshotParameters();
+        parameters.setFill(Color.TRANSPARENT);
+        WritableImage img = element.snapshot(parameters, new WritableImage(
                 (int) element.getBoundsInParent().getWidth() + 2,
                 (int) element.getBoundsInParent().getHeight() + 2));
 

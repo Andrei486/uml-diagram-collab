@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import java.util.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<?import carleton.sysc4907.view.DiagramElement?>
+<?import javafx.scene.shape.Path?>
+<?import javafx.scene.shape.MoveTo?>
+<?import javafx.scene.shape.LineTo?>
+<DiagramElement xmlns="http://javafx.com/javafx" fx:id="element"
+                xmlns:fx="http://javafx.com/fxml"
+                fx:controller="carleton.sysc4907.controller.element.ConnectorElementController">
+    <Path>
+        <elements>
+            <MoveTo/>
+            <LineTo x="100" y="50"/>
+        </elements>
+    </Path>
+</DiagramElement>
