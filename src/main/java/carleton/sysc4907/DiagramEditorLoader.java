@@ -90,6 +90,7 @@ public class DiagramEditorLoader {
         MovePreviewCreator movePreviewCreator = new MovePreviewCreator(elementIdManager);
         ResizeHandleCreator resizeHandleCreator = new ResizeHandleCreator();
         ResizePreviewCreator resizePreviewCreator = new ResizePreviewCreator(elementIdManager);
+        ConnectorHandleCreator connectorHandleCreator = new ConnectorHandleCreator();
         DependencyInjector elementControllerInjector = new DependencyInjector();
         ElementCreator elementCreator;
         try {
@@ -124,7 +125,7 @@ public class DiagramEditorLoader {
         elementControllerInjector.addInjectionMethod(EditableLabelController.class,
                 () -> new EditableLabelController(editTextCommandFactory));
         elementControllerInjector.addInjectionMethod(ConnectorElementController.class,
-                () -> new ConnectorElementController(movePreviewCreator, moveCommandFactory, diagramModel));
+                () -> new ConnectorElementController(movePreviewCreator, moveCommandFactory, diagramModel, connectorHandleCreator));
 
         // Add instantiation methods to the main dependency injector, used to create UI elements
         injector.addInjectionMethod(SessionInfoBarController.class,
