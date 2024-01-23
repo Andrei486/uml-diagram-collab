@@ -19,7 +19,7 @@ public class ClientData {
         this.isValid = false;
         this.socket = socket;
         this.outputStream = new ObjectOutputStream(socket.getOutputStream());
-        this.receiver = new TCPReceiver(socket, messageInterpreter);
+        this.receiver = new TCPReceiver(socket, messageInterpreter, id);
 
         new Thread(this.receiver).start();
     }
