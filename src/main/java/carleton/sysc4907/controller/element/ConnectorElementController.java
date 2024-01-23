@@ -23,6 +23,7 @@ import java.util.List;
 
 public class ConnectorElementController extends DiagramElementController {
 
+    private final double AUTO_DIRECTION_THRESHOLD = 4.0;
     private final ConnectorHandleCreator connectorHandleCreator;
     private final List<Node> handles;
 
@@ -33,7 +34,11 @@ public class ConnectorElementController extends DiagramElementController {
     private final DoubleProperty endY = new SimpleDoubleProperty();
 
     private final BooleanProperty isStartHorizontal = new SimpleBooleanProperty();
+
+    private boolean isStartSnapping = false;
     private final BooleanProperty isEndHorizontal = new SimpleBooleanProperty();
+
+    private boolean isEndSnapping = false;
 
     @FXML
     private Path connectorPath;
@@ -82,6 +87,7 @@ public class ConnectorElementController extends DiagramElementController {
         ChangeListener<Number> listener = (observableValue, number, t1) -> {
             reposition();
             recalculatePath();
+            updateDirections();
         };
         ChangeListener<Boolean> booleanListener = (observableValue, bool, t1) -> {
             recalculatePath();
@@ -145,6 +151,52 @@ public class ConnectorElementController extends DiagramElementController {
                 adjustX(getStartX()), adjustY(getStartY()), isStartHorizontal.get(),
                 adjustX(getEndX()), adjustY(getEndY()), isEndHorizontal.get()
         );
+    }
+
+    private void updateDirections() {
+        var deltaX = Math.abs(getEndX() - getStartX());
+        var deltaY = Math.abs(getEndY() - getStartY());
+
+        if (isStartSnapping && isEndSnapping) {
+            return; // can't update anything
+        }
+
+        if (isStartSnapping) {
+            if (deltaX / deltaY > AUTO_DIRECTION_THRESHOLD) {
+                isEndHorizontal.set(true);
+            } else if (deltaY / deltaX > AUTO_DIRECTION_THRESHOLD) {
+                // mostly vertical
+                isEndHorizontal.set(false);
+            } else {
+                isEndHorizontal.set(isStartHorizontal.get());
+            }
+        } else if (isEndSnapping) {
+            if (deltaX / deltaY > AUTO_DIRECTION_THRESHOLD) {
+                isStartHorizontal.set(true);
+            } else if (deltaY / deltaX > AUTO_DIRECTION_THRESHOLD) {
+                // mostly vertical
+                isStartHorizontal.set(false);
+            } else {
+                isStartHorizontal.set(isEndHorizontal.get());
+            }
+        } else {
+            if (deltaX / deltaY > AUTO_DIRECTION_THRESHOLD) {
+                // mostly horizontal
+                isStartHorizontal.set(true);
+                isEndHorizontal.set(true);
+            } else if (deltaY / deltaX > AUTO_DIRECTION_THRESHOLD) {
+                // mostly vertical
+                isStartHorizontal.set(false);
+                isEndHorizontal.set(false);
+            } else if (deltaX > deltaY){
+                // diagonal enough, arbitrary
+                isStartHorizontal.set(true);
+                isEndHorizontal.set(false);
+            } else {
+                isStartHorizontal.set(false);
+                isEndHorizontal.set(true);
+            }
+        }
     }
 
     private void handleDragDetectedStartMovePoint(MouseEvent event) {
