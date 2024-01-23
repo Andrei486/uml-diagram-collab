@@ -141,4 +141,12 @@ public class EditableLabelController {
         }
 
     }
+
+    /**
+     * Exposes the label element for advanced formatting
+     * @return the editable label
+     */
+    public Label getLabel() {
+        return label;
+    }
 }
