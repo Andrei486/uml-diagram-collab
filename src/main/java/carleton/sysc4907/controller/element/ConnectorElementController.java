@@ -6,6 +6,7 @@ import carleton.sysc4907.view.DiagramElement;
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.SimpleDoubleProperty;
 import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.collections.ListChangeListener;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
@@ -37,8 +38,7 @@ public class ConnectorElementController extends DiagramElementController {
     private double dragStartX;
     private double dragStartY;
 
-    private double moveDragStartX;
-    private double moveDragStartY;
+    private boolean repositioning = false;
 
     /**
      * Constructs a new ConnectorElementController.
@@ -77,6 +77,22 @@ public class ConnectorElementController extends DiagramElementController {
         startY.addListener(listener);
         endX.addListener(listener);
         endY.addListener(listener);
+        element.layoutXProperty().addListener((observableValue, number, t1) -> {
+            if (repositioning) {
+                return;
+            }
+            double deltaX = t1.doubleValue() - number.doubleValue();
+            setStartX(deltaX + getStartX());
+            setEndX(deltaX + getEndX());
+        });
+        element.layoutYProperty().addListener((observableValue, number, t1) -> {
+            if (repositioning) {
+                return;
+            }
+            double deltaY = t1.doubleValue() - number.doubleValue();
+            setStartY(deltaY + getStartY());
+            setEndY(deltaY + getEndY());
+        });
         setEndX(100);
         setEndY(20);
     }
@@ -100,10 +116,12 @@ public class ConnectorElementController extends DiagramElementController {
     }
 
     private void reposition() {
+        repositioning = true;
         double leftmostX = Math.min(getStartX(), getEndX());
         double topmostY = Math.min(getStartY(), getEndY());
         element.setLayoutX(leftmostX);
         element.setLayoutY(topmostY);
+        repositioning = false;
     }
 
     private void recalculatePath() {
