@@ -14,6 +14,7 @@ public class MessageInterpreter {
 
     private final Map<Class<?>, CommandFactory> commandFactories;
     private Manager manager;
+    private boolean isHost;
     private MessageConstructor messageConstructor;
 
     public MessageInterpreter(MessageConstructor messageConstructor) {
@@ -21,8 +22,9 @@ public class MessageInterpreter {
         this.messageConstructor = messageConstructor;
     }
 
-    public void setManager(Manager manager) {
+    public void setManager(Manager manager, boolean isHost) {
         this.manager = manager;
+        this.isHost = isHost;
     }
 
     public MessageInterpreter(
@@ -72,6 +74,8 @@ public class MessageInterpreter {
 
         Platform.runLater(command::execute);
 
-        messageConstructor.sendAllBut(message, userId);
+        if (isHost) {
+            messageConstructor.sendAllBut(message, userId);
+        }
     }
 }

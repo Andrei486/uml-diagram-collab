@@ -20,6 +20,10 @@ public class MessageConstructor {
     }
 
     public void sendAllBut(Message message, long id) {
-        manager.send(new TargetedMessage(clients.getClientIds(new long[]{id}), true, false, message));
+        long[] ids = clients.getClientIds(new long[]{id});
+
+        if (ids.length > 0) {
+            manager.send(new TargetedMessage(ids, true, false, message));
+        }
     }
 }
