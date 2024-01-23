@@ -13,6 +13,7 @@ import carleton.sysc4907.controller.SessionInfoBarController;
 import carleton.sysc4907.controller.SessionUsersMenuController;
 import carleton.sysc4907.controller.*;
 import carleton.sysc4907.controller.element.*;
+import carleton.sysc4907.controller.element.pathing.DirectPathStrategy;
 import carleton.sysc4907.model.*;
 import carleton.sysc4907.processing.ElementCreator;
 import carleton.sysc4907.processing.ElementIdManager;
@@ -125,7 +126,7 @@ public class DiagramEditorLoader {
         elementControllerInjector.addInjectionMethod(EditableLabelController.class,
                 () -> new EditableLabelController(editTextCommandFactory));
         elementControllerInjector.addInjectionMethod(ConnectorElementController.class,
-                () -> new ConnectorElementController(movePreviewCreator, moveCommandFactory, diagramModel, connectorHandleCreator));
+                () -> new ConnectorElementController(movePreviewCreator, moveCommandFactory, diagramModel, connectorHandleCreator, new DirectPathStrategy()));
 
         // Add instantiation methods to the main dependency injector, used to create UI elements
         injector.addInjectionMethod(SessionInfoBarController.class,

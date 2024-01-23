@@ -10,7 +10,7 @@
 <?import javafx.scene.shape.Path?>
 <DiagramElement xmlns="http://javafx.com/javafx" fx:id="element"
                 xmlns:fx="http://javafx.com/fxml"
-                fx:controller="carleton.sysc4907.controller.element.ConnectorElementController" styleClass="debug">
+                fx:controller="carleton.sysc4907.controller.element.ConnectorElementController">
     <Path fx:id="connectorPath">
     </Path>
 </DiagramElement>

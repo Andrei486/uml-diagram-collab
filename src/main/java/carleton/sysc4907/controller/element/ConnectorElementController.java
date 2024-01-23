@@ -1,9 +1,12 @@
 package carleton.sysc4907.controller.element;
 
 import carleton.sysc4907.command.MoveCommandFactory;
+import carleton.sysc4907.controller.element.pathing.PathingStrategy;
 import carleton.sysc4907.model.DiagramModel;
 import carleton.sysc4907.view.DiagramElement;
+import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.DoubleProperty;
+import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleDoubleProperty;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
@@ -29,10 +32,13 @@ public class ConnectorElementController extends DiagramElementController {
     private final DoubleProperty endX = new SimpleDoubleProperty();
     private final DoubleProperty endY = new SimpleDoubleProperty();
 
+    private final BooleanProperty isStartHorizontal = new SimpleBooleanProperty();
+    private final BooleanProperty isEndHorizontal = new SimpleBooleanProperty();
+
     @FXML
     private Path connectorPath;
 
-    private PathType pathType;
+    private PathingStrategy pathingStrategy;
 
     private boolean movePointDragging = false;
     private double dragStartX;
@@ -51,9 +57,11 @@ public class ConnectorElementController extends DiagramElementController {
             MovePreviewCreator previewCreator,
             MoveCommandFactory moveCommandFactory,
             DiagramModel diagramModel,
-            ConnectorHandleCreator connectorHandleCreator) {
+            ConnectorHandleCreator connectorHandleCreator,
+            PathingStrategy pathingStrategy) {
         super(previewCreator, moveCommandFactory, diagramModel);
         this.connectorHandleCreator = connectorHandleCreator;
+        this.pathingStrategy = pathingStrategy;
         this.handles = new LinkedList<>();
         diagramModel.getSelectedElements().addListener((ListChangeListener<DiagramElement>) change -> {
             while (change.next()) {
@@ -125,10 +133,11 @@ public class ConnectorElementController extends DiagramElementController {
     }
 
     private void recalculatePath() {
-        // Put this in a Strategy?
-        connectorPath.getElements().clear();
-        connectorPath.getElements().add(new MoveTo(adjustX(getStartX()), adjustY(getStartY())));
-        connectorPath.getElements().add(new LineTo(adjustX(getEndX()), adjustY(getEndY())));
+        pathingStrategy.makePath(
+                connectorPath,
+                adjustX(getStartX()), adjustY(getStartY()), isStartHorizontal.get(),
+                adjustX(getEndX()), adjustY(getEndY()), isEndHorizontal.get()
+        );
     }
 
     private void handleDragDetectedStartMovePoint(MouseEvent event) {
@@ -148,6 +157,10 @@ public class ConnectorElementController extends DiagramElementController {
         x.set(x.get() + event.getSceneX() - dragStartX);
         y.set(y.get() + event.getSceneY() - dragStartY);
         event.consume();
+    }
+
+    public void setPathingStrategy(PathingStrategy strategy) {
+        this.pathingStrategy = strategy;
     }
 
     public double getStartX() {
