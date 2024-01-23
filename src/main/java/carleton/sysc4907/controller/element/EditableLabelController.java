@@ -1,10 +1,13 @@
 package carleton.sysc4907.controller.element;
 
+import carleton.sysc4907.command.EditTextCommandFactory;
+import carleton.sysc4907.command.args.EditTextCommandArgs;
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.SimpleDoubleProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import javafx.fxml.FXML;
+import javafx.geometry.Pos;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextArea;
 import javafx.scene.text.TextAlignment;
@@ -25,10 +28,13 @@ public class EditableLabelController {
     private final DoubleProperty widthProperty = new SimpleDoubleProperty();
     private final DoubleProperty heightProperty = new SimpleDoubleProperty();
 
+    private final EditTextCommandFactory editTextCommandFactory;
+
     /**
      * Constructs a new EditableLabelController.
      */
-    public EditableLabelController() {
+    public EditableLabelController(EditTextCommandFactory editTextCommandFactory) {
+        this.editTextCommandFactory = editTextCommandFactory;
     }
 
     /**
@@ -43,6 +49,9 @@ public class EditableLabelController {
         editableText.maxWidthProperty().bind(widthProperty);
         label.maxHeightProperty().bind(heightProperty);
         label.maxWidthProperty().bind(widthProperty);
+        label.minHeightProperty().bind(heightProperty.multiply(0.8));
+        label.minWidthProperty().bind(widthProperty.multiply(0.8));
+        label.setAlignment(Pos.CENTER);
         label.setTextAlignment(TextAlignment.CENTER);
         editableText.setWrapText(true);
         toggleEditable(false);
@@ -118,8 +127,18 @@ public class EditableLabelController {
         if (editable) {
             editableText.setText(label.getText());
             editableText.selectAll();
-
+            label.setText(editableText.getText());
+        } else {
+            var id = label.getUserData();
+            // In case the ID has not been set properly - happens during element creation.
+            if (!(id instanceof Long)) {
+                label.setText(editableText.getText());
+            } else {
+                var command = editTextCommandFactory.createTracked(new EditTextCommandArgs(
+                        editableText.getText(), (Long) id));
+                command.execute();
+            }
         }
-        label.setText(editableText.getText());
+
     }
 }

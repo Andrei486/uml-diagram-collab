@@ -1,10 +1,7 @@
 package carleton.sysc4907.communications;
 
 import carleton.sysc4907.command.*;
-import carleton.sysc4907.command.args.AddCommandArgs;
-import carleton.sysc4907.command.args.MoveCommandArgs;
-import carleton.sysc4907.command.args.RemoveCommandArgs;
-import carleton.sysc4907.command.args.ResizeCommandArgs;
+import carleton.sysc4907.command.args.*;
 import javafx.application.Platform;
 
 import java.util.HashMap;
@@ -32,26 +29,31 @@ public class MessageInterpreter {
         RemoveCommandFactory removeCommandFactory,
         MoveCommandFactory moveCommandFactory,
         ResizeCommandFactory resizeCommandFactory,
+        EditTextCommandFactory editTextCommandFactory,
         MessageConstructor messageConstructor
+
     ) {
         this(messageConstructor);
         addFactories(
                 addCommandFactory,
                 removeCommandFactory,
                 moveCommandFactory,
-                resizeCommandFactory);
+                resizeCommandFactory,
+                editTextCommandFactory);
     }
 
     public void addFactories(
             AddCommandFactory addCommandFactory,
             RemoveCommandFactory removeCommandFactory,
             MoveCommandFactory moveCommandFactory,
-            ResizeCommandFactory resizeCommandFactory
+            ResizeCommandFactory resizeCommandFactory,
+            EditTextCommandFactory editTextCommandFactory
     ) {
         commandFactories.put(AddCommandArgs.class, addCommandFactory);
         commandFactories.put(RemoveCommandArgs.class, removeCommandFactory);
         commandFactories.put(MoveCommandArgs.class, moveCommandFactory);
         commandFactories.put(ResizeCommandArgs.class, resizeCommandFactory);
+        commandFactories.put(EditTextCommandArgs.class, editTextCommandFactory);
     }
 
     public void interpret(Message message, long userId) {

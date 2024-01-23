@@ -123,8 +123,8 @@ public abstract class DiagramElementController {
             return;
         }
         dragging = true;
-        dragStartX = event.getSceneX() - element.getLayoutX();
-        dragStartY = event.getSceneY() - element.getLayoutY();
+        dragStartX = event.getSceneX();
+        dragStartY = event.getSceneY();
         previewCreator.deleteMovePreview(element, preview);
         element.getStyleClass().removeAll(SELECTED_STYLE_CLASS);
         preview = previewCreator.createMovePreview(element, dragStartX, dragStartY);
@@ -137,8 +137,8 @@ public abstract class DiagramElementController {
             return;
         }
         if (preview != null) {
-            double dragEndX = event.getSceneX();
-            double dragEndY = event.getSceneY();
+            double dragEndX = event.getSceneX() + element.getLayoutX() - preview.getLayoutX();
+            double dragEndY = event.getSceneY() + element.getLayoutY() - preview.getLayoutY();
             MoveCommandArgs args = new MoveCommandArgs(
                     dragStartX, dragStartY,
                     dragEndX, dragEndY,
