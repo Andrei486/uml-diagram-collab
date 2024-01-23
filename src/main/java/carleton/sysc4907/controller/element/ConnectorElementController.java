@@ -63,6 +63,8 @@ public class ConnectorElementController extends DiagramElementController {
         this.connectorHandleCreator = connectorHandleCreator;
         this.pathingStrategy = pathingStrategy;
         this.handles = new LinkedList<>();
+        isStartHorizontal.set(true);
+        isEndHorizontal.set(false);
         diagramModel.getSelectedElements().addListener((ListChangeListener<DiagramElement>) change -> {
             while (change.next()) {
                 if (change.wasAdded() && change.getAddedSubList().contains(element)) {
@@ -81,10 +83,15 @@ public class ConnectorElementController extends DiagramElementController {
             reposition();
             recalculatePath();
         };
+        ChangeListener<Boolean> booleanListener = (observableValue, bool, t1) -> {
+            recalculatePath();
+        };
         startX.addListener(listener);
         startY.addListener(listener);
         endX.addListener(listener);
         endY.addListener(listener);
+        isStartHorizontal.addListener(booleanListener);
+        isEndHorizontal.addListener(booleanListener);
         element.layoutXProperty().addListener((observableValue, number, t1) -> {
             if (repositioning) {
                 return;
