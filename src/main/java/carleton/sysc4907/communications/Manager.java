@@ -14,6 +14,7 @@ public abstract class Manager {
 
     protected LinkedBlockingQueue<TargetedMessage> sendingQueue;
     protected MessageInterpreter messageInterpreter;
+    protected MessageConstructor messageConstructor;
 
     public void setMessageInterpreter(MessageInterpreter messageInterpreter) {
         this.messageInterpreter = messageInterpreter;
