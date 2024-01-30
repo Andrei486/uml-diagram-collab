@@ -159,8 +159,8 @@ public class ConnectorElementController extends DiagramElementController {
     }
 
     private void updateDirections() {
-        var deltaX = Math.abs(getEndX() - getStartX());
-        var deltaY = Math.abs(getEndY() - getStartY());
+        var deltaX = Math.abs(getEndX() - getStartX()) + 0.01; // add 0.01 to avoid division by 0 errors
+        var deltaY = Math.abs(getEndY() - getStartY()) + 0.01;
 
         if (isStartSnapping && isEndSnapping) {
             return; // can't update anything
