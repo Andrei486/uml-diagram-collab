@@ -7,6 +7,9 @@ import java.io.ObjectOutputStream;
 import java.io.OutputStream;
 import java.net.Socket;
 
+/**
+ * Holds all of the data for a client
+ */
 public class ClientData {
     private long id;
     private Socket socket;
@@ -14,6 +17,13 @@ public class ClientData {
     private TCPReceiver receiver;
     private Boolean isValid;
 
+    /**
+     * Help
+     * @param id
+     * @param socket
+     * @param messageInterpreter
+     * @throws IOException
+     */
     public ClientData(long id, Socket socket, MessageInterpreter messageInterpreter) throws IOException {
         this.id = id;
         this.isValid = false;
