@@ -11,6 +11,10 @@
 <DiagramElement xmlns="http://javafx.com/javafx" fx:id="element"
                 xmlns:fx="http://javafx.com/fxml"
                 fx:controller="carleton.sysc4907.controller.element.ConnectorElementController">
+    <properties>
+        <!-- Set controller as property so commands can find it-->
+        <controller><fx:reference source="controller"/></controller>
+    </properties>
     <Path fx:id="connectorPath">
     </Path>
 </DiagramElement>

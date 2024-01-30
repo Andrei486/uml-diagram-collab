@@ -1,5 +1,6 @@
 package carleton.sysc4907.ui.view;
 
+import carleton.sysc4907.command.ConnectorMovePointCommandFactory;
 import carleton.sysc4907.controller.element.ConnectorElementController;
 import carleton.sysc4907.controller.element.ConnectorHandleCreator;
 import carleton.sysc4907.controller.element.pathing.OrthogonalPathStrategy;
@@ -12,11 +13,13 @@ import java.io.IOException;
 public class ConnectorTest extends DiagramElementTest {
 
     private ConnectorHandleCreator connectorHandleCreator;
+    private ConnectorMovePointCommandFactory connectorMovePointCommandFactory;
 
     @Start
     @Override
     protected void start(Stage stage) throws IOException {
         connectorHandleCreator = new ConnectorHandleCreator();
+        connectorMovePointCommandFactory = new ConnectorMovePointCommandFactory(elementIdManager, mockManager);
         super.start(stage);
     }
 
@@ -30,6 +33,7 @@ public class ConnectorTest extends DiagramElementTest {
                         moveCommandFactory,
                         diagramModel,
                         connectorHandleCreator,
+                        connectorMovePointCommandFactory,
                         new OrthogonalPathStrategy()));
     }
 

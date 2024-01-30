@@ -1,6 +1,8 @@
 package carleton.sysc4907.controller.element;
 
+import carleton.sysc4907.command.ConnectorMovePointCommandFactory;
 import carleton.sysc4907.command.MoveCommandFactory;
+import carleton.sysc4907.command.args.ConnectorMovePointCommandArgs;
 import carleton.sysc4907.controller.element.pathing.PathingStrategy;
 import carleton.sysc4907.model.DiagramModel;
 import carleton.sysc4907.view.DiagramElement;
@@ -25,6 +27,7 @@ public class ConnectorElementController extends DiagramElementController {
 
     private final double AUTO_DIRECTION_THRESHOLD = 4.0;
     private final ConnectorHandleCreator connectorHandleCreator;
+    private final ConnectorMovePointCommandFactory connectorMovePointCommandFactory;
     private final List<Node> handles;
 
     // All coordinates relative to the parent element (editing area)!
@@ -63,9 +66,11 @@ public class ConnectorElementController extends DiagramElementController {
             MoveCommandFactory moveCommandFactory,
             DiagramModel diagramModel,
             ConnectorHandleCreator connectorHandleCreator,
+            ConnectorMovePointCommandFactory connectorMovePointCommandFactory,
             PathingStrategy pathingStrategy) {
         super(previewCreator, moveCommandFactory, diagramModel);
         this.connectorHandleCreator = connectorHandleCreator;
+        this.connectorMovePointCommandFactory = connectorMovePointCommandFactory;
         this.pathingStrategy = pathingStrategy;
         this.handles = new LinkedList<>();
         isStartHorizontal.set(true);
@@ -122,11 +127,11 @@ public class ConnectorElementController extends DiagramElementController {
         if (showHandles) {
             var handle = connectorHandleCreator.createMovePointHandle(element, startX, startY);
             handle.setOnDragDetected(this::handleDragDetectedStartMovePoint);
-            handle.setOnMouseReleased(event -> handleMouseReleasedResize(event, startX, startY));
+            handle.setOnMouseReleased(event -> handleMouseReleasedResize(event, true));
             handles.add(handle);
             handle = connectorHandleCreator.createMovePointHandle(element, endX, endY);
             handle.setOnDragDetected(this::handleDragDetectedStartMovePoint);
-            handle.setOnMouseReleased(event -> handleMouseReleasedResize(event, endX, endY));
+            handle.setOnMouseReleased(event -> handleMouseReleasedResize(event, false));
             handles.add(handle);
         } else {
             for (Node handle : handles) {
@@ -206,15 +211,18 @@ public class ConnectorElementController extends DiagramElementController {
         event.consume();
     }
 
-    private void handleMouseReleasedResize(MouseEvent event, DoubleProperty x, DoubleProperty y) {
+    private void handleMouseReleasedResize(MouseEvent event, boolean isStart) {
         if (!movePointDragging) {
             return;
         }
         movePointDragging = false;
-        System.out.println(x.get());
-        System.out.println(x.get() + event.getSceneX() - dragStartX);
-        x.set(x.get() + event.getSceneX() - dragStartX);
-        y.set(y.get() + event.getSceneY() - dragStartY);
+        var args = new ConnectorMovePointCommandArgs(
+                isStart,
+                event.getSceneX() - dragStartX,
+                event.getSceneY() - dragStartY,
+                element.getElementId());
+        var command = connectorMovePointCommandFactory.createTracked(args);
+        command.execute();
         event.consume();
     }
 

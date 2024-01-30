@@ -109,13 +109,15 @@ public class DiagramEditorLoader {
         AddCommandFactory addCommandFactory = new AddCommandFactory(diagramModel, elementCreator, manager);
         RemoveCommandFactory removeCommandFactory = new RemoveCommandFactory(diagramModel, elementIdManager, manager);
         EditTextCommandFactory editTextCommandFactory = new EditTextCommandFactory(elementIdManager, manager);
+        ConnectorMovePointCommandFactory connectorMovePointCommandFactory = new ConnectorMovePointCommandFactory(elementIdManager, manager);
         // Add factories to message interpreter: avoids circular dependencies
         interpreter.addFactories(
                 addCommandFactory,
                 removeCommandFactory,
                 moveCommandFactory,
                 resizeCommandFactory,
-                editTextCommandFactory
+                editTextCommandFactory,
+                connectorMovePointCommandFactory
         );
 
         // Add instantiation methods for the element injector, used to create diagram element controllers
@@ -128,7 +130,13 @@ public class DiagramEditorLoader {
         elementControllerInjector.addInjectionMethod(EditableLabelController.class,
                 () -> new EditableLabelController(editTextCommandFactory));
         elementControllerInjector.addInjectionMethod(ConnectorElementController.class,
-                () -> new ConnectorElementController(movePreviewCreator, moveCommandFactory, diagramModel, connectorHandleCreator, new CurvedPathStrategy()));
+                () -> new ConnectorElementController(
+                        movePreviewCreator,
+                        moveCommandFactory,
+                        diagramModel,
+                        connectorHandleCreator,
+                        connectorMovePointCommandFactory,
+                        new CurvedPathStrategy()));
 
         // Add instantiation methods to the main dependency injector, used to create UI elements
         injector.addInjectionMethod(SessionInfoBarController.class,
@@ -148,7 +156,7 @@ public class DiagramEditorLoader {
     /**
      * Opens the editor screen.
      * @param stage the stage to open on.
-     * @param injector the dependancy injector
+     * @param injector the dependency injector
      * @param manager the TCP manager
      * @throws IOException when loading the resources required for the scene fails
      */

@@ -27,6 +27,8 @@ public class MessageInterpreterTest {
     private ResizeCommandFactory resizeCommandFactory;
     @Mock
     private EditTextCommandFactory editTextCommandFactory;
+    @Mock
+    private ConnectorMovePointCommandFactory connectorMovePointCommandFactory;
 
     @Mock
     private Command<MoveCommandArgs> mockCommand;
@@ -39,7 +41,8 @@ public class MessageInterpreterTest {
                 removeCommandFactory,
                 moveCommandFactory,
                 resizeCommandFactory,
-                editTextCommandFactory
+                editTextCommandFactory,
+                connectorMovePointCommandFactory
         );
         var args = new MoveCommandArgs(0, 0, 1, 1, 0L);
         Mockito.when(moveCommandFactory.create(any(MoveCommandArgs.class))).thenReturn(mockCommand);
@@ -62,7 +65,8 @@ public class MessageInterpreterTest {
                 removeCommandFactory,
                 moveCommandFactory,
                 resizeCommandFactory,
-                editTextCommandFactory
+                editTextCommandFactory,
+                connectorMovePointCommandFactory
         );
         var payload = "Not an args object";
         try (MockedStatic<Platform> platformMockedStatic = Mockito.mockStatic(Platform.class)) {
