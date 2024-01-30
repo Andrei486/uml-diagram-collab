@@ -42,14 +42,18 @@ public class MessageInterpreterTest {
                 moveCommandFactory,
                 resizeCommandFactory,
                 editTextCommandFactory,
-                connectorMovePointCommandFactory
+                connectorMovePointCommandFactory,
+                new MessageConstructor()
         );
+
+
+
         var args = new MoveCommandArgs(0, 0, 1, 1, 0L);
         Mockito.when(moveCommandFactory.create(any(MoveCommandArgs.class))).thenReturn(mockCommand);
         try (MockedStatic<Platform> platformMockedStatic = Mockito.mockStatic(Platform.class)) {
             // runLater will do nothing by default
             // test
-            interpreter.interpret(new Message(MessageType.UPDATE, args));
+            interpreter.interpret(new Message(MessageType.UPDATE, args), 0);
 
             // verify
             Mockito.verify(moveCommandFactory).create(any(MoveCommandArgs.class));
@@ -66,7 +70,8 @@ public class MessageInterpreterTest {
                 moveCommandFactory,
                 resizeCommandFactory,
                 editTextCommandFactory,
-                connectorMovePointCommandFactory
+                connectorMovePointCommandFactory,
+                new MessageConstructor()
         );
         var payload = "Not an args object";
         try (MockedStatic<Platform> platformMockedStatic = Mockito.mockStatic(Platform.class)) {
@@ -74,7 +79,7 @@ public class MessageInterpreterTest {
             // test
             assertThrows(
                     IllegalArgumentException.class,
-                    () -> interpreter.interpret(new Message(MessageType.UPDATE, payload)));
+                    () -> interpreter.interpret(new Message(MessageType.UPDATE, payload), 0));
 
             // verify
             platformMockedStatic.verify(() -> Platform.runLater(any()), Mockito.never());

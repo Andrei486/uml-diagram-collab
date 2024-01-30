@@ -8,10 +8,12 @@ public class TCPReceiver implements Runnable {
 
     private final ObjectInputStream socketInput;
     private final MessageInterpreter interpreter;
+    private long id;
 
-    public TCPReceiver(Socket socket, MessageInterpreter interpreter) throws IOException {
+    public TCPReceiver(Socket socket, MessageInterpreter interpreter, long id) throws IOException {
         this.socketInput = new ObjectInputStream(socket.getInputStream());
         this.interpreter = interpreter;
+        this.id = id;
         System.out.println("Receiver Created");
     }
 
@@ -21,7 +23,7 @@ public class TCPReceiver implements Runnable {
         while (flag) {
             try {
                 Message message = (Message) socketInput.readObject();
-                interpreter.interpret(message);
+                interpreter.interpret(message, id);
             } catch (IOException | ClassNotFoundException e) {
                 flag = false;
             }
