@@ -184,7 +184,7 @@ public class ConnectorElementController extends DiagramElementController {
      * Paths that are close to horizontal or vertical will be set to be in that direction.
      * Endpoints that are marked as "snapped" will not have their directions changed.
      */
-    private void updateDirections() {
+    public void updateDirections() {
         var deltaX = Math.abs(getEndX() - getStartX()) + 0.01; // add 0.01 to avoid division by 0 errors
         var deltaY = Math.abs(getEndY() - getStartY()) + 0.01;
 
@@ -300,6 +300,22 @@ public class ConnectorElementController extends DiagramElementController {
 
     public void setEndY(double y) {
         endY.set(y);
+    }
+
+    public boolean getIsStartHorizontal() {
+        return isStartHorizontal.get();
+    }
+
+    public void setIsStartHorizontal(boolean isHorizontal) {
+        isStartHorizontal.set(isHorizontal);
+    }
+
+    public boolean getIsEndHorizontal() {
+        return isEndHorizontal.get();
+    }
+
+    public void setIsEndHorizontal(boolean isHorizontal) {
+        isEndHorizontal.set(isHorizontal);
     }
 
     public void setSnapStart(boolean isSnap) {
