@@ -27,6 +27,6 @@ public class ConnectorMovePointFactoryTest {
 
         var command = factory.create(args);
 
-        assertEquals(ConnectorMovePointCommandTest.class, command.getClass());
+        assertEquals(ConnectorMovePointCommand.class, command.getClass());
     }
 }

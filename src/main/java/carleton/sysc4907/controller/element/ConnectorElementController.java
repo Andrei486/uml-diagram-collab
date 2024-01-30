@@ -262,6 +262,14 @@ public class ConnectorElementController extends DiagramElementController {
         endY.set(y);
     }
 
+    public void setSnapStart(boolean isSnap) {
+        isStartSnapping = isSnap;
+    }
+
+    public void setSnapEnd(boolean isSnap) {
+        isEndSnapping = isSnap;
+    }
+
     private double adjustX(double x) {
         return x - element.getLayoutX();
     }
