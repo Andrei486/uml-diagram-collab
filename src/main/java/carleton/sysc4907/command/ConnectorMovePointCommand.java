@@ -11,6 +11,9 @@ import carleton.sysc4907.view.DiagramElement;
 import javafx.scene.Node;
 import javafx.scene.layout.Pane;
 
+/**
+ * Command for moving the start or end point of a connector.
+ */
 public class ConnectorMovePointCommand implements Command<ConnectorMovePointCommandArgs> {
 
     private final ConnectorMovePointCommandArgs args;
@@ -22,12 +25,13 @@ public class ConnectorMovePointCommand implements Command<ConnectorMovePointComm
     }
 
     /**
-     * Executes the command
+     * Executes the command.
      */
     @Override
     public void execute() {
         var element = elementIdManager.getElementById(args.elementId());
         if (element == null) return;
+        // Find connector controller from properties: this must be specified in FXML, see Controller.fxml
         ConnectorElementController controller = (ConnectorElementController) element.getProperties().get("controller");
         if (controller == null) throw new IllegalArgumentException();
         if (args.isStart()) {
@@ -41,6 +45,6 @@ public class ConnectorMovePointCommand implements Command<ConnectorMovePointComm
 
     @Override
     public ConnectorMovePointCommandArgs getArgs() {
-        return null;
+        return args;
     }
 }

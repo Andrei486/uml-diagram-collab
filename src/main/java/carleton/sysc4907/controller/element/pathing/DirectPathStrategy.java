@@ -4,6 +4,9 @@ import javafx.scene.shape.LineTo;
 import javafx.scene.shape.MoveTo;
 import javafx.scene.shape.Path;
 
+/**
+ * Pathing strategy for creating straight paths between two points.
+ */
 public class DirectPathStrategy implements PathingStrategy {
 
     /**

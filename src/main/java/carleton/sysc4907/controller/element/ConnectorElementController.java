@@ -15,6 +15,7 @@ import javafx.beans.value.ObservableValue;
 import javafx.collections.ListChangeListener;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
+import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.shape.LineTo;
 import javafx.scene.shape.MoveTo;
@@ -123,6 +124,18 @@ public class ConnectorElementController extends DiagramElementController {
         setEndY(20);
     }
 
+    @Override
+    protected ImageView takeMovePreviewImage() {
+        toggleShowPointDragHandles(false);
+        var preview = super.takeMovePreviewImage();
+        toggleShowPointDragHandles(true);
+        return preview;
+    }
+
+    /**
+     * Shows or hides handles which allow the endpoints of the connector to be moved.
+     * @param showHandles true if the handles for moving points should be shown, false if they should be hidden
+     */
     private void toggleShowPointDragHandles(boolean showHandles) {
         if (showHandles) {
             var handle = connectorHandleCreator.createMovePointHandle(element, startX, startY);
@@ -141,6 +154,10 @@ public class ConnectorElementController extends DiagramElementController {
         }
     }
 
+    /**
+     * Repositions the element so that neither of the endpoints have negative coordinates.
+     * This will move the endpoints to compensate, so that they are at the same position on the diagram.
+     */
     private void reposition() {
         repositioning = true;
         double leftmostX = Math.min(getStartX(), getEndX());
@@ -150,6 +167,9 @@ public class ConnectorElementController extends DiagramElementController {
         repositioning = false;
     }
 
+    /**
+     * Uses this connector's pathing strategy to re-make the connector's path. Overwrites the previous path.
+     */
     private void recalculatePath() {
         pathingStrategy.makePath(
                 connectorPath,
@@ -158,6 +178,12 @@ public class ConnectorElementController extends DiagramElementController {
         );
     }
 
+    /**
+     * Updates this connector's start and end directions, i.e. whether the path should start and end
+     * horizontally or vertically.
+     * Paths that are close to horizontal or vertical will be set to be in that direction.
+     * Endpoints that are marked as "snapped" will not have their directions changed.
+     */
     private void updateDirections() {
         var deltaX = Math.abs(getEndX() - getStartX()) + 0.01; // add 0.01 to avoid division by 0 errors
         var deltaY = Math.abs(getEndY() - getStartY()) + 0.01;
@@ -204,6 +230,10 @@ public class ConnectorElementController extends DiagramElementController {
         }
     }
 
+    /**
+     * Handler for the endpoint move handles, starts a drag operation.
+     * @param event the mouse event
+     */
     private void handleDragDetectedStartMovePoint(MouseEvent event) {
         movePointDragging = true;
         dragStartX = event.getSceneX();
@@ -211,6 +241,11 @@ public class ConnectorElementController extends DiagramElementController {
         event.consume();
     }
 
+    /**
+     * Handler for the endpoint move handlers. Moves the dragged endpoint to where the mouse was released.
+     * @param event the mouse release event
+     * @param isStart true if the start point was the one dragged, false if it was the end point
+     */
     private void handleMouseReleasedResize(MouseEvent event, boolean isStart) {
         if (!movePointDragging) {
             return;
@@ -226,8 +261,13 @@ public class ConnectorElementController extends DiagramElementController {
         event.consume();
     }
 
+    /**
+     * Sets the pathing strategy of this connector.
+     * @param strategy the new PathingStrategy to use when calculating paths
+     */
     public void setPathingStrategy(PathingStrategy strategy) {
         this.pathingStrategy = strategy;
+        recalculatePath();
     }
 
     public double getStartX() {

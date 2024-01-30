@@ -2,6 +2,10 @@ package carleton.sysc4907.controller.element.pathing;
 
 import javafx.scene.shape.*;
 
+/**
+ * Pathing strategy used for creating curved paths.
+ * Uses a quadratic curve for diagonal paths or a cubic curve for straighter paths.
+ */
 public class CurvedPathStrategy implements PathingStrategy {
 
     /**

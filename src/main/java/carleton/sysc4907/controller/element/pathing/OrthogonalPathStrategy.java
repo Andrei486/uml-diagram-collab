@@ -2,6 +2,9 @@ package carleton.sysc4907.controller.element.pathing;
 
 import javafx.scene.shape.*;
 
+/**
+ * Pathing strategy for creating orthogonal paths between two points: either an elbow-shaped path or a path via one corner.
+ */
 public class OrthogonalPathStrategy implements PathingStrategy {
     /**
      * Clears the given path, replacing it with a path from the start point to the end point.

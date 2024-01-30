@@ -2,6 +2,9 @@ package carleton.sysc4907.controller.element.pathing;
 
 import javafx.scene.shape.Path;
 
+/**
+ * Interface representing a Strategy used for creating connector paths given two points.
+ */
 public interface PathingStrategy {
 
     /**
