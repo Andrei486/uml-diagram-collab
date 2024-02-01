@@ -32,8 +32,11 @@ public class TrackedCommand<TArgs> implements Command<TArgs>{
 
     @Override
     public void execute() {
-        //Add the command to the running queue
-        Platform.runLater(command::execute);
+        // Add the command to the running queue
+        // Tracked commands must be sent to the host first, they will be run untracked by the client
+        if (manager.isHost()) {
+            Platform.runLater(command::execute);
+        }
 
         //Create a message to send over TCP
         TargetedMessage message = new TargetedMessage(

@@ -20,7 +20,7 @@ public class ClientManager extends Manager{
             MessageInterpreter messageInterpreter,
             MessageConstructor messageConstructor)
             throws IOException {
-
+        this.isHost = false;
         messageInterpreter.setManager(this, false);
         this.clientList = new ClientList(messageInterpreter);
         this.clientConnectionManger = new ClientConnectionManager(ip, port, this.clientList);

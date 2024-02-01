@@ -19,6 +19,7 @@ public class HostManager extends Manager {
             MessageConstructor messageConstructor)
             throws IOException
     {
+        this.isHost = true;
         messageInterpreter.setManager(this, true);
         this.clientList = new ClientList(messageInterpreter);
         this.hostConnectionManager = new HostConnectionManager(port, this.clientList, this);

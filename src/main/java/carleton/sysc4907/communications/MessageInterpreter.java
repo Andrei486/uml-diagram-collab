@@ -77,7 +77,7 @@ public class MessageInterpreter {
         Platform.runLater(command::execute);
 
         if (isHost) {
-            messageConstructor.sendAllBut(message, userId);
+            messageConstructor.send(message);
         }
     }
 }
