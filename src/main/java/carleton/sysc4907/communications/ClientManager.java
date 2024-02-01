@@ -7,6 +7,9 @@ import carleton.sysc4907.processing.ElementIdManager;
 import java.io.IOException;
 import java.util.concurrent.LinkedBlockingQueue;
 
+/**
+ *
+ */
 public class ClientManager extends Manager{
 
     private ClientList clientList;

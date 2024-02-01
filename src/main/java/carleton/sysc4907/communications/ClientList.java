@@ -7,11 +7,18 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 
+/**
+ * The list of clients and their data managed by the manager
+ */
 public class ClientList {
 
     private HashMap<Long, ClientData> clients;
     private MessageInterpreter messageInterpreter;
 
+    /**
+     * Creates a list of client data
+     * @param messageInterpreter the hostManagers messageInterpreter
+     */
     public ClientList(MessageInterpreter messageInterpreter) {
         clients = new HashMap<>();
         this.messageInterpreter =  messageInterpreter;
@@ -21,10 +28,20 @@ public class ClientList {
         return clients;
     }
 
+    /**
+     * Creates of a clientData for a client and adds it to the map,
+     * the socket port number is used as the id
+     * @param socket the socket of the client
+     * @throws IOException the connection failed
+     */
     public void addClient(Socket socket) throws IOException {
         clients.put((long) socket.getPort(), new ClientData(socket.getPort(), socket, this.messageInterpreter));
     }
 
+    /**
+     * removes a client from the map
+     * @param id
+     */
     public void removeClient(long id) {
         System.out.println("Closing Client: " + id);
         ClientData client = clients.get(id);
