@@ -20,7 +20,7 @@ public class HostManager extends Manager {
             throws IOException
     {
         this.isHost = true;
-        messageInterpreter.setManager(this, true);
+        messageInterpreter.setManager(this);
         this.clientList = new ClientList(messageInterpreter);
         this.hostConnectionManager = new HostConnectionManager(port, this.clientList, this);
         this.sendingQueue = new LinkedBlockingQueue<TargetedMessage>();

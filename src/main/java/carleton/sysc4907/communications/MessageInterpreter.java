@@ -19,9 +19,9 @@ public class MessageInterpreter {
         this.messageConstructor = messageConstructor;
     }
 
-    public void setManager(Manager manager, boolean isHost) {
+    public void setManager(Manager manager) {
         this.manager = manager;
-        this.isHost = isHost;
+        this.isHost = manager.isHost();
     }
 
     public MessageInterpreter(
