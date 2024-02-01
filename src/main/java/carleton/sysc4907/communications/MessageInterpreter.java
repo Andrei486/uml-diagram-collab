@@ -4,6 +4,7 @@ import carleton.sysc4907.command.*;
 import carleton.sysc4907.command.args.*;
 import javafx.application.Platform;
 
+import java.time.LocalTime;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -75,6 +76,7 @@ public class MessageInterpreter {
         Command<?> command = factory.create(argType.cast(args));
 
         Platform.runLater(command::execute);
+        System.out.println("Interpreted command finished executing (on platform) at time " + LocalTime.now());
 
         if (isHost) {
             messageConstructor.send(message);
