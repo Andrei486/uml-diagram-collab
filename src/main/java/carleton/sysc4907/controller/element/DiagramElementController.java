@@ -59,6 +59,7 @@ public abstract class DiagramElementController {
         addMouseHandler(MouseEvent.MOUSE_DRAGGED, this::handleMouseDraggedMovePreview);
         addMouseHandler(MouseEvent.MOUSE_RELEASED, this::handleMouseReleasedDeletePreview);
         addMouseHandler(MouseEvent.MOUSE_PRESSED, this::handleSelect);
+        addMouseHandler(MouseEvent.MOUSE_PRESSED, (evt) -> element.requestFocus());
     }
 
     /**
