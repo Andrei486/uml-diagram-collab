@@ -15,6 +15,7 @@ public abstract class Manager {
     protected LinkedBlockingQueue<TargetedMessage> sendingQueue;
     protected MessageInterpreter messageInterpreter;
     protected MessageConstructor messageConstructor;
+    protected boolean isHost;
 
     public void setMessageInterpreter(MessageInterpreter messageInterpreter) {
         this.messageInterpreter = messageInterpreter;
@@ -22,6 +23,10 @@ public abstract class Manager {
 
     public void send(TargetedMessage targetedMessage) {
         sendingQueue.add(targetedMessage);
+    }
+
+    public boolean isHost() {
+        return isHost;
     }
 
     public abstract void close();

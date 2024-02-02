@@ -27,26 +27,31 @@ public class MessageInterpreterTest {
     private ResizeCommandFactory resizeCommandFactory;
     @Mock
     private EditTextCommandFactory editTextCommandFactory;
+    @Mock
+    private MessageConstructor messageConstructor;
+    @Mock
+    private Manager manager;
 
     @Mock
     private Command<MoveCommandArgs> mockCommand;
 
     @Test
-    public void interpretUpdateMoveCommand() {
+    public void interpretUpdateMoveCommandHost() {
         // setup
+        var args = new MoveCommandArgs(0, 0, 1, 1, 0L);
+        Mockito.when(moveCommandFactory.create(any(MoveCommandArgs.class))).thenReturn(mockCommand);
+        Mockito.doNothing().when(messageConstructor).send(any(Message.class));
+        Mockito.when(manager.isHost()).thenReturn(true);
         MessageInterpreter interpreter = new MessageInterpreter(
                 addCommandFactory,
                 removeCommandFactory,
                 moveCommandFactory,
                 resizeCommandFactory,
                 editTextCommandFactory,
-                new MessageConstructor()
+                messageConstructor
         );
+        interpreter.setManager(manager);
 
-
-
-        var args = new MoveCommandArgs(0, 0, 1, 1, 0L);
-        Mockito.when(moveCommandFactory.create(any(MoveCommandArgs.class))).thenReturn(mockCommand);
         try (MockedStatic<Platform> platformMockedStatic = Mockito.mockStatic(Platform.class)) {
             // runLater will do nothing by default
             // test
@@ -54,6 +59,35 @@ public class MessageInterpreterTest {
 
             // verify
             Mockito.verify(moveCommandFactory).create(any(MoveCommandArgs.class));
+            Mockito.verify(messageConstructor).send(any(Message.class));
+            platformMockedStatic.verify(() -> Platform.runLater(any()));
+        }
+    }
+
+    @Test
+    public void interpretUpdateMoveCommandClient() {
+        // setup
+        var args = new MoveCommandArgs(0, 0, 1, 1, 0L);
+        Mockito.when(moveCommandFactory.create(any(MoveCommandArgs.class))).thenReturn(mockCommand);
+        Mockito.when(manager.isHost()).thenReturn(false);
+        MessageInterpreter interpreter = new MessageInterpreter(
+                addCommandFactory,
+                removeCommandFactory,
+                moveCommandFactory,
+                resizeCommandFactory,
+                editTextCommandFactory,
+                messageConstructor
+        );
+        interpreter.setManager(manager);
+
+        try (MockedStatic<Platform> platformMockedStatic = Mockito.mockStatic(Platform.class)) {
+            // runLater will do nothing by default
+            // test
+            interpreter.interpret(new Message(MessageType.UPDATE, args), 0);
+
+            // verify
+            Mockito.verify(moveCommandFactory).create(any(MoveCommandArgs.class));
+            Mockito.verify(messageConstructor, Mockito.never()).send(any(Message.class));
             platformMockedStatic.verify(() -> Platform.runLater(any()));
         }
     }
@@ -67,7 +101,7 @@ public class MessageInterpreterTest {
                 moveCommandFactory,
                 resizeCommandFactory,
                 editTextCommandFactory,
-                new MessageConstructor()
+                messageConstructor
 
         );
         var payload = "Not an args object";
