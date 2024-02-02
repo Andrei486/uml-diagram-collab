@@ -25,6 +25,7 @@ public class TrackedCommandTest {
     void executeTrackedCommand() {
         //setup
         Command<MoveCommandArgs> trackedCommand = new TrackedCommand<>(mockMoveCommand, mockManager);
+        Mockito.when(mockManager.isHost()).thenReturn(true);
 
         try (MockedStatic<Platform> platformMockedStatic = Mockito.mockStatic(Platform.class)) {
             // test
@@ -33,6 +34,22 @@ public class TrackedCommandTest {
             // verify
             Mockito.verify(mockManager).send(any(TargetedMessage.class));
             platformMockedStatic.verify(() -> Platform.runLater(any()));
+        }
+    }
+
+    @Test
+    void executeTrackedCommandClient() {
+        //setup
+        Command<MoveCommandArgs> trackedCommand = new TrackedCommand<>(mockMoveCommand, mockManager);
+        Mockito.when(mockManager.isHost()).thenReturn(false);
+
+        try (MockedStatic<Platform> platformMockedStatic = Mockito.mockStatic(Platform.class)) {
+            // test
+            trackedCommand.execute();
+
+            // verify
+            Mockito.verify(mockManager).send(any(TargetedMessage.class));
+            platformMockedStatic.verify(() -> Platform.runLater(any()), Mockito.never());
         }
     }
 

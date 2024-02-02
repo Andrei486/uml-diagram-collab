@@ -20,8 +20,8 @@ public class ClientManager extends Manager{
             MessageInterpreter messageInterpreter,
             MessageConstructor messageConstructor)
             throws IOException {
-
-        messageInterpreter.setManager(this, false);
+        this.isHost = false;
+        messageInterpreter.setManager(this);
         this.clientList = new ClientList(messageInterpreter);
         this.clientConnectionManger = new ClientConnectionManager(ip, port, this.clientList);
         this.sendingQueue = new LinkedBlockingQueue<TargetedMessage>();

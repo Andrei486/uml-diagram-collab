@@ -19,7 +19,8 @@ public class HostManager extends Manager {
             MessageConstructor messageConstructor)
             throws IOException
     {
-        messageInterpreter.setManager(this, true);
+        this.isHost = true;
+        messageInterpreter.setManager(this);
         this.clientList = new ClientList(messageInterpreter);
         this.hostConnectionManager = new HostConnectionManager(port, this.clientList, this);
         this.sendingQueue = new LinkedBlockingQueue<TargetedMessage>();

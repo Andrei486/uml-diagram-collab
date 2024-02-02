@@ -6,6 +6,8 @@ import carleton.sysc4907.communications.MessageType;
 import carleton.sysc4907.communications.TargetedMessage;
 import javafx.application.Platform;
 
+import java.time.LocalTime;
+
 /**
  * A wrapper to make any type of command into a track command.
  * Tracked commands are put on the command stack and sent over TCP.
@@ -32,8 +34,12 @@ public class TrackedCommand<TArgs> implements Command<TArgs>{
 
     @Override
     public void execute() {
-        //Add the command to the running queue
-        Platform.runLater(command::execute);
+        // Add the command to the running queue
+        // Tracked commands must be sent to the host first, they will be run untracked by the client
+        if (manager.isHost()) {
+            Platform.runLater(command::execute);
+            System.out.println("Tracked command finished executing (on platform) at time " + LocalTime.now());
+        }
 
         //Create a message to send over TCP
         TargetedMessage message = new TargetedMessage(
