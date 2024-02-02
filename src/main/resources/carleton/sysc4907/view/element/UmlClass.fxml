@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import java.util.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<?import carleton.sysc4907.view.DiagramElement?>
+<?import javafx.scene.shape.Rectangle?>
+<?import javafx.scene.chart.StackedAreaChart?>
+<?import javafx.scene.shape.Line?>
+<DiagramElement xmlns="http://javafx.com/javafx" fx:id="element"
+                xmlns:fx="http://javafx.com/fxml"
+                fx:controller="carleton.sysc4907.controller.element.UmlClassController"
+                maxHeight="200" maxWidth="150">
+    <StackPane fx:id="bgStackPane">
+        <Rectangle styleClass="diagram-UML-class-element" fx:id="background"/>
+        <VBox>
+            <StackPane>
+                <Rectangle styleClass="diagram-UML-class-invisible-element" fx:id="titleRectangle" width="${element.maxWidth}"/>
+                <fx:include source="EditableLabel.fxml" fx:id="titleLabel"/>
+            </StackPane>
+            <Rectangle />
+            <StackPane alignment="TOP_LEFT">
+                <Rectangle styleClass="diagram-UML-class-element" fx:id="fieldsRectangle" width="${element.maxWidth}"/>
+                <fx:include source="EditableLabel.fxml" fx:id="fieldsLabel"/>
+            </StackPane>
+            <StackPane alignment="TOP_LEFT">
+                <Rectangle styleClass="diagram-UML-class-invisible-element" fx:id="methodsRectangle" width="${element.maxWidth}"/>
+                <fx:include source="EditableLabel.fxml" fx:id="methodsLabel"/>
+            </StackPane>
+        </VBox>
+    </StackPane>
+</DiagramElement>
