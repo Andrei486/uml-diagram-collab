@@ -7,17 +7,32 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.concurrent.BlockingQueue;
 
+/**
+ * Sends messages to from the sendQueue to users
+ */
 public class TCPSender implements Runnable{
     private final BlockingQueue<TargetedMessage> sendQueue;
     private final Manager manager;
     private ClientList clients;
 
+    /**
+     * Constructs a TCPSender
+     * @param sendQueue the manager's sendQueue
+     * @param clients the manager's ClientList
+     * @param manager the manager of the system
+     */
     public TCPSender(BlockingQueue<TargetedMessage> sendQueue, ClientList clients, Manager manager) {
         this.sendQueue = sendQueue;
         this.clients = clients;
         this.manager = manager;
     }
 
+    /**
+     * Sends a message to another user
+     * @param outputStream the output stream of the user
+     * @param message the message being sent
+     * @param id the id of the user
+     */
     private void send(ObjectOutputStream outputStream, Message message, long id){
         try {
             outputStream.writeObject(message);
@@ -27,6 +42,12 @@ public class TCPSender implements Runnable{
         }
     }
 
+    /**
+     * Used to send to every client connected to the manager
+     * @param outputStreams the output streams of the clients
+     * @param message the message to be sent
+     * @param closeUserOnSend if the connection to the clients should be closed
+     */
     private void broadcastSend(HashMap<Long, ObjectOutputStream> outputStreams, Message message, boolean closeUserOnSend) {
         if(closeUserOnSend) {
             for (long id : outputStreams.keySet()) {
@@ -42,6 +63,13 @@ public class TCPSender implements Runnable{
         }
     }
 
+    /**
+     * used to send to every specified client connected to the manager
+     * @param outputStreams the output streams of the clients
+     * @param message the message to be sent
+     * @param closeUserOnSend if the connection to the clients should be closed
+     * @param targetIds the ids of the clients to be sent to
+     */
     private void targetedSend(HashMap<Long, ObjectOutputStream> outputStreams, Message message, boolean closeUserOnSend, long[] targetIds) {
         if(closeUserOnSend){
             for (long id : outputStreams.keySet()) {

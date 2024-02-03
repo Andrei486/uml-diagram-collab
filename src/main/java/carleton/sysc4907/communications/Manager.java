@@ -1,15 +1,10 @@
 package carleton.sysc4907.communications;
-import carleton.sysc4907.command.*;
-import carleton.sysc4907.command.args.AddCommandArgs;
-import carleton.sysc4907.command.args.MoveCommandArgs;
-import carleton.sysc4907.command.args.RemoveCommandArgs;
-import carleton.sysc4907.command.args.ResizeCommandArgs;
-import carleton.sysc4907.model.DiagramModel;
-import carleton.sysc4907.processing.ElementCreator;
-import carleton.sysc4907.processing.ElementIdManager;
 
 import java.util.concurrent.LinkedBlockingQueue;
 
+/**
+ * This class provides some of base componets shared between the hostManager and the clientManger
+ */
 public abstract class Manager {
 
     protected LinkedBlockingQueue<TargetedMessage> sendingQueue;
@@ -17,17 +12,25 @@ public abstract class Manager {
     protected MessageConstructor messageConstructor;
     protected boolean isHost;
 
+
     public void setMessageInterpreter(MessageInterpreter messageInterpreter) {
         this.messageInterpreter = messageInterpreter;
     }
 
+    /**
+     * adds message to the message queue to be sent out by the Mangers TCPSender
+     * @param targetedMessage the message to be sent
+     */
     public void send(TargetedMessage targetedMessage) {
         sendingQueue.add(targetedMessage);
     }
-
+    
     public boolean isHost() {
         return isHost;
     }
 
+    /**
+     * Used to close all the connection the manager manages
+     */
     public abstract void close();
 }
