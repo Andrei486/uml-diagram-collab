@@ -40,7 +40,7 @@ public class ClientList {
 
     /**
      * removes a client from the map
-     * @param id
+     * @param id the id of the client to be removed
      */
     public void removeClient(long id) {
         System.out.println("Closing Client: " + id);
@@ -56,6 +56,10 @@ public class ClientList {
         }
     }
 
+    /**
+     * Gets the output streams for all the clients
+     * @return a map of all ids and output streams for the clients in a map
+     */
     public HashMap<Long, ObjectOutputStream> getOutputStreams() {
         HashMap<Long, ObjectOutputStream> outputs = new HashMap<>();
 
@@ -78,6 +82,11 @@ public class ClientList {
         return outputs;
     }
 
+    /**
+     * get the ids of the clients in the client list
+     * @param idsToBeRemove the ids to be removed from the list
+     * @return a long array of ids with the ids to be removed, removed
+     */
     public long[] getClientIds(long[] idsToBeRemove) {
         ArrayList<Long> ids = new ArrayList<>();
 
