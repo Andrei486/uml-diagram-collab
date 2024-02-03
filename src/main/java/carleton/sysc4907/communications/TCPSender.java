@@ -2,6 +2,7 @@ package carleton.sysc4907.communications;
 
 import java.io.IOException;
 import java.io.ObjectOutputStream;
+import java.time.LocalTime;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.concurrent.BlockingQueue;
@@ -35,6 +36,7 @@ public class TCPSender implements Runnable{
     private void send(ObjectOutputStream outputStream, Message message, long id){
         try {
             outputStream.writeObject(message);
+            System.out.println("Message sent at time " + LocalTime.now());
         } catch (IOException e) {
             clients.removeClient(id);
         }

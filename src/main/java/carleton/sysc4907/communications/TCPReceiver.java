@@ -3,6 +3,7 @@ package carleton.sysc4907.communications;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.net.Socket;
+import java.time.LocalTime;
 
 /**
  * Receives messages from a client
@@ -33,6 +34,7 @@ public class TCPReceiver implements Runnable {
         while (flag) {
             try {
                 Message message = (Message) socketInput.readObject();
+                System.out.println("Message received at time " + LocalTime.now());
                 interpreter.interpret(message, id);
             } catch (IOException | ClassNotFoundException e) {
                 flag = false;

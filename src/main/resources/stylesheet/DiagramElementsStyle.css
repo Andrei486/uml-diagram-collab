@@ -41,6 +41,15 @@
     -fx-stroke: #000000;
 }
 
+.diagram-UML-class-element {
+    -fx-fill: #F4F4F4;
+    -fx-stroke: #000000;
+}
+.diagram-UML-class-invisible-element {
+    -fx-fill: none;
+    -fx-stroke: none;
+}
+
 .diagram-text {
     -fx-fill: #EDEDED00;
     -fx-stroke: #00000000;
