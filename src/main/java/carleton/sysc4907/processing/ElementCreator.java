@@ -78,6 +78,7 @@ public class ElementCreator {
         int i = 1;
         for (Node sub : subElements) {
             sub.setUserData(elementIdManager.getNextId(baseId, i));
+            i++;
         }
     }
 

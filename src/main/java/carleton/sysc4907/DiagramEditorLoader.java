@@ -125,6 +125,9 @@ public class DiagramEditorLoader {
         elementControllerInjector.addInjectionMethod(UmlCommentController.class,
                 () -> new UmlCommentController(movePreviewCreator, moveCommandFactory, diagramModel,
                         resizeHandleCreator, resizePreviewCreator, resizeCommandFactory));
+        elementControllerInjector.addInjectionMethod(UmlClassController.class,
+                () -> new UmlClassController(movePreviewCreator, moveCommandFactory, diagramModel,
+                        resizeHandleCreator, resizePreviewCreator, resizeCommandFactory));
         elementControllerInjector.addInjectionMethod(EditableLabelController.class,
                 () -> new EditableLabelController(editTextCommandFactory));
         elementControllerInjector.addInjectionMethod(ConnectorElementController.class,

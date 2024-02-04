@@ -7,6 +7,9 @@ import carleton.sysc4907.processing.ElementIdManager;
 import java.io.IOException;
 import java.util.concurrent.LinkedBlockingQueue;
 
+/**
+ * This class manages to connect between the client and the host
+ */
 public class ClientManager extends Manager{
 
     private ClientList clientList;
@@ -14,6 +17,15 @@ public class ClientManager extends Manager{
     private ClientConnectionManager clientConnectionManger;
     private Thread senderThread;
 
+    /**
+     * constructs a ClientManager, sets up all the support classes and
+     * the connection to the HostManager
+     * @param port the port of the HostManager
+     * @param ip the ip of the HostManager
+     * @param messageInterpreter the MessageInterpreter of the system
+     * @param messageConstructor the MessageConstructor of the system
+     * @throws IOException the connection can not be set up
+     */
     public ClientManager(
             int port,
             String ip,

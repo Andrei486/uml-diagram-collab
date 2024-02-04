@@ -8,6 +8,9 @@ import java.time.LocalTime;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * Interprets messages received from other users
+ */
 public class MessageInterpreter {
 
     private final Map<Class<?>, CommandFactory> commandFactories;
@@ -15,16 +18,33 @@ public class MessageInterpreter {
     private boolean isHost;
     private MessageConstructor messageConstructor;
 
+    /**
+     * Constructs a MessageInterpreter
+     * @param messageConstructor the MessageConstructor of the system
+     */
     public MessageInterpreter(MessageConstructor messageConstructor) {
         this.commandFactories = new HashMap<>();
         this.messageConstructor = messageConstructor;
     }
 
+    /**
+     * sets the Manager and whether they are a host
+     * @param manager the manager to be set
+     */
     public void setManager(Manager manager) {
         this.manager = manager;
         this.isHost = manager.isHost();
     }
 
+    /**
+     * Constructs a MessageInterpreter with all the command factories
+     * @param addCommandFactory the systems AddCommandFactory
+     * @param removeCommandFactory the systems RemoveCommandFactory
+     * @param moveCommandFactory the systems MoveCommandFactory
+     * @param resizeCommandFactory the systems ResizeCommandFactory
+     * @param editTextCommandFactory the systems EditTextCommandFactory
+     * @param messageConstructor the MessageConstructor of the system
+     */
     public MessageInterpreter(
         AddCommandFactory addCommandFactory,
         RemoveCommandFactory removeCommandFactory,
@@ -44,6 +64,14 @@ public class MessageInterpreter {
                 connectorMovePointCommandFactory);
     }
 
+    /**
+     * Adds the factories to the MessageInterpreter
+     * @param addCommandFactory the systems AddCommandFactory
+     * @param removeCommandFactory the systems RemoveCommandFactory
+     * @param moveCommandFactory the systems MoveCommandFactory
+     * @param resizeCommandFactory the systems ResizeCommandFactory
+     * @param editTextCommandFactory the systems EditTextCommandFactory
+     */
     public void addFactories(
             AddCommandFactory addCommandFactory,
             RemoveCommandFactory removeCommandFactory,
@@ -59,6 +87,11 @@ public class MessageInterpreter {
         commandFactories.put(ConnectorMovePointCommandArgs.class, connectorMovePointCommandFactory);
     }
 
+    /**
+     * Interpret the message received
+     * @param message the message
+     * @param userId the user id who sent the message
+     */
     public void interpret(Message message, long userId) {
         System.out.println(message.type() + " - " + message.payload());
         switch (message.type()) {
@@ -67,6 +100,11 @@ public class MessageInterpreter {
         }
     }
 
+    /**
+     * Interpret the update message received
+     * @param message the message
+     * @param userId the user id who sent the message
+     */
     private void interpretUpdate(Message message, long userId) {
         Object args = message.payload();
         Class<?> argType = args.getClass();
