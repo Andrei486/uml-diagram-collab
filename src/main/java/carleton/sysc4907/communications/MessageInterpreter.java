@@ -51,8 +51,8 @@ public class MessageInterpreter {
         MoveCommandFactory moveCommandFactory,
         ResizeCommandFactory resizeCommandFactory,
         EditTextCommandFactory editTextCommandFactory,
+        ConnectorMovePointCommandFactory connectorMovePointCommandFactory,
         MessageConstructor messageConstructor
-
     ) {
         this(messageConstructor);
         addFactories(
@@ -60,7 +60,8 @@ public class MessageInterpreter {
                 removeCommandFactory,
                 moveCommandFactory,
                 resizeCommandFactory,
-                editTextCommandFactory);
+                editTextCommandFactory,
+                connectorMovePointCommandFactory);
     }
 
     /**
@@ -76,13 +77,14 @@ public class MessageInterpreter {
             RemoveCommandFactory removeCommandFactory,
             MoveCommandFactory moveCommandFactory,
             ResizeCommandFactory resizeCommandFactory,
-            EditTextCommandFactory editTextCommandFactory
-    ) {
+            EditTextCommandFactory editTextCommandFactory,
+            ConnectorMovePointCommandFactory connectorMovePointCommandFactory) {
         commandFactories.put(AddCommandArgs.class, addCommandFactory);
         commandFactories.put(RemoveCommandArgs.class, removeCommandFactory);
         commandFactories.put(MoveCommandArgs.class, moveCommandFactory);
         commandFactories.put(ResizeCommandArgs.class, resizeCommandFactory);
         commandFactories.put(EditTextCommandArgs.class, editTextCommandFactory);
+        commandFactories.put(ConnectorMovePointCommandArgs.class, connectorMovePointCommandFactory);
     }
 
     /**

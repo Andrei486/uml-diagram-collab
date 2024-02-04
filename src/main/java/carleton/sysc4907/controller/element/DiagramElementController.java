@@ -86,6 +86,18 @@ public abstract class DiagramElementController {
         });
     }
 
+    /**
+     * Creates a move preview by taking a screenshot of the element. Also handles any preparation before and after it,
+     * to ensure that the preview is the same size as the actual element.
+     * @return the preview element as an ImageView
+     */
+    protected ImageView takeMovePreviewImage() {
+        element.getStyleClass().removeAll(SELECTED_STYLE_CLASS);
+        var preview = previewCreator.createMovePreview(element, dragStartX, dragStartY);
+        element.getStyleClass().add(SELECTED_STYLE_CLASS);
+        return preview;
+    }
+
     protected void addMouseHandler(EventType<MouseEvent> type, EventHandler<MouseEvent> handler) {
         List<EventHandler<MouseEvent>> existingHandlers = mouseHandlers.computeIfAbsent(type, k -> new LinkedList<>());
         existingHandlers.add(handler);
@@ -127,9 +139,7 @@ public abstract class DiagramElementController {
         dragStartX = event.getSceneX();
         dragStartY = event.getSceneY();
         previewCreator.deleteMovePreview(element, preview);
-        element.getStyleClass().removeAll(SELECTED_STYLE_CLASS);
-        preview = previewCreator.createMovePreview(element, dragStartX, dragStartY);
-        element.getStyleClass().add(SELECTED_STYLE_CLASS);
+        preview = takeMovePreviewImage();
     }
 
     protected void handleMouseDraggedMovePreview(MouseEvent event) {

@@ -10,6 +10,7 @@ import javafx.beans.value.ObservableValue;
 import javafx.collections.ListChangeListener;
 import javafx.event.Event;
 import javafx.scene.Node;
+import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Pane;
 
@@ -80,6 +81,14 @@ public abstract class ResizableElementController extends DiagramElementControlle
             toggleShowResizeHandles(!showHandles);
             toggleShowResizeHandles(showHandles);
         });
+    }
+
+    @Override
+    protected ImageView takeMovePreviewImage() {
+        toggleShowResizeHandles(false);
+        var preview = super.takeMovePreviewImage();
+        toggleShowResizeHandles(true);
+        return preview;
     }
 
     private void createResizeHandles() {
