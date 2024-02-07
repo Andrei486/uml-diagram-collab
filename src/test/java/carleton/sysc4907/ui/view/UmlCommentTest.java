@@ -1,5 +1,6 @@
 package carleton.sysc4907.ui.view;
 
+import carleton.sysc4907.command.EditTextCommandFactory;
 import carleton.sysc4907.controller.element.EditableLabelController;
 import carleton.sysc4907.controller.element.UmlCommentController;
 import carleton.sysc4907.view.DiagramElement;
@@ -37,7 +38,7 @@ public class UmlCommentTest extends ResizableElementTest {
                         resizePreviewCreator,
                         resizeCommandFactory));
         dependencyInjector.addInjectionMethod(EditableLabelController.class,
-                EditableLabelController::new);
+                () -> new EditableLabelController(new EditTextCommandFactory(elementIdManager, mockManager)));
     }
 
     @Override

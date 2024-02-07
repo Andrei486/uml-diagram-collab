@@ -59,6 +59,7 @@ public abstract class DiagramElementController {
         addMouseHandler(MouseEvent.MOUSE_DRAGGED, this::handleMouseDraggedMovePreview);
         addMouseHandler(MouseEvent.MOUSE_RELEASED, this::handleMouseReleasedDeletePreview);
         addMouseHandler(MouseEvent.MOUSE_PRESSED, this::handleSelect);
+        addMouseHandler(MouseEvent.MOUSE_PRESSED, (evt) -> element.requestFocus());
     }
 
     /**
@@ -83,6 +84,18 @@ public abstract class DiagramElementController {
                 }
             }
         });
+    }
+
+    /**
+     * Creates a move preview by taking a screenshot of the element. Also handles any preparation before and after it,
+     * to ensure that the preview is the same size as the actual element.
+     * @return the preview element as an ImageView
+     */
+    protected ImageView takeMovePreviewImage() {
+        element.getStyleClass().removeAll(SELECTED_STYLE_CLASS);
+        var preview = previewCreator.createMovePreview(element, dragStartX, dragStartY);
+        element.getStyleClass().add(SELECTED_STYLE_CLASS);
+        return preview;
     }
 
     protected void addMouseHandler(EventType<MouseEvent> type, EventHandler<MouseEvent> handler) {
@@ -123,12 +136,10 @@ public abstract class DiagramElementController {
             return;
         }
         dragging = true;
-        dragStartX = event.getSceneX() - element.getLayoutX();
-        dragStartY = event.getSceneY() - element.getLayoutY();
+        dragStartX = event.getSceneX();
+        dragStartY = event.getSceneY();
         previewCreator.deleteMovePreview(element, preview);
-        element.getStyleClass().removeAll(SELECTED_STYLE_CLASS);
-        preview = previewCreator.createMovePreview(element, dragStartX, dragStartY);
-        element.getStyleClass().add(SELECTED_STYLE_CLASS);
+        preview = takeMovePreviewImage();
     }
 
     protected void handleMouseDraggedMovePreview(MouseEvent event) {
@@ -137,8 +148,8 @@ public abstract class DiagramElementController {
             return;
         }
         if (preview != null) {
-            double dragEndX = event.getSceneX();
-            double dragEndY = event.getSceneY();
+            double dragEndX = event.getSceneX() + element.getLayoutX() - preview.getLayoutX();
+            double dragEndY = event.getSceneY() + element.getLayoutY() - preview.getLayoutY();
             MoveCommandArgs args = new MoveCommandArgs(
                     dragStartX, dragStartY,
                     dragEndX, dragEndY,

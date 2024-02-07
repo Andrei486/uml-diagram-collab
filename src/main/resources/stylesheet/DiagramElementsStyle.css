@@ -41,6 +41,15 @@
     -fx-stroke: #000000;
 }
 
+.diagram-UML-class-element {
+    -fx-fill: #F4F4F4;
+    -fx-stroke: #000000;
+}
+.diagram-UML-class-invisible-element {
+    -fx-fill: none;
+    -fx-stroke: none;
+}
+
 .diagram-text {
     -fx-fill: #EDEDED00;
     -fx-stroke: #00000000;
@@ -64,5 +73,14 @@
     -fx-stroke-dash-array: 5;
     -fx-stroke-width: 10;
     -fx-border-color: #38B6FF;
+    -fx-border-style: dashed;
+}
+
+.debug {
+    -fx-fill: #00000000;
+    -fx-stroke: red;
+    -fx-stroke-dash-array: 5;
+    -fx-stroke-width: 10;
+    -fx-border-color: red;
     -fx-border-style: dashed;
 }

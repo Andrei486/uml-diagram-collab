@@ -1,18 +1,18 @@
 package carleton.sysc4907;
 
+import carleton.sysc4907.command.*;
 import carleton.sysc4907.command.ResizeCommandFactory;
 import carleton.sysc4907.command.AddCommandFactory;
 import carleton.sysc4907.command.RemoveCommandFactory;
-import carleton.sysc4907.communications.ClientManager;
-import carleton.sysc4907.communications.HostManager;
-import carleton.sysc4907.communications.Manager;
-import carleton.sysc4907.communications.MessageInterpreter;
+import carleton.sysc4907.communications.*;
 import carleton.sysc4907.controller.FormattingPanelController;
 import carleton.sysc4907.controller.SessionInfoBarController;
 import carleton.sysc4907.controller.SessionUsersMenuController;
-import carleton.sysc4907.command.MoveCommandFactory;
 import carleton.sysc4907.controller.*;
 import carleton.sysc4907.controller.element.*;
+import carleton.sysc4907.controller.element.pathing.CurvedPathStrategy;
+import carleton.sysc4907.controller.element.pathing.DirectPathStrategy;
+import carleton.sysc4907.controller.element.pathing.OrthogonalPathStrategy;
 import carleton.sysc4907.model.*;
 import carleton.sysc4907.processing.ElementCreator;
 import carleton.sysc4907.processing.ElementIdManager;
@@ -35,6 +35,7 @@ public class DiagramEditorLoader {
     private DependencyInjector injector;
 
     private MessageInterpreter interpreter;
+    private MessageConstructor constructor;
 
     /**
      * Creates a new diagram room and loads the editor. This method is to be used for hosting a diagram.
@@ -90,6 +91,7 @@ public class DiagramEditorLoader {
         MovePreviewCreator movePreviewCreator = new MovePreviewCreator(elementIdManager);
         ResizeHandleCreator resizeHandleCreator = new ResizeHandleCreator();
         ResizePreviewCreator resizePreviewCreator = new ResizePreviewCreator(elementIdManager);
+        ConnectorHandleCreator connectorHandleCreator = new ConnectorHandleCreator();
         DependencyInjector elementControllerInjector = new DependencyInjector();
         ElementCreator elementCreator;
         try {
@@ -104,12 +106,16 @@ public class DiagramEditorLoader {
         ResizeCommandFactory resizeCommandFactory = new ResizeCommandFactory(elementIdManager, manager);
         AddCommandFactory addCommandFactory = new AddCommandFactory(diagramModel, elementCreator, manager);
         RemoveCommandFactory removeCommandFactory = new RemoveCommandFactory(diagramModel, elementIdManager, manager);
+        EditTextCommandFactory editTextCommandFactory = new EditTextCommandFactory(elementIdManager, manager);
+        ConnectorMovePointCommandFactory connectorMovePointCommandFactory = new ConnectorMovePointCommandFactory(elementIdManager, manager);
         // Add factories to message interpreter: avoids circular dependencies
         interpreter.addFactories(
                 addCommandFactory,
                 removeCommandFactory,
                 moveCommandFactory,
-                resizeCommandFactory
+                resizeCommandFactory,
+                editTextCommandFactory,
+                connectorMovePointCommandFactory
         );
 
         // Add instantiation methods for the element injector, used to create diagram element controllers
@@ -119,8 +125,19 @@ public class DiagramEditorLoader {
         elementControllerInjector.addInjectionMethod(UmlCommentController.class,
                 () -> new UmlCommentController(movePreviewCreator, moveCommandFactory, diagramModel,
                         resizeHandleCreator, resizePreviewCreator, resizeCommandFactory));
+        elementControllerInjector.addInjectionMethod(UmlClassController.class,
+                () -> new UmlClassController(movePreviewCreator, moveCommandFactory, diagramModel,
+                        resizeHandleCreator, resizePreviewCreator, resizeCommandFactory));
         elementControllerInjector.addInjectionMethod(EditableLabelController.class,
-                EditableLabelController::new);
+                () -> new EditableLabelController(editTextCommandFactory));
+        elementControllerInjector.addInjectionMethod(ConnectorElementController.class,
+                () -> new ConnectorElementController(
+                        movePreviewCreator,
+                        moveCommandFactory,
+                        diagramModel,
+                        connectorHandleCreator,
+                        connectorMovePointCommandFactory,
+                        new CurvedPathStrategy()));
 
         // Add instantiation methods to the main dependency injector, used to create UI elements
         injector.addInjectionMethod(SessionInfoBarController.class,
@@ -140,7 +157,7 @@ public class DiagramEditorLoader {
     /**
      * Opens the editor screen.
      * @param stage the stage to open on.
-     * @param injector the dependancy injector
+     * @param injector the dependency injector
      * @param manager the TCP manager
      * @throws IOException when loading the resources required for the scene fails
      */
@@ -161,8 +178,9 @@ public class DiagramEditorLoader {
      * @throws IOException when the host manager could not be initialized
      */
     private Manager initializeTCPHost() throws IOException {
-        interpreter = new MessageInterpreter();
-        return new HostManager(4000, interpreter);
+        constructor = new MessageConstructor();
+        interpreter = new MessageInterpreter(constructor);
+        return new HostManager(4000, interpreter, constructor);
     }
 
     /**
@@ -175,7 +193,8 @@ public class DiagramEditorLoader {
     private Manager initializeTCPClient(
             String host,
             int port) throws IOException {
-        interpreter = new MessageInterpreter();
-        return new ClientManager(port, host, interpreter);
+        constructor = new MessageConstructor();
+        interpreter = new MessageInterpreter(constructor);
+        return new ClientManager(port, host, interpreter, constructor);
     }
 }
