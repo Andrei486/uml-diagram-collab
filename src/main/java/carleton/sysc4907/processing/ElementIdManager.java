@@ -1,6 +1,7 @@
 package carleton.sysc4907.processing;
 
 import carleton.sysc4907.EditingAreaProvider;
+import carleton.sysc4907.controller.element.DiagramElementController;
 import carleton.sysc4907.model.SessionModel;
 import javafx.scene.Node;
 import javafx.scene.Parent;
@@ -88,6 +89,21 @@ public class ElementIdManager {
     public Node getElementById(Long id) {
         Parent parent = EditingAreaProvider.getEditingArea();
         return getElementByIdInParent(parent, id);
+    }
+
+    /**
+     * Gets the element controller for the element in the diagram with the given ID, if it exists.
+     * If the ID exists but represents a non-DiagramElement object such as a preview, returns null.
+     * @param id the ID to get the controller for
+     * @return the controller if the DiagramElement exists and has one, null otherwise
+     */
+    public DiagramElementController getElementControllerById(Long id) {
+        var node = getElementById(id);
+        if (node == null) return null;
+        var controller = node.getProperties().get("controller");
+        if (controller == null) return null;
+        if (!(controller instanceof DiagramElementController)) return null;
+        return (DiagramElementController) controller;
     }
 
     private Node getElementByIdInParent(Parent parent, Long id) {

@@ -14,6 +14,10 @@
                 xmlns:fx="http://javafx.com/fxml"
                 fx:controller="carleton.sysc4907.controller.element.UmlClassController"
                 maxHeight="200" maxWidth="150">
+    <properties>
+        <!-- Set controller as property so commands can find it-->
+        <controller><fx:reference source="controller"/></controller>
+    </properties>
     <StackPane fx:id="bgStackPane">
         <Rectangle styleClass="diagram-UML-class-element" fx:id="background"/>
         <VBox>

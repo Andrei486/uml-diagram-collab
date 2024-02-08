@@ -7,6 +7,10 @@
                 xmlns:fx="http://javafx.com/fxml"
                 fx:controller="carleton.sysc4907.controller.element.UmlCommentController"
                 maxHeight="100" maxWidth="200">
+    <properties>
+        <!-- Set controller as property so commands can find it-->
+        <controller><fx:reference source="controller"/></controller>
+    </properties>
     <StackPane fx:id="stackPane">
         <Rectangle styleClass="diagram-background-element" fx:id="background"/>
         <fx:include source="EditableLabel.fxml" fx:id="editableLabel"/>

@@ -28,9 +28,6 @@ public abstract class ResizableElementController extends DiagramElementControlle
     private final ResizeCommandFactory resizeCommandFactory;
     private final ResizePreviewCreator resizePreviewCreator;
     private Pane preview = null;
-
-
-
     private double resizeDragStartX = 0;
     private double resizeDragStartY = 0;
     private double lastPreviewDragX = 0;
@@ -81,6 +78,12 @@ public abstract class ResizableElementController extends DiagramElementControlle
             toggleShowResizeHandles(!showHandles);
             toggleShowResizeHandles(showHandles);
         });
+    }
+
+    @Override
+    public void deletePreviews() {
+        super.deletePreviews();
+        resizePreviewCreator.deleteResizePreview(element, preview);
     }
 
     @Override
