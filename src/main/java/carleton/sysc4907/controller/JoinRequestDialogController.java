@@ -30,6 +30,8 @@ public class JoinRequestDialogController extends Dialog<Boolean>{
     private Window owner;
     @FXML
     public Label title_label;
+    @FXML
+    public Label username_label;
     public JoinRequestDialogController(Window owner, String username) {
         try {
             FXMLLoader loader = new FXMLLoader();
@@ -41,8 +43,8 @@ public class JoinRequestDialogController extends Dialog<Boolean>{
             initOwner(owner);
             initModality(Modality.NONE);
             initStyle(StageStyle.UNDECORATED);
-            setTitle("Join Request Received");
-            title_label.setText(username + " has requested to join!");
+            title_label.setText("Request to join from: ");
+            username_label.setText(username);
             setHeight(DEFAULT_HEIGHT);
             setWidth(DEFAULT_WIDTH);
 

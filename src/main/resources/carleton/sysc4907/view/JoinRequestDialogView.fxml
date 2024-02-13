@@ -16,6 +16,7 @@
         <HBox alignment="CENTER">
             <VBox alignment="CENTER_LEFT">
                 <Label fx:id="title_label" styleClass="label-small-title"/>
+                <Label fx:id="username_label" styleClass="label-small-subtitle"/>
                 <Rectangle height="3"/>
                 <Label text="Allow them to join the room? They will be able to view, edit, and download the diagram." styleClass="label-paragraph" wrapText="true"/>
             </VBox>

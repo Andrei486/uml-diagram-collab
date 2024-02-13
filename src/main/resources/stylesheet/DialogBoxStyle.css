@@ -83,7 +83,7 @@
     -fx-font-family: "Segoe UI";
     -fx-text-fill: #000000;
     -fx-font-weight: bold;
-    -fx-alignment: center;
+    -fx-alignment: left;
     -fx-wrap-text: true;
 }
 
@@ -94,4 +94,13 @@
     -fx-border-style: solid;
     -fx-background-radius: 2px;
     -fx-padding: 15px;
+}
+
+.label-small-subtitle {
+    -fx-font-size: 17px;
+    -fx-font-family: "Segoe UI";
+    -fx-text-fill: #000000;
+    -fx-font-weight: bold;
+    -fx-alignment: left;
+    -fx-wrap-text: false;
 }
