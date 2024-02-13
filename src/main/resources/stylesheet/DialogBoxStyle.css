@@ -83,7 +83,7 @@
     -fx-font-family: "Segoe UI";
     -fx-text-fill: #000000;
     -fx-font-weight: bold;
-    -fx-alignment: left;
+    -fx-text-alignment: left;
     -fx-wrap-text: true;
 }
 
@@ -101,6 +101,6 @@
     -fx-font-family: "Segoe UI";
     -fx-text-fill: #000000;
     -fx-font-weight: bold;
-    -fx-alignment: left;
+    -fx-text-alignment: left;
     -fx-wrap-text: false;
 }
