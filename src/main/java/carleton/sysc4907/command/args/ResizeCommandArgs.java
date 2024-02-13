@@ -10,6 +10,8 @@ public record ResizeCommandArgs(boolean isTopAnchor,
                                 double dragStartY,
                                 double dragEndX,
                                 double dragEndY,
+                                double width,
+                                double height,
                                 long elementId) implements Serializable {
 
 }

@@ -155,6 +155,8 @@ public abstract class ResizableElementController extends DiagramElementControlle
                     resizeDragStartY,
                     event.getSceneX(),
                     event.getSceneY(),
+                    preview.getMaxWidth(),
+                    preview.getMaxHeight(),
                     (long) preview.getUserData()
             );
             // this is not a tracked command because it's the preview,
@@ -180,6 +182,8 @@ public abstract class ResizableElementController extends DiagramElementControlle
                 resizeDragStartY,
                 event.getSceneX(),
                 event.getSceneY(),
+                element.getMaxWidth(),
+                element.getMaxHeight(),
                 element.getElementId()
         ));
         command.execute();
