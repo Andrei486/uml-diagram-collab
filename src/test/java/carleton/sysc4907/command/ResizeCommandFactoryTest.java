@@ -27,7 +27,7 @@ public class ResizeCommandFactoryTest {
         long testId = 12L;
         Pane mockNode = Mockito.mock(Pane.class);
         ResizeCommandArgs args = new ResizeCommandArgs(true, true,
-                10, 0, 40, -30, 100, 200, testId);
+                10, 0, 40, -30, 0, 0, 100, 200, testId);
         Manager mockManager = Mockito.mock(Manager.class);
         ResizeCommandFactory factory = new ResizeCommandFactory(mockElementIdManager, mockManager);
 

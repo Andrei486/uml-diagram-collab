@@ -26,7 +26,7 @@ public class MovePreviewCreator {
     /**
      * Creates a semi-transparent move preview for a given element and adds it to the diagram editing pane.
      * @param element the DiagramElement to preview the movement of
-     * @param dragStartX the x coordinate where dragging started
+     * @param dragStartX the elementX coordinate where dragging started
      * @param dragStartY the y coordinate where dragging started
      * @return the created preview as an ImageView
      */

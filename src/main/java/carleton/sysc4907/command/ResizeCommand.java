@@ -1,9 +1,7 @@
 package carleton.sysc4907.command;
 
-import carleton.sysc4907.command.args.AddCommandArgs;
 import carleton.sysc4907.command.args.ResizeCommandArgs;
 import carleton.sysc4907.processing.ElementIdManager;
-import carleton.sysc4907.view.DiagramElement;
 import javafx.scene.layout.Pane;
 
 public class ResizeCommand implements Command<ResizeCommandArgs> {
@@ -28,6 +26,8 @@ public class ResizeCommand implements Command<ResizeCommandArgs> {
         var dragEndY = args.dragEndY();
         var isTopAnchor = args.isTopAnchor();
         var isRightAnchor = args.isRightAnchor();
+        var elementX = args.elementX();
+        var elementY = args.elementY();
         var width = args.width();
         var height = args.height();
 
@@ -42,10 +42,10 @@ public class ResizeCommand implements Command<ResizeCommandArgs> {
         element.setMaxHeight(height + heightChange);
         // The move part can be relative, we don't want to move the element back during a resize
         if (isTopAnchor) {
-            element.setLayoutY(element.getLayoutY() - heightChange);
+            element.setLayoutY(elementY - heightChange);
         }
         if (!isRightAnchor) {
-            element.setLayoutX(element.getLayoutX() - widthChange);
+            element.setLayoutX(elementX - widthChange);
         }
     }
 

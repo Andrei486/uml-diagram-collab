@@ -155,6 +155,8 @@ public abstract class ResizableElementController extends DiagramElementControlle
                     resizeDragStartY,
                     event.getSceneX(),
                     event.getSceneY(),
+                    preview.getLayoutX(),
+                    preview.getLayoutY(),
                     preview.getMaxWidth(),
                     preview.getMaxHeight(),
                     (long) preview.getUserData()
@@ -182,6 +184,8 @@ public abstract class ResizableElementController extends DiagramElementControlle
                 resizeDragStartY,
                 event.getSceneX(),
                 event.getSceneY(),
+                element.getLayoutX(),
+                element.getLayoutY(),
                 element.getMaxWidth(),
                 element.getMaxHeight(),
                 element.getElementId()

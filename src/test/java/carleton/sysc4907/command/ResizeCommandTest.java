@@ -28,7 +28,7 @@ public class ResizeCommandTest {
         doNothing().when(mockNode).setMaxHeight(70.0);
         when(mockElementIdManager.getElementById(testId)).thenReturn(mockNode);
         ResizeCommandArgs args = new ResizeCommandArgs(false, true,
-                10, 0, 40, -30, 100, 100, testId);
+                10, 0, 40, -30, 0, 0, 100, 100, testId);
         ResizeCommand command = new ResizeCommand(args, mockElementIdManager);
 
         command.execute();
@@ -47,7 +47,7 @@ public class ResizeCommandTest {
         doNothing().when(mockNode).setMaxHeight(70.0);
         when(mockElementIdManager.getElementById(testId)).thenReturn(mockNode);
         ResizeCommandArgs args = new ResizeCommandArgs(false, true,
-                10, 0, 40, -30, 100, 100, testId);
+                10, 0, 40, -30, 0, 0, 100, 100, testId);
         ResizeCommand command = new ResizeCommand(args, mockElementIdManager);
 
         command.execute();
@@ -69,9 +69,9 @@ public class ResizeCommandTest {
         doNothing().when(mockNode).setMaxHeight(40.0);
         when(mockElementIdManager.getElementById(testId)).thenReturn(mockNode);
         ResizeCommandArgs args = new ResizeCommandArgs(false, true,
-                10, 0, 40, -30, 100, 100, testId);
+                10, 0, 40, -30, 0, 0, 100, 100, testId);
         ResizeCommandArgs args2 = new ResizeCommandArgs(false, true,
-                10, 0, 70, -60, 100, 100, testId);
+                10, 0, 70, -60, 0, 0, 100, 100, testId);
         ResizeCommand command = new ResizeCommand(args, mockElementIdManager);
         ResizeCommand command2 = new ResizeCommand(args2, mockElementIdManager);
 
@@ -92,13 +92,11 @@ public class ResizeCommandTest {
     void executeResizeTopLeft() {
         long testId = 12L;
         Pane mockNode = Mockito.mock(Pane.class);
-        Mockito.when(mockNode.getLayoutX()).thenReturn(0.0);
-        Mockito.when(mockNode.getLayoutY()).thenReturn(0.0);
         doNothing().when(mockNode).setMaxWidth(130.0);
         doNothing().when(mockNode).setMaxHeight(70.0);
         when(mockElementIdManager.getElementById(testId)).thenReturn(mockNode);
         ResizeCommandArgs args = new ResizeCommandArgs(true, false,
-                10, 0, -20, 30, 100, 100, testId);
+                10, 0, -20, 30, 0, 0, 100, 100, testId);
         ResizeCommand command = new ResizeCommand(args, mockElementIdManager);
 
         command.execute();
