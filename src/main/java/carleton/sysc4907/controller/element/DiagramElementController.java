@@ -87,6 +87,15 @@ public abstract class DiagramElementController {
     }
 
     /**
+     * Deletes all previews related to this element. Should be called when this element is deleted.
+     * Subclasses should override this if they add any previews that aren't placed as children of the element itself.
+     * Does nothing if there are no previews for this element.
+     */
+    public void deletePreviews() {
+        previewCreator.deleteMovePreview(element, preview);
+    }
+
+    /**
      * Creates a move preview by taking a screenshot of the element. Also handles any preparation before and after it,
      * to ensure that the preview is the same size as the actual element.
      * @return the preview element as an ImageView

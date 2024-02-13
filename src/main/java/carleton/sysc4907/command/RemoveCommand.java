@@ -3,6 +3,7 @@ package carleton.sysc4907.command;
 import carleton.sysc4907.EditingAreaProvider;
 import carleton.sysc4907.command.args.AddCommandArgs;
 import carleton.sysc4907.command.args.RemoveCommandArgs;
+import carleton.sysc4907.controller.element.DiagramElementController;
 import carleton.sysc4907.model.DiagramModel;
 import carleton.sysc4907.processing.ElementIdManager;
 import carleton.sysc4907.view.DiagramElement;
@@ -32,15 +33,22 @@ public class RemoveCommand implements Command<RemoveCommandArgs> {
     public void execute() {
         Pane editingArea = EditingAreaProvider.getEditingArea();
         List<DiagramElement> elements = new LinkedList<>();
+        List<DiagramElementController> controllers = new LinkedList<>();
         for (long id : args.elementIds()) {
             var element = (DiagramElement) elementIdManager.getElementById(id);
             if (element != null) {
                 elements.add(element);
             }
+            var controller = elementIdManager.getElementControllerById(id);
+            if (controller != null) {
+                controllers.add(controller);
+            }
         }
-        if (elements.isEmpty()) {
+        if (elements.isEmpty() && controllers.isEmpty()) {
             return;
         }
+
+        controllers.forEach(DiagramElementController::deletePreviews);
         editingArea.getChildren().removeAll(elements);
         diagramModel.getElements().removeAll(elements);
         diagramModel.getSelectedElements().clear();

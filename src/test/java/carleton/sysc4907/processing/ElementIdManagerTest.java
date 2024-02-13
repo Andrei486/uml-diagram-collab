@@ -1,10 +1,12 @@
 package carleton.sysc4907.processing;
 
 import carleton.sysc4907.EditingAreaProvider;
+import carleton.sysc4907.controller.element.DiagramElementController;
 import carleton.sysc4907.model.SessionModel;
 import carleton.sysc4907.model.User;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.collections.ObservableMap;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.layout.Pane;
@@ -19,8 +21,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import java.util.LinkedList;
 
 import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.lenient;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 public class ElementIdManagerTest {
@@ -40,6 +41,11 @@ public class ElementIdManagerTest {
     @Mock
     private Pane mockEditingArea;
 
+    @Mock
+    private ObservableMap<Object, Object> mockProperties;
+    @Mock
+    private DiagramElementController mockElementController;
+
     private final String testUserId = "testlongid";
     private final long testNodeId = 1L;
 
@@ -51,6 +57,7 @@ public class ElementIdManagerTest {
         lenient().when(mockSessionModel.getLocalUser()).thenReturn(mockUser);
         lenient().when(mockUser.getUsername()).thenReturn(testUserId);
         lenient().when(mockNode.getUserData()).thenReturn(testNodeId);
+        lenient().when(mockNode.getProperties()).thenReturn(mockProperties);
     }
 
     @Test
@@ -108,6 +115,41 @@ public class ElementIdManagerTest {
             nodes.add(mockNode);
             when(mockEditingArea.getChildrenUnmodifiable()).thenReturn(nodes);
             assertNull(elementIdManager.getElementById(201L));
+        }
+    }
+
+    @Test
+    public void getElementControllerByIdExists() {
+        try (MockedStatic<EditingAreaProvider> utilities = Mockito.mockStatic(EditingAreaProvider.class)) {
+            utilities.when(EditingAreaProvider::getEditingArea).thenReturn(mockEditingArea);
+            ObservableList<Node> nodes = FXCollections.observableList(new LinkedList<>());
+            nodes.add(mockNode);
+            when(mockEditingArea.getChildrenUnmodifiable()).thenReturn(nodes);
+            when(mockProperties.get("controller")).thenReturn(mockElementController);
+            assertEquals(mockElementController, elementIdManager.getElementControllerById(testNodeId));
+        }
+    }
+
+    @Test
+    public void getElementControllerByIdNoElement() {
+        try (MockedStatic<EditingAreaProvider> utilities = Mockito.mockStatic(EditingAreaProvider.class)) {
+            utilities.when(EditingAreaProvider::getEditingArea).thenReturn(mockEditingArea);
+            ObservableList<Node> nodes = FXCollections.observableList(new LinkedList<>());
+            nodes.add(mockNode);
+            when(mockEditingArea.getChildrenUnmodifiable()).thenReturn(nodes);
+            assertNull(elementIdManager.getElementControllerById(201L));
+        }
+    }
+
+    @Test
+    public void getElementControllerByIdNoController() {
+        try (MockedStatic<EditingAreaProvider> utilities = Mockito.mockStatic(EditingAreaProvider.class)) {
+            utilities.when(EditingAreaProvider::getEditingArea).thenReturn(mockEditingArea);
+            ObservableList<Node> nodes = FXCollections.observableList(new LinkedList<>());
+            nodes.add(mockNode);
+            when(mockEditingArea.getChildrenUnmodifiable()).thenReturn(nodes);
+            when(mockProperties.get("controller")).thenReturn(null);
+            assertNull(elementIdManager.getElementControllerById(testNodeId));
         }
     }
 }
