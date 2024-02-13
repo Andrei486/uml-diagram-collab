@@ -9,13 +9,15 @@
 <?import javafx.scene.shape.Rectangle?>
 <DialogPane xmlns="http://javafx.com/javafx"
             xmlns:fx="http://javafx.com/fxml"
-            prefHeight="200.0" prefWidth="400.0">
+            prefHeight="215.0" prefWidth="375.0"
+            styleClass="undecorated-dialog"
+            fx:id="dialogPane">
     <content>
         <HBox alignment="CENTER">
             <VBox alignment="CENTER_LEFT">
-                <Label text="Someone has requested to join!" styleClass="label-small-title"/>
+                <Label fx:id="title_label" styleClass="label-small-title"/>
                 <Rectangle height="3"/>
-                <Label text="Will you let them join the room?" styleClass="label-paragraph" wrapText="true"/>
+                <Label text="Allow them to join the room? They will be able to view, edit, and download the diagram." styleClass="label-paragraph" wrapText="true"/>
             </VBox>
         </HBox>
     </content>

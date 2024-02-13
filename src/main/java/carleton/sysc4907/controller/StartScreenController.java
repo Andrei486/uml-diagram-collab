@@ -234,7 +234,7 @@ public class StartScreenController {
     //TODO delete this, it is for testing only
     public void onTestBtnClicked(ActionEvent actionEvent) {
         Window owner = ((Node) actionEvent.getSource()).getScene().getWindow();
-        JoinRequestDialogController joinRequestDialogController = new JoinRequestDialogController(owner);
+        JoinRequestDialogController joinRequestDialogController = new JoinRequestDialogController(owner, "Em");
         joinRequestDialogController.showAndWait();
 
     }
