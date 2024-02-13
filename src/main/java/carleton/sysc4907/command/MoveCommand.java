@@ -22,8 +22,8 @@ public class MoveCommand implements Command<MoveCommandArgs> {
     public void execute() {
         var element = elementIdManager.getElementById(args.elementId());
         if (element == null) return;
-        element.setLayoutX(args.endX() - args.startX() + element.getLayoutX());
-        element.setLayoutY(args.endY() - args.startY() + element.getLayoutY());
+        element.setLayoutX(args.endX() - args.startX());
+        element.setLayoutY(args.endY() - args.startY());
     }
 
     @Override
