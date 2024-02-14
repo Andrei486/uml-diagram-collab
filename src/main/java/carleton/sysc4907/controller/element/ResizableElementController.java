@@ -68,16 +68,6 @@ public abstract class ResizableElementController extends DiagramElementControlle
     @Override
     public void initialize() {
         super.initialize();
-//        element.maxWidthProperty().addListener((observableValue, number, t1) -> {
-//            boolean showHandles = diagramModel.getSelectedElements().contains(element);
-//            toggleShowResizeHandles(!showHandles);
-//            toggleShowResizeHandles(showHandles);
-//        });
-//        element.maxHeightProperty().addListener((observableValue, number, t1) -> {
-//            boolean showHandles = diagramModel.getSelectedElements().contains(element);
-//            toggleShowResizeHandles(!showHandles);
-//            toggleShowResizeHandles(showHandles);
-//        });
     }
 
     @Override
