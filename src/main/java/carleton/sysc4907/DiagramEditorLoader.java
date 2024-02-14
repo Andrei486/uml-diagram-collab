@@ -88,6 +88,7 @@ public class DiagramEditorLoader {
         ElementIdManager elementIdManager = new ElementIdManager(sessionModel);
         TextFormattingModel textFormattingModel = new TextFormattingModel(fontOptionsFinder);
         DiagramModel diagramModel = new DiagramModel();
+        ExecutedCommandList executedCommandList = new ExecutedCommandList();
         MovePreviewCreator movePreviewCreator = new MovePreviewCreator(elementIdManager);
         ResizeHandleCreator resizeHandleCreator = new ResizeHandleCreator();
         ResizePreviewCreator resizePreviewCreator = new ResizePreviewCreator(elementIdManager);
@@ -102,12 +103,18 @@ public class DiagramEditorLoader {
             throw new RuntimeException(e);
         }
 
-        MoveCommandFactory moveCommandFactory = new MoveCommandFactory(elementIdManager, manager);
-        ResizeCommandFactory resizeCommandFactory = new ResizeCommandFactory(elementIdManager, manager);
-        AddCommandFactory addCommandFactory = new AddCommandFactory(diagramModel, elementCreator, manager);
-        RemoveCommandFactory removeCommandFactory = new RemoveCommandFactory(diagramModel, elementIdManager, manager);
-        EditTextCommandFactory editTextCommandFactory = new EditTextCommandFactory(elementIdManager, manager);
-        ConnectorMovePointCommandFactory connectorMovePointCommandFactory = new ConnectorMovePointCommandFactory(elementIdManager, manager);
+        MoveCommandFactory moveCommandFactory = new MoveCommandFactory(
+                elementIdManager, manager, executedCommandList);
+        ResizeCommandFactory resizeCommandFactory = new ResizeCommandFactory(
+                elementIdManager, manager, executedCommandList);
+        AddCommandFactory addCommandFactory = new AddCommandFactory(
+                diagramModel, elementCreator, manager, executedCommandList);
+        RemoveCommandFactory removeCommandFactory = new RemoveCommandFactory(
+                diagramModel, elementIdManager, manager, executedCommandList);
+        EditTextCommandFactory editTextCommandFactory = new EditTextCommandFactory(
+                elementIdManager, manager, executedCommandList);
+        ConnectorMovePointCommandFactory connectorMovePointCommandFactory = new ConnectorMovePointCommandFactory(
+                elementIdManager, manager, executedCommandList);
         // Add factories to message interpreter: avoids circular dependencies
         interpreter.addFactories(
                 addCommandFactory,
@@ -147,7 +154,7 @@ public class DiagramEditorLoader {
         injector.addInjectionMethod(SessionUsersMenuController.class,
                 () -> new SessionUsersMenuController(sessionModel));
         injector.addInjectionMethod(DiagramMenuBarController.class,
-                () -> new DiagramMenuBarController(diagramModel, removeCommandFactory));
+                () -> new DiagramMenuBarController(diagramModel, removeCommandFactory, executedCommandList));
         injector.addInjectionMethod(DiagramEditingAreaController.class,
                 () -> new DiagramEditingAreaController(diagramModel));
         injector.addInjectionMethod(ElementLibraryPanelController.class,

@@ -13,7 +13,7 @@
     <Menu text="File">
         <MenuItem text="New" disable="true"/>
         <MenuItem text="Open" disable="true"/>
-        <MenuItem text="Save" disable="true"/>
+        <MenuItem text="Save" onAction="#saveDiagram"/>
         <MenuItem text="Save As" disable="true"/>
         <SeparatorMenuItem/>
         <MenuItem text="Export To Image" disable="true"/>

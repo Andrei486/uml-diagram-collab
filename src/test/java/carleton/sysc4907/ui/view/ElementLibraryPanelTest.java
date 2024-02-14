@@ -6,6 +6,7 @@ import carleton.sysc4907.command.AddCommandFactory;
 import carleton.sysc4907.communications.Manager;
 import carleton.sysc4907.controller.ElementLibraryPanelController;
 import carleton.sysc4907.model.DiagramModel;
+import carleton.sysc4907.model.ExecutedCommandList;
 import carleton.sysc4907.processing.ElementCreator;
 import carleton.sysc4907.processing.ElementIdManager;
 import carleton.sysc4907.view.DiagramElement;
@@ -27,6 +28,7 @@ import org.testfx.framework.junit5.Start;
 import java.io.IOException;
 import java.util.Collection;
 import java.util.HashSet;
+import java.util.LinkedList;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyInt;
@@ -53,6 +55,9 @@ public class ElementLibraryPanelTest {
     private ElementCreator mockElementCreator;
 
     @Mock
+    private ExecutedCommandList mockExecutedCommandList;
+
+    @Mock
     private DiagramElement mockDiagramElement;
 
     @Mock
@@ -69,7 +74,7 @@ public class ElementLibraryPanelTest {
             DependencyInjector injector = new DependencyInjector();
 
             Manager mockManager = Mockito.mock(Manager.class);
-            AddCommandFactory addCommandFactory = new AddCommandFactory(mockDiagramModel, mockElementCreator, mockManager);
+            AddCommandFactory addCommandFactory = new AddCommandFactory(mockDiagramModel, mockElementCreator, mockManager, mockExecutedCommandList);
             injector.addInjectionMethod(ElementLibraryPanelController.class,
                     () -> {
                         var controller = new ElementLibraryPanelController(
@@ -97,6 +102,7 @@ public class ElementLibraryPanelTest {
         Mockito.when(mockNodesList.add(any(Node.class))).thenReturn(true);
         Mockito.when(mockElementCreator.create("rectangleType", testId, true))
                 .thenReturn(mockDiagramElement);
+        Mockito.when(mockExecutedCommandList.getCommandList()).thenReturn(new LinkedList<>());
         Mockito.when(mockElementIdManager.getNewIdRange(anyInt())).thenReturn(testId);
 
         robot.clickOn("#elementsPane .button");

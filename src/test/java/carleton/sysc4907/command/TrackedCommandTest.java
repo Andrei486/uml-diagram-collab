@@ -2,6 +2,7 @@ package carleton.sysc4907.command;
 import carleton.sysc4907.command.args.MoveCommandArgs;
 import carleton.sysc4907.communications.Manager;
 import carleton.sysc4907.communications.TargetedMessage;
+import carleton.sysc4907.model.ExecutedCommandList;
 import carleton.sysc4907.processing.ElementIdManager;
 import javafx.application.Platform;
 import org.junit.jupiter.api.Test;
@@ -10,6 +11,8 @@ import org.mockito.Mock;
 import org.mockito.MockedStatic;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
+
+import java.util.LinkedList;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
@@ -20,12 +23,15 @@ public class TrackedCommandTest {
     private Manager mockManager;
     @Mock
     private MoveCommand mockMoveCommand;
+    @Mock
+    private ExecutedCommandList mockExecutedCommandList;
 
     @Test
     void executeTrackedCommand() {
         //setup
-        Command<MoveCommandArgs> trackedCommand = new TrackedCommand<>(mockMoveCommand, mockManager);
+        Command<MoveCommandArgs> trackedCommand = new TrackedCommand<>(mockMoveCommand, mockManager, mockExecutedCommandList);
         Mockito.when(mockManager.isHost()).thenReturn(true);
+        Mockito.when(mockExecutedCommandList.getCommandList()).thenReturn(new LinkedList<>());
 
         try (MockedStatic<Platform> platformMockedStatic = Mockito.mockStatic(Platform.class)) {
             // test
@@ -33,6 +39,7 @@ public class TrackedCommandTest {
 
             // verify
             Mockito.verify(mockManager).send(any(TargetedMessage.class));
+            Mockito.verify(mockExecutedCommandList).getCommandList();
             platformMockedStatic.verify(() -> Platform.runLater(any()));
         }
     }
@@ -40,7 +47,7 @@ public class TrackedCommandTest {
     @Test
     void executeTrackedCommandClient() {
         //setup
-        Command<MoveCommandArgs> trackedCommand = new TrackedCommand<>(mockMoveCommand, mockManager);
+        Command<MoveCommandArgs> trackedCommand = new TrackedCommand<>(mockMoveCommand, mockManager, mockExecutedCommandList);
         Mockito.when(mockManager.isHost()).thenReturn(false);
 
         try (MockedStatic<Platform> platformMockedStatic = Mockito.mockStatic(Platform.class)) {

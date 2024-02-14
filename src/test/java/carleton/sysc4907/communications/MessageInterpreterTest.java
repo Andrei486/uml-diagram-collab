@@ -41,7 +41,7 @@ public class MessageInterpreterTest {
     public void interpretUpdateMoveCommandHost() {
         // setup
         var args = new MoveCommandArgs(0, 0, 1, 1, 0L);
-        Mockito.when(moveCommandFactory.create(any(MoveCommandArgs.class))).thenReturn(mockCommand);
+        Mockito.when(moveCommandFactory.createRemote(any(MoveCommandArgs.class))).thenReturn(mockCommand);
         Mockito.doNothing().when(messageConstructor).send(any(Message.class));
         Mockito.when(manager.isHost()).thenReturn(true);
         MessageInterpreter interpreter = new MessageInterpreter(
@@ -61,7 +61,7 @@ public class MessageInterpreterTest {
             interpreter.interpret(new Message(MessageType.UPDATE, args), 0);
 
             // verify
-            Mockito.verify(moveCommandFactory).create(any(MoveCommandArgs.class));
+            Mockito.verify(moveCommandFactory).createRemote(any(MoveCommandArgs.class));
             Mockito.verify(messageConstructor).send(any(Message.class));
             platformMockedStatic.verify(() -> Platform.runLater(any()));
         }
@@ -71,7 +71,7 @@ public class MessageInterpreterTest {
     public void interpretUpdateMoveCommandClient() {
         // setup
         var args = new MoveCommandArgs(0, 0, 1, 1, 0L);
-        Mockito.when(moveCommandFactory.create(any(MoveCommandArgs.class))).thenReturn(mockCommand);
+        Mockito.when(moveCommandFactory.createRemote(any(MoveCommandArgs.class))).thenReturn(mockCommand);
         Mockito.when(manager.isHost()).thenReturn(false);
         MessageInterpreter interpreter = new MessageInterpreter(
                 addCommandFactory,
@@ -90,7 +90,7 @@ public class MessageInterpreterTest {
             interpreter.interpret(new Message(MessageType.UPDATE, args), 0);
 
             // verify
-            Mockito.verify(moveCommandFactory).create(any(MoveCommandArgs.class));
+            Mockito.verify(moveCommandFactory).createRemote(any(MoveCommandArgs.class));
             Mockito.verify(messageConstructor, Mockito.never()).send(any(Message.class));
             platformMockedStatic.verify(() -> Platform.runLater(any()));
         }
