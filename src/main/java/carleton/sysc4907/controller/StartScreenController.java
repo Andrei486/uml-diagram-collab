@@ -231,4 +231,12 @@ public class StartScreenController {
         joinBtn.setDisable(false);
     }
 
+    /* TODO move this code to where the messages are sent and received
+    public void onTestBtnClicked(ActionEvent actionEvent) {
+        Window owner = ((Node) actionEvent.getSource()).getScene().getWindow();
+        JoinRequestDialogController joinRequestDialogController = new JoinRequestDialogController(owner, "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa");
+        var result = joinRequestDialogController.showAndWait();
+        System.out.println("join dialog result: "+result);
+    }
+     */
 }

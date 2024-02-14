@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import java.util.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<?import javafx.scene.shape.Rectangle?>
+<DialogPane xmlns="http://javafx.com/javafx"
+            xmlns:fx="http://javafx.com/fxml"
+            prefHeight="215.0" prefWidth="375.0"
+            styleClass="undecorated-dialog"
+            fx:id="dialogPane">
+    <content>
+        <HBox alignment="CENTER">
+            <VBox alignment="CENTER_LEFT">
+                <Label fx:id="title_label" styleClass="label-small-title"/>
+                <Label fx:id="username_label" styleClass="label-small-subtitle"/>
+                <Rectangle height="3"/>
+                <Label text="Allow them to join the room? They will be able to view, edit, and download the diagram." styleClass="label-paragraph" wrapText="true"/>
+            </VBox>
+        </HBox>
+    </content>
+    <ButtonType fx:id="allowButtonType" text="Allow" buttonData="OK_DONE"/>
+    <ButtonType fx:id="denyButtonType" text="Deny" buttonData="CANCEL_CLOSE"/>
+</DialogPane>

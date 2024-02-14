@@ -1,0 +1,106 @@
+
+.button {
+    -fx-font-size: 15px;
+    -fx-font-family: "Segoe UI";
+    -fx-text-fill: #000000;
+    -fx-background-color: #D9D9D9;
+    -fx-border-color: #545454;
+    -fx-border-width: 1px;
+    -fx-border-radius: 10;
+    -fx-background-radius: 10;
+    -fx-pref-width: 80;
+    -fx-alignment: CENTER;
+}
+
+.button:hover {
+    -fx-background-color: #38B6FF;
+}
+
+.button-main {
+    -fx-font-size: 14px;
+    -fx-font-family: "Segoe UI";
+    -fx-text-fill: #000000;
+    -fx-background-color: #D9D9D9;
+    -fx-border-color: #545454;
+    -fx-border-width: 1px;
+    -fx-border-radius: 10;
+    -fx-background-radius: 10;
+    -fx-pref-width: 80;
+}
+.button-main:hover {
+    -fx-background-color: #38B6FF;
+}
+.button-main:disabled {
+    -fx-text-fill: #545454;
+}
+
+.label-textfield {
+    -fx-font-size: 14px;
+    -fx-font-family: "Segoe UI";
+    -fx-text-fill: #000000;
+}
+
+.label-title {
+    -fx-font-size: 24px;
+    -fx-font-family: "Segoe UI";
+    -fx-text-fill: #000000;
+    -fx-font-weight: bold;
+}
+
+.label-subtitle {
+    -fx-font-size: 26px;
+    -fx-font-family: "Segoe UI";
+    -fx-text-fill: #000000;
+    -fx-font-weight: bold;
+}
+
+.text-field-1 {
+    -fx-font-size: 15px;
+    -fx-font-family: "Segoe UI";
+    -fx-background-color: #EDEDED;
+    -fx-text-fill: #000000;
+    -fx-border-width: 1px;
+    -fx-border-color: #545454;
+    -fx-border-radius: 10;
+    -fx-background-radius: 10;
+    -fx-prompt-text-fill: #545454;
+}
+
+.label-paragraph {
+    -fx-font-size: 15px;
+    -fx-font-family: "Segoe UI";
+    -fx-text-fill: #000000;
+}
+
+.label-small-paragraph {
+    -fx-font-size: 14px;
+    -fx-font-family: "Segoe UI";
+    -fx-text-fill: #000000;
+}
+
+.label-small-title {
+    -fx-font-size: 19px;
+    -fx-font-family: "Segoe UI";
+    -fx-text-fill: #000000;
+    -fx-font-weight: bold;
+    -fx-text-alignment: left;
+    -fx-wrap-text: true;
+}
+
+.undecorated-dialog {
+    -fx-border-color: black;
+    -fx-border-width: 1px;
+    -fx-border-radius: 2px;
+    -fx-border-style: solid;
+    -fx-background-radius: 2px;
+    -fx-padding: 15px;
+}
+
+.label-small-subtitle {
+    -fx-font-size: 17px;
+    -fx-font-family: "Segoe UI";
+    -fx-text-fill: #000000;
+    -fx-font-weight: bold;
+    -fx-text-alignment: left;
+    -fx-wrap-text: false;
+}

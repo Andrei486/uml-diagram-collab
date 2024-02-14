@@ -53,6 +53,7 @@ public class App extends Application {
         //Set up and show the scene
         Scene scene = new Scene(injector.load("view/StartScreenView.fxml"), 640, 480);
         scene.getStylesheets().add("stylesheet/StartScreenStyle.css");
+        scene.getStylesheets().add("stylesheet/DialogBoxStyle.css");
         stage.setScene(scene);
         stage.setTitle("UML Collaboration Tool");
         try {
