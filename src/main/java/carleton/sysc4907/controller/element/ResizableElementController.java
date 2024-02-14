@@ -68,16 +68,6 @@ public abstract class ResizableElementController extends DiagramElementControlle
     @Override
     public void initialize() {
         super.initialize();
-        element.maxWidthProperty().addListener((observableValue, number, t1) -> {
-            boolean showHandles = diagramModel.getSelectedElements().contains(element);
-            toggleShowResizeHandles(!showHandles);
-            toggleShowResizeHandles(showHandles);
-        });
-        element.maxHeightProperty().addListener((observableValue, number, t1) -> {
-            boolean showHandles = diagramModel.getSelectedElements().contains(element);
-            toggleShowResizeHandles(!showHandles);
-            toggleShowResizeHandles(showHandles);
-        });
     }
 
     @Override
@@ -155,6 +145,10 @@ public abstract class ResizableElementController extends DiagramElementControlle
                     resizeDragStartY,
                     event.getSceneX(),
                     event.getSceneY(),
+                    preview.getLayoutX(),
+                    preview.getLayoutY(),
+                    preview.getMaxWidth(),
+                    preview.getMaxHeight(),
                     (long) preview.getUserData()
             );
             // this is not a tracked command because it's the preview,
@@ -180,6 +174,10 @@ public abstract class ResizableElementController extends DiagramElementControlle
                 resizeDragStartY,
                 event.getSceneX(),
                 event.getSceneY(),
+                element.getLayoutX(),
+                element.getLayoutY(),
+                element.getMaxWidth(),
+                element.getMaxHeight(),
                 element.getElementId()
         ));
         command.execute();

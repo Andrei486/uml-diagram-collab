@@ -16,8 +16,6 @@ public class ResizeHandleCreator {
     }
 
     public Node createResizeHandle(DiagramElement element, boolean isTop, boolean isRight) {
-        double posX = isRight ? element.getMaxWidth() - HANDLE_SIZE : 0;
-        double posY = isTop ? 0 : element.getMaxHeight() - HANDLE_SIZE;
         FXMLLoader loader = new FXMLLoader();
         loader.setLocation(ResizeHandleCreator.class.getResource("/carleton/sysc4907/view/element/ResizeHandle.fxml"));
         Rectangle resizeHandle = null;
@@ -27,8 +25,16 @@ public class ResizeHandleCreator {
             throw new RuntimeException(e);
         }
         element.getChildren().add(resizeHandle);
-        resizeHandle.setLayoutX(posX);
-        resizeHandle.setLayoutY(posY);
+        if (isRight) {
+            resizeHandle.layoutXProperty().bind(element.maxWidthProperty().subtract(HANDLE_SIZE));
+        } else {
+            resizeHandle.layoutXProperty().set(0);
+        }
+        if (!isTop) {
+            resizeHandle.layoutYProperty().bind(element.maxHeightProperty().subtract(HANDLE_SIZE));
+        } else {
+            resizeHandle.layoutYProperty().set(0);
+        }
         return resizeHandle;
     }
 

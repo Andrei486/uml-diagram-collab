@@ -145,8 +145,8 @@ public abstract class DiagramElementController {
             return;
         }
         dragging = true;
-        dragStartX = event.getSceneX();
-        dragStartY = event.getSceneY();
+        dragStartX = event.getSceneX() - element.getLayoutX();
+        dragStartY = event.getSceneY() - element.getLayoutY();
         previewCreator.deleteMovePreview(element, preview);
         preview = takeMovePreviewImage();
     }
@@ -157,8 +157,8 @@ public abstract class DiagramElementController {
             return;
         }
         if (preview != null) {
-            double dragEndX = event.getSceneX() + element.getLayoutX() - preview.getLayoutX();
-            double dragEndY = event.getSceneY() + element.getLayoutY() - preview.getLayoutY();
+            double dragEndX = event.getSceneX();
+            double dragEndY = event.getSceneY();
             MoveCommandArgs args = new MoveCommandArgs(
                     dragStartX, dragStartY,
                     dragEndX, dragEndY,
