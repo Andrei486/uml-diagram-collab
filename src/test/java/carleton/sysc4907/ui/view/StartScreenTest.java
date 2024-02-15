@@ -3,6 +3,7 @@ import carleton.sysc4907.DependencyInjector;
 import carleton.sysc4907.DiagramEditorLoader;
 import carleton.sysc4907.controller.StartScreenController;
 import carleton.sysc4907.model.PreferencesModel;
+import carleton.sysc4907.processing.FileLoader;
 import carleton.sysc4907.processing.RoomCodeManager;
 import javafx.scene.Scene;
 import javafx.scene.input.KeyCode;
@@ -27,6 +28,9 @@ public class StartScreenTest {
     @Mock
     private DiagramEditorLoader mockLoader;
 
+    @Mock
+    private FileLoader mockFileLoader;
+
     @Start
     private void start(Stage stage) throws IOException {
         //Create dependency injector to link models and controllers
@@ -39,6 +43,7 @@ public class StartScreenTest {
                 preferencesModel,
                 mockLoader,
                 manager,
+                mockFileLoader,
                 false));
 
         //Set up and show the scene

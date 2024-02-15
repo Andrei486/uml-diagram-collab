@@ -7,6 +7,7 @@ import carleton.sysc4907.model.PreferencesModel;
 import carleton.sysc4907.model.SessionModel;
 import carleton.sysc4907.controller.SessionUsersMenuController;
 import carleton.sysc4907.model.*;
+import carleton.sysc4907.processing.FileLoader;
 import carleton.sysc4907.processing.RoomCodeManager;
 import javafx.application.Application;
 import javafx.scene.Scene;
@@ -42,12 +43,14 @@ public class App extends Application {
         PreferencesModel preferencesModel = new PreferencesModel();
         DiagramEditorLoader loader = new DiagramEditorLoader();
         RoomCodeManager roomCodeManager = new RoomCodeManager();
+        FileLoader fileLoader = new FileLoader(loader);
 
         //Add instantiation methods to the dependency injector
         injector.addInjectionMethod(StartScreenController.class, () -> new StartScreenController(
                 preferencesModel,
                 loader,
                 roomCodeManager,
+                fileLoader,
                 USE_DIRECT_CONNECTION));
 
         //Set up and show the scene

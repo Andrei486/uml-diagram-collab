@@ -4,6 +4,7 @@ import carleton.sysc4907.command.*;
 import carleton.sysc4907.command.ResizeCommandFactory;
 import carleton.sysc4907.command.AddCommandFactory;
 import carleton.sysc4907.command.RemoveCommandFactory;
+import carleton.sysc4907.command.args.*;
 import carleton.sysc4907.communications.*;
 import carleton.sysc4907.controller.FormattingPanelController;
 import carleton.sysc4907.controller.SessionInfoBarController;
@@ -26,17 +27,31 @@ import org.xml.sax.SAXException;
 import javax.xml.parsers.ParserConfigurationException;
 import java.io.IOException;
 import java.net.URISyntaxException;
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 
 public class DiagramEditorLoader {
 
     private final String TEMPLATE_FILE_PATH = "/carleton/sysc4907/templates.xml";
 
+    private Map<Class<?>, CommandFactory> commandFactories;
+
+    private DiagramModel diagramModel;
+
     private DependencyInjector injector;
 
     private MessageInterpreter interpreter;
     private MessageConstructor constructor;
+
+    /**
+     * Constructs a new DiagramEditorLoader.
+     */
+    public DiagramEditorLoader() {
+        this.commandFactories = new HashMap<>();
+        this.diagramModel = null;
+    }
 
     /**
      * Creates a new diagram room and loads the editor. This method is to be used for hosting a diagram.
@@ -104,7 +119,7 @@ public class DiagramEditorLoader {
         guestUsers.forEach(sessionModel::addUser);
         ElementIdManager elementIdManager = new ElementIdManager(sessionModel);
         TextFormattingModel textFormattingModel = new TextFormattingModel(fontOptionsFinder);
-        DiagramModel diagramModel = new DiagramModel();
+        diagramModel = new DiagramModel();
         ExecutedCommandList executedCommandList = new ExecutedCommandList();
         MovePreviewCreator movePreviewCreator = new MovePreviewCreator(elementIdManager);
         ResizeHandleCreator resizeHandleCreator = new ResizeHandleCreator();
@@ -135,6 +150,14 @@ public class DiagramEditorLoader {
                 elementIdManager, manager, executedCommandList);
         // Add factories to message interpreter: avoids circular dependencies
         interpreter.addFactories(
+                addCommandFactory,
+                removeCommandFactory,
+                moveCommandFactory,
+                resizeCommandFactory,
+                editTextCommandFactory,
+                connectorMovePointCommandFactory
+        );
+        addFactories(
                 addCommandFactory,
                 removeCommandFactory,
                 moveCommandFactory,
@@ -177,6 +200,42 @@ public class DiagramEditorLoader {
                 () -> new DiagramEditingAreaController(diagramModel));
         injector.addInjectionMethod(ElementLibraryPanelController.class,
                 () -> new ElementLibraryPanelController(diagramModel, addCommandFactory, elementCreator, elementIdManager));
+
+        // Run the previous commands
+        runPreviousCommands(commandArgsList);
+    }
+
+    public void addFactories(
+            AddCommandFactory addCommandFactory,
+            RemoveCommandFactory removeCommandFactory,
+            MoveCommandFactory moveCommandFactory,
+            ResizeCommandFactory resizeCommandFactory,
+            EditTextCommandFactory editTextCommandFactory,
+            ConnectorMovePointCommandFactory connectorMovePointCommandFactory) {
+        commandFactories.put(AddCommandArgs.class, addCommandFactory);
+        commandFactories.put(RemoveCommandArgs.class, removeCommandFactory);
+        commandFactories.put(MoveCommandArgs.class, moveCommandFactory);
+        commandFactories.put(ResizeCommandArgs.class, resizeCommandFactory);
+        commandFactories.put(EditTextCommandArgs.class, editTextCommandFactory);
+        commandFactories.put(ConnectorMovePointCommandArgs.class, connectorMovePointCommandFactory);
+    }
+
+    /**
+     * Runs a list of commands to bring back the diagram to the state it was previously in.
+     * @param commandArgsList the list of args objects for the previous commands run
+     */
+    public void runPreviousCommands(Object[] commandArgsList) {
+        for (Object args : commandArgsList) {
+            Class<?> argType = args.getClass();
+            System.out.println("Looking for type " + argType);
+            var factory = commandFactories.get(argType);
+            if (factory == null) {
+                throw new IllegalArgumentException("The given message did not correspond to a known type of command arguments.");
+            }
+            // Use remote commands to add them to the command list without transmitting them elsewhere
+            Command<?> command = factory.createRemote(argType.cast(args));
+            command.execute();
+        }
     }
 
     /**
@@ -195,6 +254,14 @@ public class DiagramEditorLoader {
         stage.setTitle("Diagram Editor");
         stage.getScene().getWindow().addEventFilter(WindowEvent.WINDOW_CLOSE_REQUEST, windowEvent -> manager.close());
         stage.show();
+    }
+
+    /**
+     * Gets the currently loaded diagram model. Will return null if no diagram has been loaded yet.
+     * @return the loaded DiagramModel
+     */
+    public DiagramModel getLoadedDiagramModel() {
+        return diagramModel;
     }
 
     /**

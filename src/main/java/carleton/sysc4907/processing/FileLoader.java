@@ -1,6 +1,7 @@
 package carleton.sysc4907.processing;
 
 import carleton.sysc4907.DiagramEditorLoader;
+import javafx.stage.Stage;
 
 import java.io.*;
 
@@ -24,9 +25,9 @@ public class FileLoader {
         return objects;
     }
 
-    public static void open(File file) throws IOException {
-        //TODO
-        //should probably throw a different exception if it's the wrong file type
-        throw new IOException();
+    public void open(File file, String roomCode, String username, Stage stage) throws IOException {
+        Object[] argsList = deserializeArgsFromFile(file);
+        diagramEditorLoader.createAndLoad(stage, username, roomCode, argsList);
+        diagramEditorLoader.getLoadedDiagramModel().setLoadedFilePath(file.getPath());
     }
 }

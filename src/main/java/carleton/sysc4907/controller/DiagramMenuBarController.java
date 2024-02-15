@@ -19,6 +19,7 @@ import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 
 import javafx.event.ActionEvent;
+import javafx.stage.WindowEvent;
 
 import java.io.File;
 import java.util.List;
@@ -55,7 +56,13 @@ public class DiagramMenuBarController {
      */
     public void closeApplication() {
         Stage stage = (Stage) menuBar.getScene().getWindow();
-        stage.close();
+        // Need to send a close request to trigger handlers (including closing TCP) instead of forcing a close
+        stage.fireEvent(
+                new WindowEvent(
+                        stage,
+                        WindowEvent.WINDOW_CLOSE_REQUEST
+                )
+        );
     }
 
     /**
