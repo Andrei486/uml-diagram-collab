@@ -201,7 +201,7 @@ public class StartScreenController {
      */
     private void joinEditor(String host, int port, String username, Stage stage) {
         try {
-            loader.loadJoin(stage, preferences.getUsername(), host, port);
+            loader.loadJoin(stage, preferences.getUsername(), host, port, new Object[0]);
         } catch (IOException e) {
             Alert alert = new Alert(Alert.AlertType.ERROR);
             alert.setTitle("Error");

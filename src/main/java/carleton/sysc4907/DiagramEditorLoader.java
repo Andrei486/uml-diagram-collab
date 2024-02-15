@@ -16,6 +16,7 @@ import carleton.sysc4907.controller.element.pathing.OrthogonalPathStrategy;
 import carleton.sysc4907.model.*;
 import carleton.sysc4907.processing.ElementCreator;
 import carleton.sysc4907.processing.ElementIdManager;
+import carleton.sysc4907.processing.FileSaver;
 import carleton.sysc4907.processing.FontOptionsFinder;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
@@ -42,11 +43,26 @@ public class DiagramEditorLoader {
      * @param stage the stage
      * @param username the username to use
      * @param roomCode the room code generated
+     * @param commandArgsList an array of command args for the commands that have already been run (from a save)
+     * @throws IOException when an error has occurred loading the editor or initializing TCP
+     */
+    public void createAndLoad(Stage stage, String username, String roomCode, Object[] commandArgsList) throws IOException {
+        var manager = initializeTCPHost();
+        load(username, roomCode, manager, commandArgsList);
+        showScene(stage, injector, manager);
+    }
+
+    /**
+     * Creates a new diagram room and loads the editor. This method is to be used for hosting a diagram.
+     * Assumes that no commands have been run beforehand; that is, the diagram is empty.
+     * @param stage the stage
+     * @param username the username to use
+     * @param roomCode the room code generated
      * @throws IOException when an error has occurred loading the editor or initializing TCP
      */
     public void createAndLoad(Stage stage, String username, String roomCode) throws IOException {
         var manager = initializeTCPHost();
-        load(username, roomCode, manager);
+        load(username, roomCode, manager, new Object[0]);
         showScene(stage, injector, manager);
     }
 
@@ -56,11 +72,12 @@ public class DiagramEditorLoader {
      * @param username the username to join with
      * @param host the IP of the host to join
      * @param port the port number on the host
+     * @param commandArgsList an array of command args for the commands that have already been run
      * @throws IOException when an error has occurred loading the editor or initializing TCP
      */
-    public void loadJoin(Stage stage, String username, String host, int port) throws IOException {
+    public void loadJoin(Stage stage, String username, String host, int port, Object[] commandArgsList) throws IOException {
         var manager = initializeTCPClient(host, port);
-        load(username, "111111111111", manager);
+        load(username, "111111111111", manager, commandArgsList);
         showScene(stage, injector, manager);
     }
 
@@ -70,7 +87,7 @@ public class DiagramEditorLoader {
      * @param roomCode the room code of the room to load
      * @param manager the TCP manager
      */
-    private void load(String username, String roomCode, Manager manager) {
+    private void load(String username, String roomCode, Manager manager, Object[] commandArgsList) {
         //Create dependency injector to link models and controllers
         injector = new DependencyInjector();
         //Create the models and supporting classes
@@ -94,6 +111,7 @@ public class DiagramEditorLoader {
         ResizePreviewCreator resizePreviewCreator = new ResizePreviewCreator(elementIdManager);
         ConnectorHandleCreator connectorHandleCreator = new ConnectorHandleCreator();
         DependencyInjector elementControllerInjector = new DependencyInjector();
+        FileSaver fileSaver = new FileSaver(diagramModel, executedCommandList);
         ElementCreator elementCreator;
         try {
             elementCreator = new ElementCreator(elementControllerInjector, TEMPLATE_FILE_PATH, elementIdManager);
@@ -154,7 +172,7 @@ public class DiagramEditorLoader {
         injector.addInjectionMethod(SessionUsersMenuController.class,
                 () -> new SessionUsersMenuController(sessionModel));
         injector.addInjectionMethod(DiagramMenuBarController.class,
-                () -> new DiagramMenuBarController(diagramModel, removeCommandFactory, executedCommandList));
+                () -> new DiagramMenuBarController(diagramModel, removeCommandFactory, fileSaver));
         injector.addInjectionMethod(DiagramEditingAreaController.class,
                 () -> new DiagramEditingAreaController(diagramModel));
         injector.addInjectionMethod(ElementLibraryPanelController.class,
