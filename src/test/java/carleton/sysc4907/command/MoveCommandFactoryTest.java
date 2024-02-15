@@ -2,6 +2,7 @@ package carleton.sysc4907.command;
 
 import carleton.sysc4907.command.args.MoveCommandArgs;
 import carleton.sysc4907.communications.Manager;
+import carleton.sysc4907.model.ExecutedCommandList;
 import carleton.sysc4907.processing.ElementIdManager;
 import javafx.scene.Node;
 import org.junit.jupiter.api.Test;
@@ -19,13 +20,15 @@ public class MoveCommandFactoryTest {
     private Node mockNode;
     @Mock
     private ElementIdManager mockElementIdManager;
+    @Mock
+    private ExecutedCommandList mockExecutedCommandList;
 
     @Test
     void createCommand() {
         long testId = 12L;
         MoveCommandArgs args = new MoveCommandArgs(10, 0, 40, -30, testId);
         Manager mockManager = Mockito.mock(Manager.class);
-        MoveCommandFactory factory = new MoveCommandFactory(mockElementIdManager, mockManager);
+        MoveCommandFactory factory = new MoveCommandFactory(mockElementIdManager, mockManager, mockExecutedCommandList);
 
         var command = factory.create(args);
 
@@ -37,7 +40,7 @@ public class MoveCommandFactoryTest {
         long testId = 12L;
         MoveCommandArgs args = new MoveCommandArgs(10, 0, 40, -30, testId);
         Manager mockManager = Mockito.mock(Manager.class);
-        MoveCommandFactory factory = new MoveCommandFactory(mockElementIdManager, mockManager);
+        MoveCommandFactory factory = new MoveCommandFactory(mockElementIdManager, mockManager, mockExecutedCommandList);
 
         var command = factory.createTracked(args);
 

@@ -7,6 +7,7 @@ import carleton.sysc4907.controller.DiagramEditingAreaController;
 import carleton.sysc4907.controller.element.MovePreviewCreator;
 import carleton.sysc4907.model.DiagramModel;
 import carleton.sysc4907.controller.element.RectangleController;
+import carleton.sysc4907.model.ExecutedCommandList;
 import carleton.sysc4907.processing.ElementIdManager;
 import carleton.sysc4907.view.DiagramElement;
 import carleton.sysc4907.model.TextFormattingModel;
@@ -64,6 +65,8 @@ public abstract class DiagramElementTest {
 
     @Mock
     protected ElementIdManager elementIdManager;
+    @Mock
+    protected ExecutedCommandList mockExecutedCommandList;
 
     /**
      * Sets up the scene before each test, loading an editing area and adding the element inside it.
@@ -73,7 +76,7 @@ public abstract class DiagramElementTest {
     @Start
     protected void start(Stage stage) throws IOException {
         diagramModel = new DiagramModel();
-        moveCommandFactory = new MoveCommandFactory(elementIdManager, mockManager);
+        moveCommandFactory = new MoveCommandFactory(elementIdManager, mockManager, mockExecutedCommandList);
         initializeDependencyInjector();
         // Load the scroll pane and get the editing area from it
         ScrollPane root = (ScrollPane) dependencyInjector.load("view/DiagramEditingArea.fxml");

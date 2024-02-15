@@ -1,8 +1,10 @@
 package carleton.sysc4907.controller;
 
+import carleton.sysc4907.command.Command;
 import carleton.sysc4907.command.MoveCommandFactory;
 import carleton.sysc4907.command.RemoveCommandFactory;
 import carleton.sysc4907.command.args.RemoveCommandArgs;
+import carleton.sysc4907.model.ExecutedCommandList;
 import carleton.sysc4907.view.DiagramElement;
 import carleton.sysc4907.model.DiagramModel;
 import javafx.fxml.FXML;
@@ -12,6 +14,7 @@ import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
 
 import java.util.List;
+import java.util.function.Consumer;
 
 /**
  * Controller for the main menu bar of the diagram editor, which includes File/Edit options, etc.
@@ -27,14 +30,16 @@ public class DiagramMenuBarController {
     private final DiagramModel diagramModel;
 
     private final RemoveCommandFactory removeCommandFactory;
+    private final ExecutedCommandList executedCommandList;
 
     /**
      * Constructs a new DiagramMenuBarController.
      * @param diagramModel the DiagramModel for the current diagram.
      */
-    public DiagramMenuBarController(DiagramModel diagramModel, RemoveCommandFactory removeCommandFactory) {
+    public DiagramMenuBarController(DiagramModel diagramModel, RemoveCommandFactory removeCommandFactory, ExecutedCommandList executedCommandList) {
         this.diagramModel = diagramModel;
         this.removeCommandFactory = removeCommandFactory;
+        this.executedCommandList = executedCommandList;
     }
 
     /**
@@ -55,7 +60,15 @@ public class DiagramMenuBarController {
             var command = removeCommandFactory.createTracked(args);
             command.execute();
         }
+    }
 
+    /**
+     * Saves the diagram.
+     */
+    public void saveDiagram() {
+        var commandList = executedCommandList.getCommandList();
+        commandList.forEach(System.out::println);
+        System.out.println(commandList.size());
     }
 
     /**

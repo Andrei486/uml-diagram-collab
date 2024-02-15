@@ -3,6 +3,7 @@ package carleton.sysc4907.command;
 import carleton.sysc4907.command.args.EditTextCommandArgs;
 import carleton.sysc4907.command.args.MoveCommandArgs;
 import carleton.sysc4907.communications.Manager;
+import carleton.sysc4907.model.ExecutedCommandList;
 import carleton.sysc4907.processing.ElementIdManager;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -17,6 +18,8 @@ public class EditTextCommandFactoryTest {
 
     @Mock
     private ElementIdManager mockElementIdManager;
+    @Mock
+    private ExecutedCommandList mockExecutedCommandList;
 
     @Test
     void createCommand() {
@@ -24,7 +27,7 @@ public class EditTextCommandFactoryTest {
         String testString = "Test";
         Manager mockManager = Mockito.mock(Manager.class);
         var args = new EditTextCommandArgs(testString, testId);
-        EditTextCommandFactory factory = new EditTextCommandFactory(mockElementIdManager, mockManager);
+        EditTextCommandFactory factory = new EditTextCommandFactory(mockElementIdManager, mockManager, mockExecutedCommandList);
 
         var command = factory.create(args);
 

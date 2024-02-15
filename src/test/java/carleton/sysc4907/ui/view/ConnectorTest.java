@@ -28,7 +28,7 @@ public class ConnectorTest extends DiagramElementTest {
     @Override
     protected void start(Stage stage) throws IOException {
         connectorHandleCreator = new ConnectorHandleCreator();
-        connectorMovePointCommandFactory = new ConnectorMovePointCommandFactory(elementIdManager, mockManager);
+        connectorMovePointCommandFactory = new ConnectorMovePointCommandFactory(elementIdManager, mockManager, mockExecutedCommandList);
         super.start(stage);
         controller = (ConnectorElementController) element.getProperties().get("controller");
     }
