@@ -1,5 +1,8 @@
 package carleton.sysc4907.communications;
 
+import javafx.scene.control.Alert;
+import javafx.scene.layout.Region;
+
 import java.io.IOException;
 import java.net.Socket;
 
@@ -32,6 +35,13 @@ public class ClientConnectionManager {
             System.out.println("Connection Made");
             clients.addClient(clientSocket);
         } catch (IOException e) {
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("Error");
+            alert.setHeaderText("Connection error");
+            alert.setContentText("The application has encountered an error connecting to the host, please check that the information is correct and try again.");
+            alert.getDialogPane().setMinHeight(Region.USE_PREF_SIZE);
+            alert.getDialogPane().setMinWidth(Region.USE_PREF_SIZE);
+            alert.showAndWait();
             throw new RuntimeException(e);
         }
     }
