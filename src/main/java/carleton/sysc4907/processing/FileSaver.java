@@ -37,7 +37,7 @@ public class FileSaver {
      * Returns a serializable object that can be saved to a file to represent the commands that have been run.
      * @return the object to write to the save file
      */
-    public Object getSaveableCommandList() {
+    private Object getSaveableCommandList() {
         var commandList = executedCommandList.getCommandList();
         return commandList.stream().map(Command::getArgs).toArray();
     }
