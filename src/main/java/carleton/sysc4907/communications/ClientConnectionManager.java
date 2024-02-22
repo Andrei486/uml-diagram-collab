@@ -19,7 +19,7 @@ public class ClientConnectionManager {
      * @param port the port host application is connected to
      * @param clients the client list of the clientManager
      */
-    ClientConnectionManager(String ip, int port, ClientList clients) {
+    ClientConnectionManager(String ip, int port, ClientList clients) throws IOException {
         this.clients = clients;
         startConnection(ip, port);
     }
@@ -29,20 +29,13 @@ public class ClientConnectionManager {
      * @param ip ip of the host
      * @param port the port host application is connected to
      */
-    public void startConnection(String ip, int port) {
+    public void startConnection(String ip, int port) throws IOException {
         try {
             clientSocket = new Socket(ip, port);
             System.out.println("Connection Made");
             clients.addClient(clientSocket);
         } catch (IOException e) {
-            Alert alert = new Alert(Alert.AlertType.ERROR);
-            alert.setTitle("Error");
-            alert.setHeaderText("Connection error");
-            alert.setContentText("The application has encountered an error connecting to the host, please check that the information is correct and try again.");
-            alert.getDialogPane().setMinHeight(Region.USE_PREF_SIZE);
-            alert.getDialogPane().setMinWidth(Region.USE_PREF_SIZE);
-            alert.showAndWait();
-            throw new RuntimeException(e);
+            throw new IOException(e);
         }
     }
 
