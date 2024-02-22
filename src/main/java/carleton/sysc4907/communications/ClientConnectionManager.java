@@ -30,13 +30,9 @@ public class ClientConnectionManager {
      * @param port the port host application is connected to
      */
     public void startConnection(String ip, int port) throws IOException {
-        try {
-            clientSocket = new Socket(ip, port);
-            System.out.println("Connection Made");
-            clients.addClient(clientSocket);
-        } catch (IOException e) {
-            throw new IOException(e);
-        }
+        clientSocket = new Socket(ip, port);
+        System.out.println("Connection Made");
+        clients.addClient(clientSocket);
     }
 
     /**
