@@ -3,6 +3,7 @@ package carleton.sysc4907.command;
 import carleton.sysc4907.command.args.MoveCommandArgs;
 import carleton.sysc4907.command.args.ResizeCommandArgs;
 import carleton.sysc4907.communications.Manager;
+import carleton.sysc4907.model.ExecutedCommandList;
 import carleton.sysc4907.processing.ElementIdManager;
 import javafx.scene.Node;
 import javafx.scene.layout.Pane;
@@ -21,6 +22,8 @@ public class ResizeCommandFactoryTest {
     private Node mockNode;
     @Mock
     private ElementIdManager mockElementIdManager;
+    @Mock
+    private ExecutedCommandList mockExecutedCommandList;
 
     @Test
     void createCommand() {
@@ -29,7 +32,7 @@ public class ResizeCommandFactoryTest {
         ResizeCommandArgs args = new ResizeCommandArgs(true, true,
                 10, 0, 40, -30, 0, 0, 100, 200, testId);
         Manager mockManager = Mockito.mock(Manager.class);
-        ResizeCommandFactory factory = new ResizeCommandFactory(mockElementIdManager, mockManager);
+        ResizeCommandFactory factory = new ResizeCommandFactory(mockElementIdManager, mockManager, mockExecutedCommandList);
 
         var command = factory.create(args);
 

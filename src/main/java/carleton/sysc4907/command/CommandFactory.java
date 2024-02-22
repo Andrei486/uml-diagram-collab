@@ -20,4 +20,11 @@ public interface CommandFactory<T extends Command<TArgs>, TArgs> {
      * @return a tracked command that wraps a command of the specified type
      */
     Command<TArgs> createTracked(TArgs args);
+
+    /**
+     * Creates a remote command object, for commands received via TCP.
+     * @param args the arguments for the remote command
+     * @return a remote command wrapping a command of the specified type
+     */
+    Command<TArgs> createRemote(TArgs args);
 }
