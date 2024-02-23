@@ -1,6 +1,7 @@
 package carleton.sysc4907.processing;
 
 import carleton.sysc4907.command.Command;
+import carleton.sysc4907.command.CommandListCompressor;
 import carleton.sysc4907.model.DiagramModel;
 import carleton.sysc4907.model.ExecutedCommandList;
 
@@ -10,9 +11,11 @@ public class FileSaver {
 
     private final DiagramModel diagramModel;
     private final ExecutedCommandList executedCommandList;
-    public FileSaver(DiagramModel diagramModel, ExecutedCommandList executedCommandList) {
+    private final CommandListCompressor commandListCompressor;
+    public FileSaver(DiagramModel diagramModel, ExecutedCommandList executedCommandList, CommandListCompressor commandListCompressor) {
         this.diagramModel = diagramModel;
         this.executedCommandList = executedCommandList;
+        this.commandListCompressor = commandListCompressor;
     }
 
     public boolean save() {
@@ -39,6 +42,11 @@ public class FileSaver {
      */
     private Object getSaveableCommandList() {
         var commandList = executedCommandList.getCommandList();
-        return commandList.stream().map(Command::getArgs).toArray();
+        var compressedCommandList = commandListCompressor.compressCommandList(commandList);
+        System.out.println(compressedCommandList.size());
+        for (var command : compressedCommandList) {
+            System.out.println(command);
+        }
+        return compressedCommandList.stream().map(Command::getArgs).toArray();
     }
 }
