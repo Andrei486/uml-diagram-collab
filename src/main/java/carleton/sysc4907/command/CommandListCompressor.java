@@ -1,6 +1,7 @@
 package carleton.sysc4907.command;
 
 import carleton.sysc4907.command.Command;
+import carleton.sysc4907.command.args.*;
 import carleton.sysc4907.model.DiagramModel;
 import carleton.sysc4907.processing.ElementIdManager;
 
@@ -11,6 +12,17 @@ public class CommandListCompressor {
 
     private final DiagramModel diagramModel;
     private final ElementIdManager elementIdManager;
+
+    // I wish we could find these via reflection but no
+    private final Class[] commandClasses = new Class[] {
+            AddCommandArgs.class,
+            RemoveCommandArgs.class,
+            ConnectorMovePointCommandArgs.class,
+            EditTextCommandArgs.class,
+            MoveCommandArgs.class,
+            RemoveCommandArgs.class,
+            ResizeCommandArgs.class
+    };
 
     public CommandListCompressor(DiagramModel diagramModel, ElementIdManager elementIdManager) {
         this.diagramModel = diagramModel;
@@ -32,6 +44,11 @@ public class CommandListCompressor {
                 cmd -> Arrays.stream(cmd.getArgs().getElementIds()).anyMatch(
                         id::equals
                 )).toList();
+    }
+
+    private Command<?> findLastOfType(List<Command<?>> commandList, Class type) {
+        var commandsOfType = commandList.stream().filter(cmd ->  type.isInstance(cmd.getArgs())).toList();
+        return commandsOfType.get(commandsOfType.size() - 1);
     }
 
     private List<Command<?>> compressCommandListForId(List<Command<?>> idCommandList) {
