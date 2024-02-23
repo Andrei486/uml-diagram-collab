@@ -12,6 +12,10 @@ public record ResizeCommandArgs(boolean isTopAnchor,
                                 double elementY,
                                 double width,
                                 double height,
-                                long elementId) implements Serializable {
+                                long elementId) implements Serializable, CommandArgs {
 
+    @Override
+    public long[] getElementIds() {
+        return new long[] {elementId};
+    }
 }

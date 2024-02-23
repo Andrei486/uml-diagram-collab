@@ -113,7 +113,7 @@ public class MessageInterpreter {
         if (factory == null) {
             throw new IllegalArgumentException("The given message did not correspond to a known type of command arguments.");
         }
-        Command<?> command = factory.createRemote(argType.cast(args));
+        Command<?> command = factory.createRemote((CommandArgs) argType.cast(args));
 
         Platform.runLater(command::execute);
         System.out.println("Interpreted command finished executing (on platform) at time " + LocalTime.now());

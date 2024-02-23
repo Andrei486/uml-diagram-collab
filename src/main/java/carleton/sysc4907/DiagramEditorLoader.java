@@ -233,7 +233,7 @@ public class DiagramEditorLoader {
                 throw new IllegalArgumentException("The given message did not correspond to a known type of command arguments.");
             }
             // Use remote commands to add them to the command list without transmitting them elsewhere
-            Command<?> command = factory.createRemote(argType.cast(args));
+            Command<?> command = factory.createRemote((CommandArgs) argType.cast(args));
             command.execute();
         }
     }

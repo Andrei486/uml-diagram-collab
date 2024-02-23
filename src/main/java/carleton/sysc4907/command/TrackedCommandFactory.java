@@ -1,5 +1,6 @@
 package carleton.sysc4907.command;
 
+import carleton.sysc4907.command.args.CommandArgs;
 import carleton.sysc4907.communications.Manager;
 import carleton.sysc4907.model.ExecutedCommandList;
 
@@ -8,7 +9,7 @@ import carleton.sysc4907.model.ExecutedCommandList;
  * @param <T> The type of commands created by the factory.
  * @param <TArgs> The arg type the command takes.
  */
-public abstract class TrackedCommandFactory<T extends Command<TArgs>, TArgs> implements CommandFactory<T, TArgs>{
+public abstract class TrackedCommandFactory<T extends Command<TArgs>, TArgs extends CommandArgs> implements CommandFactory<T, TArgs>{
 
     private final Manager manager;
     private final ExecutedCommandList executedCommandList;
