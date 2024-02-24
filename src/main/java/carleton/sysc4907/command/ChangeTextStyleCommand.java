@@ -2,18 +2,60 @@ package carleton.sysc4907.command;
 
 import carleton.sysc4907.command.args.ChangeTextStyleCommandArgs;
 import carleton.sysc4907.command.args.EditTextCommandArgs;
+import carleton.sysc4907.controller.element.EditableLabelController;
 import carleton.sysc4907.processing.ElementIdManager;
 import javafx.beans.property.Property;
+import javafx.scene.text.Font;
 import org.w3c.dom.Text;
 
 import java.util.EnumMap;
+import java.util.HashMap;
 
 public class ChangeTextStyleCommand implements Command<ChangeTextStyleCommandArgs>{
 
-    private EnumMap<TextStyleProperty, Property> propertyEnumMap = new EnumMap<TextStyleProperty, Property>();
+    private ElementIdManager idManager;
+
+    private ChangeTextStyleCommandArgs args;
 
     public ChangeTextStyleCommand(ChangeTextStyleCommandArgs args, ElementIdManager idManager) {
-        propertyEnumMap.put(TextStyleProperty.BOLD, idManager.getElementById(args.elementId()).)
+        this.idManager = idManager;
+        this.args = args;
     }
-    //use an enum map to map the enum properties to real properties
+
+    @Override
+    public void execute() {
+        TextStyleProperty propertyToChange = args.property();
+        Object valueToApply = args.value();
+        EditableLabelController controller = (EditableLabelController) idManager.getElementById(args.elementId()).getProperties().get("controller");
+        HashMap<TextStyleProperty, String> oldFontProperties = parseOldFontStyle(controller.getLabel().getFont());
+
+        switch (propertyToChange) {
+            case BOLD -> {
+                return;
+            }
+            case SIZE -> {
+                return;
+            }
+            case ITALICS -> {
+                return;
+            }
+            case UNDERLINE -> {
+                return;
+            }
+            case FONT_FAMILY -> {
+                return;
+            }
+        }
+    }
+
+    private HashMap<TextStyleProperty, String> parseOldFontStyle(Font oldFont) {
+        System.out.print(oldFont.getStyle());
+        return null;
+    }
+
+    @Override
+    public ChangeTextStyleCommandArgs getArgs() {
+        return args;
+    }
+
 }

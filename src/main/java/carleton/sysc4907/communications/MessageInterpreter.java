@@ -52,7 +52,8 @@ public class MessageInterpreter {
         ResizeCommandFactory resizeCommandFactory,
         EditTextCommandFactory editTextCommandFactory,
         ConnectorMovePointCommandFactory connectorMovePointCommandFactory,
-        MessageConstructor messageConstructor
+        MessageConstructor messageConstructor,
+        ChangeTextStyleCommandFactory changeTextStyleCommandFactory
     ) {
         this(messageConstructor);
         addFactories(
@@ -61,16 +62,19 @@ public class MessageInterpreter {
                 moveCommandFactory,
                 resizeCommandFactory,
                 editTextCommandFactory,
-                connectorMovePointCommandFactory);
+                connectorMovePointCommandFactory,
+                changeTextStyleCommandFactory);
     }
 
     /**
      * Adds the factories to the MessageInterpreter
-     * @param addCommandFactory the systems AddCommandFactory
-     * @param removeCommandFactory the systems RemoveCommandFactory
-     * @param moveCommandFactory the systems MoveCommandFactory
-     * @param resizeCommandFactory the systems ResizeCommandFactory
-     * @param editTextCommandFactory the systems EditTextCommandFactory
+     *
+     * @param addCommandFactory             the systems AddCommandFactory
+     * @param removeCommandFactory          the systems RemoveCommandFactory
+     * @param moveCommandFactory            the systems MoveCommandFactory
+     * @param resizeCommandFactory          the systems ResizeCommandFactory
+     * @param editTextCommandFactory        the systems EditTextCommandFactory
+     * @param changeTextStyleCommandFactory
      */
     public void addFactories(
             AddCommandFactory addCommandFactory,
@@ -78,7 +82,7 @@ public class MessageInterpreter {
             MoveCommandFactory moveCommandFactory,
             ResizeCommandFactory resizeCommandFactory,
             EditTextCommandFactory editTextCommandFactory,
-            ConnectorMovePointCommandFactory connectorMovePointCommandFactory) {
+            ConnectorMovePointCommandFactory connectorMovePointCommandFactory, ChangeTextStyleCommandFactory changeTextStyleCommandFactory) {
         commandFactories.put(AddCommandArgs.class, addCommandFactory);
         commandFactories.put(RemoveCommandArgs.class, removeCommandFactory);
         commandFactories.put(MoveCommandArgs.class, moveCommandFactory);

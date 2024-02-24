@@ -6,6 +6,10 @@
 <Group xmlns="http://javafx.com/javafx"
             xmlns:fx="http://javafx.com/fxml"
             fx:controller="carleton.sysc4907.controller.element.EditableLabelController">
+    <properties>
+        <!-- Set controller as property so commands can find it-->
+        <controller><fx:reference source="controller"/></controller>
+    </properties>
     <Label styleClass="diagram-text" fx:id="label" userData="0"/>
     <TextArea styleClass="diagram-text" fx:id="editableText"/>
 </Group>

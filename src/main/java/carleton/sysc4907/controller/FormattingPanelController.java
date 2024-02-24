@@ -1,7 +1,15 @@
 package carleton.sysc4907.controller;
 
+import carleton.sysc4907.command.ChangeTextStyleCommand;
+import carleton.sysc4907.command.ChangeTextStyleCommandFactory;
+import carleton.sysc4907.command.Command;
+import carleton.sysc4907.command.TextStyleProperty;
+import carleton.sysc4907.command.args.ChangeTextStyleCommandArgs;
+import carleton.sysc4907.model.DiagramModel;
 import carleton.sysc4907.model.TextFormattingModel;
+import carleton.sysc4907.view.DiagramElement;
 import javafx.beans.value.ChangeListener;
+import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 
@@ -27,12 +35,18 @@ public class FormattingPanelController {
 
     private final TextFormattingModel textFormattingModel;
 
+    private final ChangeTextStyleCommandFactory changeTextStyleCommandFactory;
+
+    private final DiagramModel diagramModel;
+
     /**
      * Constructs a FormattingPanelController.
      * @param textFormattingModel the TextFormattingModel containing text formatting information
      */
-    public FormattingPanelController(TextFormattingModel textFormattingModel) {
+    public FormattingPanelController(TextFormattingModel textFormattingModel, ChangeTextStyleCommandFactory changeTextStyleCommandFactory, DiagramModel diagramModel) {
         this.textFormattingModel = textFormattingModel;
+        this.changeTextStyleCommandFactory = changeTextStyleCommandFactory;
+        this.diagramModel = diagramModel;
     }
 
     /**
@@ -49,6 +63,11 @@ public class FormattingPanelController {
 
     private void onBoldButtonToggled(Boolean t1) {
         System.out.println("The bold button has been toggled! Val = " + t1);
+        ObservableList<DiagramElement> selectedElems = diagramModel.getSelectedElements();
+        for(int i = 0 ; i < selectedElems.toArray().length ; i++) {
+            Command<ChangeTextStyleCommandArgs> command = changeTextStyleCommandFactory.createTracked(new ChangeTextStyleCommandArgs(TextStyleProperty.BOLD, t1.toString(), selectedElems.get(i).getElementId()));
+            command.execute();
+        }
     }
 
 
