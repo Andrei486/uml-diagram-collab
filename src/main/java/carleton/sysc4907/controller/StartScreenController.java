@@ -214,7 +214,8 @@ public class StartScreenController {
             Alert alert = new Alert(Alert.AlertType.ERROR);
             alert.setTitle("Error");
             alert.setHeaderText("Join error");
-            alert.setContentText("The application has encountered an error joining the diagram, please try again.");
+            alert.setContentText("The application has encountered an error joining the diagram, " +
+                    "please ensure the information entered is correct and try again.");
             alert.getDialogPane().setMinHeight(Region.USE_PREF_SIZE);
             alert.getDialogPane().setMinWidth(Region.USE_PREF_SIZE);
             alert.showAndWait();
