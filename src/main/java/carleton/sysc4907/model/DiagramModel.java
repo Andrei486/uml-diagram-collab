@@ -19,6 +19,8 @@ public class DiagramModel {
 
     private final BooleanProperty isElementSelected = new SimpleBooleanProperty();
 
+    private String loadedFilePath;
+
     /**
      * Constructs a new DiagramModel with no elements.
      */
@@ -28,6 +30,24 @@ public class DiagramModel {
         ListProperty<DiagramElement> listProperty = new SimpleListProperty<>();
         listProperty.setValue(selectedElements);
         isElementSelected.bind(listProperty.emptyProperty().not());
+        this.loadedFilePath = null;
+    }
+
+    /**
+     * Gets the currently loaded file path for this diagram, i.e. the file from which the diagram was loaded and
+     * where it will be saved by default.
+     * @return the loaded file's path
+     */
+    public String getLoadedFilePath() {
+        return loadedFilePath;
+    }
+
+    /**
+     * Sets the loaded file path for this diagram, i.e. the file to which the diagram will be saved by default.
+     * @param loadedFilePath the loaded file's path
+     */
+    public void setLoadedFilePath(String loadedFilePath) {
+        this.loadedFilePath = loadedFilePath;
     }
 
     /**

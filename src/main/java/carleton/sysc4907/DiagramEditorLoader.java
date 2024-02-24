@@ -4,6 +4,7 @@ import carleton.sysc4907.command.*;
 import carleton.sysc4907.command.ResizeCommandFactory;
 import carleton.sysc4907.command.AddCommandFactory;
 import carleton.sysc4907.command.RemoveCommandFactory;
+import carleton.sysc4907.command.args.*;
 import carleton.sysc4907.communications.*;
 import carleton.sysc4907.controller.FormattingPanelController;
 import carleton.sysc4907.controller.SessionInfoBarController;
@@ -16,6 +17,7 @@ import carleton.sysc4907.controller.element.pathing.OrthogonalPathStrategy;
 import carleton.sysc4907.model.*;
 import carleton.sysc4907.processing.ElementCreator;
 import carleton.sysc4907.processing.ElementIdManager;
+import carleton.sysc4907.processing.FileSaver;
 import carleton.sysc4907.processing.FontOptionsFinder;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
@@ -25,12 +27,18 @@ import org.xml.sax.SAXException;
 import javax.xml.parsers.ParserConfigurationException;
 import java.io.IOException;
 import java.net.URISyntaxException;
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 
 public class DiagramEditorLoader {
 
     private final String TEMPLATE_FILE_PATH = "/carleton/sysc4907/templates.xml";
+
+    private Map<Class<?>, CommandFactory> commandFactories;
+
+    private DiagramModel diagramModel;
 
     private DependencyInjector injector;
 
@@ -38,7 +46,30 @@ public class DiagramEditorLoader {
     private MessageConstructor constructor;
 
     /**
+     * Constructs a new DiagramEditorLoader.
+     */
+    public DiagramEditorLoader() {
+        this.commandFactories = new HashMap<>();
+        this.diagramModel = null;
+    }
+
+    /**
      * Creates a new diagram room and loads the editor. This method is to be used for hosting a diagram.
+     * @param stage the stage
+     * @param username the username to use
+     * @param roomCode the room code generated
+     * @param commandArgsList an array of command args for the commands that have already been run (from a save)
+     * @throws IOException when an error has occurred loading the editor or initializing TCP
+     */
+    public void createAndLoad(Stage stage, String username, String roomCode, Object[] commandArgsList) throws IOException {
+        var manager = initializeTCPHost();
+        load(username, roomCode, manager, commandArgsList);
+        showScene(stage, injector, manager);
+    }
+
+    /**
+     * Creates a new diagram room and loads the editor. This method is to be used for hosting a diagram.
+     * Assumes that no commands have been run beforehand; that is, the diagram is empty.
      * @param stage the stage
      * @param username the username to use
      * @param roomCode the room code generated
@@ -46,7 +77,7 @@ public class DiagramEditorLoader {
      */
     public void createAndLoad(Stage stage, String username, String roomCode) throws IOException {
         var manager = initializeTCPHost();
-        load(username, roomCode, manager);
+        load(username, roomCode, manager, new Object[0]);
         showScene(stage, injector, manager);
     }
 
@@ -56,11 +87,12 @@ public class DiagramEditorLoader {
      * @param username the username to join with
      * @param host the IP of the host to join
      * @param port the port number on the host
+     * @param commandArgsList an array of command args for the commands that have already been run
      * @throws IOException when an error has occurred loading the editor or initializing TCP
      */
-    public void loadJoin(Stage stage, String username, String host, int port) throws IOException {
+    public void loadJoin(Stage stage, String username, String host, int port, Object[] commandArgsList) throws IOException {
         var manager = initializeTCPClient(host, port);
-        load(username, "111111111111", manager);
+        load(username, "111111111111", manager, commandArgsList);
         showScene(stage, injector, manager);
     }
 
@@ -70,7 +102,7 @@ public class DiagramEditorLoader {
      * @param roomCode the room code of the room to load
      * @param manager the TCP manager
      */
-    private void load(String username, String roomCode, Manager manager) {
+    private void load(String username, String roomCode, Manager manager, Object[] commandArgsList) {
         //Create dependency injector to link models and controllers
         injector = new DependencyInjector();
         //Create the models and supporting classes
@@ -87,13 +119,14 @@ public class DiagramEditorLoader {
         guestUsers.forEach(sessionModel::addUser);
         ElementIdManager elementIdManager = new ElementIdManager(sessionModel);
         TextFormattingModel textFormattingModel = new TextFormattingModel(fontOptionsFinder);
-        DiagramModel diagramModel = new DiagramModel();
+        diagramModel = new DiagramModel();
         ExecutedCommandList executedCommandList = new ExecutedCommandList();
         MovePreviewCreator movePreviewCreator = new MovePreviewCreator(elementIdManager);
         ResizeHandleCreator resizeHandleCreator = new ResizeHandleCreator();
         ResizePreviewCreator resizePreviewCreator = new ResizePreviewCreator(elementIdManager);
         ConnectorHandleCreator connectorHandleCreator = new ConnectorHandleCreator();
         DependencyInjector elementControllerInjector = new DependencyInjector();
+        FileSaver fileSaver = new FileSaver(diagramModel, executedCommandList);
         ElementCreator elementCreator;
         try {
             elementCreator = new ElementCreator(elementControllerInjector, TEMPLATE_FILE_PATH, elementIdManager);
@@ -117,6 +150,14 @@ public class DiagramEditorLoader {
                 elementIdManager, manager, executedCommandList);
         // Add factories to message interpreter: avoids circular dependencies
         interpreter.addFactories(
+                addCommandFactory,
+                removeCommandFactory,
+                moveCommandFactory,
+                resizeCommandFactory,
+                editTextCommandFactory,
+                connectorMovePointCommandFactory
+        );
+        addFactories(
                 addCommandFactory,
                 removeCommandFactory,
                 moveCommandFactory,
@@ -154,11 +195,47 @@ public class DiagramEditorLoader {
         injector.addInjectionMethod(SessionUsersMenuController.class,
                 () -> new SessionUsersMenuController(sessionModel));
         injector.addInjectionMethod(DiagramMenuBarController.class,
-                () -> new DiagramMenuBarController(diagramModel, removeCommandFactory, executedCommandList));
+                () -> new DiagramMenuBarController(diagramModel, removeCommandFactory, fileSaver));
         injector.addInjectionMethod(DiagramEditingAreaController.class,
                 () -> new DiagramEditingAreaController(diagramModel));
         injector.addInjectionMethod(ElementLibraryPanelController.class,
                 () -> new ElementLibraryPanelController(diagramModel, addCommandFactory, elementCreator, elementIdManager));
+
+        // Run the previous commands
+        runPreviousCommands(commandArgsList);
+    }
+
+    public void addFactories(
+            AddCommandFactory addCommandFactory,
+            RemoveCommandFactory removeCommandFactory,
+            MoveCommandFactory moveCommandFactory,
+            ResizeCommandFactory resizeCommandFactory,
+            EditTextCommandFactory editTextCommandFactory,
+            ConnectorMovePointCommandFactory connectorMovePointCommandFactory) {
+        commandFactories.put(AddCommandArgs.class, addCommandFactory);
+        commandFactories.put(RemoveCommandArgs.class, removeCommandFactory);
+        commandFactories.put(MoveCommandArgs.class, moveCommandFactory);
+        commandFactories.put(ResizeCommandArgs.class, resizeCommandFactory);
+        commandFactories.put(EditTextCommandArgs.class, editTextCommandFactory);
+        commandFactories.put(ConnectorMovePointCommandArgs.class, connectorMovePointCommandFactory);
+    }
+
+    /**
+     * Runs a list of commands to bring back the diagram to the state it was previously in.
+     * @param commandArgsList the list of args objects for the previous commands run
+     */
+    public void runPreviousCommands(Object[] commandArgsList) {
+        for (Object args : commandArgsList) {
+            Class<?> argType = args.getClass();
+            System.out.println("Looking for type " + argType);
+            var factory = commandFactories.get(argType);
+            if (factory == null) {
+                throw new IllegalArgumentException("The given message did not correspond to a known type of command arguments.");
+            }
+            // Use remote commands to add them to the command list without transmitting them elsewhere
+            Command<?> command = factory.createRemote(argType.cast(args));
+            command.execute();
+        }
     }
 
     /**
@@ -177,6 +254,14 @@ public class DiagramEditorLoader {
         stage.setTitle("Diagram Editor");
         stage.getScene().getWindow().addEventFilter(WindowEvent.WINDOW_CLOSE_REQUEST, windowEvent -> manager.close());
         stage.show();
+    }
+
+    /**
+     * Gets the currently loaded diagram model. Will return null if no diagram has been loaded yet.
+     * @return the loaded DiagramModel
+     */
+    public DiagramModel getLoadedDiagramModel() {
+        return diagramModel;
     }
 
     /**
