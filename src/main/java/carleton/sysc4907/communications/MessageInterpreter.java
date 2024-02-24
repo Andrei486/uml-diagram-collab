@@ -96,6 +96,8 @@ public class MessageInterpreter {
         System.out.println(message.type() + " - " + message.payload());
         switch (message.type()) {
             case UPDATE -> interpretUpdate(message, userId);
+            case JOIN_REQUEST -> interpretJoinRequest(message, userId);
+            case JOIN_RESPONSE -> interpretJoinResponse(message, userId);
             default -> System.out.println(message);
         }
     }
@@ -121,5 +123,28 @@ public class MessageInterpreter {
         if (isHost) {
             messageConstructor.send(message);
         }
+    }
+
+    /**
+     * Interpret the Join Request received
+     * @param message the message
+     * @param userId the user id who sent the message
+     */
+    private void interpretJoinRequest(Message message, long userId){
+        if (isHost) {
+            manager.validateClient(userId);
+            messageConstructor.sendToInvalid(new Message(MessageType.JOIN_RESPONSE, null), userId);
+        }
+        System.out.println("Join Request Received");
+    }
+
+    /**
+     * Interpret the Join Response received
+     * @param message the message
+     * @param userId the user id who sent the message
+     */
+    private void interpretJoinResponse(Message message, long userId){
+        manager.validateClient(userId);
+        System.out.println("Join Response Received");
     }
 }

@@ -12,7 +12,6 @@ import java.util.concurrent.LinkedBlockingQueue;
  * This class manages to connect between the host and the clients
  */
 public class HostManager extends Manager {
-    private ClientList clientList;
     private TCPSender sender;
     private HostConnectionManager hostConnectionManager;
     private Thread senderThread;
