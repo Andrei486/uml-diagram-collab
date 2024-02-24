@@ -28,6 +28,8 @@ public class ClientList {
         return clients;
     }
 
+    public ClientData getClient(long id) {return clients.get(id);}
+
     /**
      * Creates of a clientData for a client and adds it to the map,
      * the socket port number is used as the id
@@ -70,6 +72,10 @@ public class ClientList {
         return outputs;
     }
 
+    /**
+     * Gets the output streams for all the valid clients
+     * @return a map of all ids and output streams for the clients in a map
+     */
     public HashMap<Long, ObjectOutputStream> getValidOutputStreams() {
         HashMap<Long, ObjectOutputStream> outputs = new HashMap<>();
 

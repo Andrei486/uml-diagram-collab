@@ -10,6 +10,7 @@ public abstract class Manager {
     protected LinkedBlockingQueue<TargetedMessage> sendingQueue;
     protected MessageInterpreter messageInterpreter;
     protected MessageConstructor messageConstructor;
+    protected ClientList clientList;
     protected boolean isHost;
 
 
@@ -23,6 +24,14 @@ public abstract class Manager {
      */
     public void send(TargetedMessage targetedMessage) {
         sendingQueue.add(targetedMessage);
+    }
+
+    /**
+     * Validate a user
+     * @param id the id of the user being validated
+     */
+    public void validateClient(long id) {
+        clientList.getClient(id).setValid(true);
     }
     
     public boolean isHost() {
