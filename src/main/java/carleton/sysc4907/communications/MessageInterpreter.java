@@ -144,7 +144,9 @@ public class MessageInterpreter {
      * @param userId the user id who sent the message
      */
     private void interpretJoinResponse(Message message, long userId){
-        manager.validateClient(userId);
+        if (!isHost) {
+            manager.validateClient(userId);
+        }
         System.out.println("Join Response Received");
     }
 }
