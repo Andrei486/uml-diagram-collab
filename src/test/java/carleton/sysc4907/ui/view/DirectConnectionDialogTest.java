@@ -4,6 +4,7 @@ import carleton.sysc4907.DependencyInjector;
 import carleton.sysc4907.DiagramEditorLoader;
 import carleton.sysc4907.controller.StartScreenController;
 import carleton.sysc4907.model.PreferencesModel;
+import carleton.sysc4907.processing.FileLoader;
 import carleton.sysc4907.processing.RoomCodeManager;
 import javafx.scene.Scene;
 import javafx.scene.input.KeyCode;
@@ -28,6 +29,9 @@ public class DirectConnectionDialogTest {
     @Mock
     private DiagramEditorLoader mockLoader;
 
+    @Mock
+    private FileLoader mockFileLoader;
+
     @Start
     private void start(Stage stage) throws IOException {
         //Create dependency injector to link models and controllers
@@ -40,6 +44,7 @@ public class DirectConnectionDialogTest {
                 preferencesModel,
                 mockLoader,
                 manager,
+                mockFileLoader,
                 true));
 
         //Set up and show the scene
@@ -58,12 +63,12 @@ public class DirectConnectionDialogTest {
         robot.clickOn("#ipPortField");
         robot.type(KeyCode.A);
         robot.clickOn(".button");
-        Mockito.verify(mockLoader, Mockito.never()).loadJoin(Mockito.any(Stage.class), Mockito.any(String.class), Mockito.any(String.class), Mockito.anyInt());
+        Mockito.verify(mockLoader, Mockito.never()).loadJoin(Mockito.any(Stage.class), Mockito.any(String.class), Mockito.any(String.class), Mockito.anyInt(), Mockito.any(Object[].class));
     }
 
     @Test
     public void joinButtonClickedWithUsername(FxRobot robot) throws IOException, InterruptedException {
-        Mockito.doNothing().when(mockLoader).loadJoin(Mockito.any(Stage.class), Mockito.anyString(), Mockito.anyString(), Mockito.anyInt());
+        Mockito.doNothing().when(mockLoader).loadJoin(Mockito.any(Stage.class), Mockito.anyString(), Mockito.anyString(), Mockito.anyInt(), Mockito.any(Object[].class));
         robot.clickOn("#usernameField");
         robot.type(KeyCode.T, KeyCode.E, KeyCode.S, KeyCode.T);
         robot.clickOn("#joinBtn");
@@ -77,7 +82,7 @@ public class DirectConnectionDialogTest {
 
         TimeUnit.MILLISECONDS.sleep(500);
         robot.clickOn(".button");
-        Mockito.verify(mockLoader).loadJoin(Mockito.any(Stage.class), Mockito.anyString(), Mockito.anyString(), Mockito.anyInt());
+        Mockito.verify(mockLoader).loadJoin(Mockito.any(Stage.class), Mockito.anyString(), Mockito.anyString(), Mockito.anyInt(), Mockito.any(Object[].class));
     }
 
 

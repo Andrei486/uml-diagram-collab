@@ -50,6 +50,7 @@ public class StartScreenController {
     private final IpPortParser ipPortParser;
 
     private final DiagramEditorLoader loader;
+    private final FileLoader fileLoader;
 
     private final boolean useDirectConnection;
 
@@ -58,9 +59,15 @@ public class StartScreenController {
     private String directConnectPort;
 
 
-    public StartScreenController(PreferencesModel preferences, DiagramEditorLoader loader, RoomCodeManager manager, boolean useDirectConnection) {
+    public StartScreenController(
+            PreferencesModel preferences,
+            DiagramEditorLoader loader,
+            RoomCodeManager manager,
+            FileLoader fileLoader,
+            boolean useDirectConnection) {
         this.preferences = preferences;
         this.loader = loader;
+        this.fileLoader = fileLoader;
         this.useDirectConnection = useDirectConnection;
         roomCodeManager = manager;
         ipPortParser = new IpPortParser();
@@ -159,7 +166,8 @@ public class StartScreenController {
 
         try {
             if (file != null) {
-                FileLoader.open(file);
+                String roomCode = roomCodeManager.getNewRoomCode();
+                fileLoader.open(file, roomCode, preferences.getUsername(), stage);
             }
         } catch (IOException e) {
             Alert alert = new Alert(Alert.AlertType.ERROR);
@@ -201,7 +209,7 @@ public class StartScreenController {
      */
     private void joinEditor(String host, int port, String username, Stage stage) {
         try {
-            loader.loadJoin(stage, preferences.getUsername(), host, port);
+            loader.loadJoin(stage, preferences.getUsername(), host, port, new Object[0]);
         } catch (IOException e) {
             Alert alert = new Alert(Alert.AlertType.ERROR);
             alert.setTitle("Error");
