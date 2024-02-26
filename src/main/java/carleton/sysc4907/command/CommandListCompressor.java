@@ -29,17 +29,18 @@ public class CommandListCompressor {
     }
 
     public List<Command<?>> compressCommandList(List<Command<?>> commandList) {
+        var cmdList = new LinkedList<>(commandList); // avoid race conditions: ignore any further commands added
         var indices = new HashSet<Integer>();
         var usedIds = elementIdManager.getUsedIds();
         for (Long id : usedIds) {
-            var idCompressedList = compressCommandListForId(filterById(commandList, id));
-            indices.addAll(idCompressedList.stream().map(commandList::indexOf).toList());
+            var idCompressedList = compressCommandListForId(filterById(cmdList, id));
+            indices.addAll(idCompressedList.stream().map(cmdList::indexOf).toList());
         }
         for (Integer i : indices) {
             System.out.print(i);
         }
         System.out.println();
-        return indices.stream().map(commandList::get).collect(Collectors.toList());
+        return indices.stream().map(cmdList::get).collect(Collectors.toList());
     }
 
     private List<Command<?>> filterById(List<Command<?>> commandList, Long id) {
