@@ -26,7 +26,7 @@ public class ConnectorMovePointFactoryTest {
     void createCommand() {
         long testId = 12L;
         Manager mockManager = Mockito.mock(Manager.class);
-        var args = new ConnectorMovePointCommandArgs(false, 20, -30, testId);
+        var args = new ConnectorMovePointCommandArgs(false, 0, 20, 0, -30, testId);
         var factory = new ConnectorMovePointCommandFactory(mockElementIdManager, mockManager, mockExecutedCommandList);
 
         var command = factory.create(args);

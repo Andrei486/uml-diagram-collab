@@ -2,6 +2,7 @@ package carleton.sysc4907.processing;
 
 import carleton.sysc4907.DiagramEditorLoader;
 import carleton.sysc4907.command.AddCommand;
+import carleton.sysc4907.command.CommandListCompressor;
 import carleton.sysc4907.command.MoveCommand;
 import carleton.sysc4907.command.RemoveCommand;
 import carleton.sysc4907.command.args.AddCommandArgs;
@@ -13,10 +14,12 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
+import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.LinkedList;
 
 @ExtendWith(MockitoExtension.class)
 public class FileSaveLoadTest {
@@ -33,9 +36,13 @@ public class FileSaveLoadTest {
     @Test
     public void testSaveAndLoadFromExistingTempFile() throws IOException {
         // Instantiate classes
+        var mockIds = new LinkedList<Long>();
+        mockIds.add(120L);
+        Mockito.when(mockElementIdManager.getUsedIds()).thenReturn(mockIds);
         var diagramModel = new DiagramModel();
         var executedCommandList = new ExecutedCommandList();
-        var fileSaver = new FileSaver(diagramModel, executedCommandList);
+        var commandListCompressor = new CommandListCompressor(diagramModel, mockElementIdManager);
+        var fileSaver = new FileSaver(diagramModel, executedCommandList, commandListCompressor);
         var fileLoader = new FileLoader(diagramEditorLoader);
         // Create the temp file to save to
         File temp = File.createTempFile("temp", ".txt");

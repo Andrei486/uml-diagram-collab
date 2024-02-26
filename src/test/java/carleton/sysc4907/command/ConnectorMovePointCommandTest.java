@@ -36,7 +36,7 @@ public class ConnectorMovePointCommandTest {
         doNothing().when(mockConnectorController).setStartX(anyDouble());
         doNothing().when(mockConnectorController).setStartY(anyDouble());
 
-        var args = new ConnectorMovePointCommandArgs(true, -55.0, 30.0, testId);
+        var args = new ConnectorMovePointCommandArgs(true, 110, -10, 55, 20, testId);
         var command = new ConnectorMovePointCommand(args, mockElementIdManager);
         command.execute();
 
@@ -59,7 +59,7 @@ public class ConnectorMovePointCommandTest {
         doNothing().when(mockConnectorController).setEndX(anyDouble());
         doNothing().when(mockConnectorController).setEndY(anyDouble());
 
-        var args = new ConnectorMovePointCommandArgs(false, 20, 10, testId);
+        var args = new ConnectorMovePointCommandArgs(false, -10, 10, 0,10, testId);
         var command = new ConnectorMovePointCommand(args, mockElementIdManager);
         command.execute();
 
