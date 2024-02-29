@@ -12,6 +12,11 @@ import java.io.Serializable;
  * @param endY the ending Y coordinate of the element
  * @param elementId the ID of the element to be moved
  */
-public record MoveCommandArgs(double startX, double startY, double endX, double endY, long elementId) implements Serializable {
+public record MoveCommandArgs(double startX, double startY, double endX, double endY, long elementId)
+        implements Serializable, CommandArgs {
 
+    @Override
+    public long[] getElementIds() {
+        return new long[] {elementId};
+    }
 }

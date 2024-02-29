@@ -6,6 +6,8 @@ import carleton.sysc4907.model.SessionModel;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 
+import java.util.Collection;
+import java.util.LinkedList;
 import java.util.Random;
 
 /**
@@ -118,5 +120,32 @@ public class ElementIdManager {
             }
         }
         return null;
+    }
+
+    /**
+     * Gets all the IDs currently used in the diagram.
+     * @return collection of all IDs currently associated to elements
+     */
+    public Collection<Long> getUsedIds() {
+        return getUsedIdsInParent(EditingAreaProvider.getEditingArea());
+    }
+
+    /**
+     * Recursively gets all the IDs currently used by children of a parent node, not including the parent node itself.
+     * @param parent the parent node to search in
+     * @return collection of all IDs currently associated to elements within the parent node
+     */
+    private Collection<Long> getUsedIdsInParent(Parent parent) {
+        Collection<Long> ids = new LinkedList<>();
+        for (Node n : parent.getChildrenUnmodifiable()) {
+            if (n.getUserData() != null && n.getUserData() instanceof Long) {
+                ids.add((Long) n.getUserData());
+            }
+            // Recursively search inside non-leaf nodes
+            if (n instanceof Parent) {
+                ids.addAll(getUsedIdsInParent((Parent) n));
+            }
+        }
+        return ids;
     }
 }

@@ -1,5 +1,6 @@
 package carleton.sysc4907.command;
 
+import carleton.sysc4907.command.args.CommandArgs;
 import carleton.sysc4907.communications.Manager;
 import carleton.sysc4907.communications.Message;
 import carleton.sysc4907.communications.MessageType;
@@ -9,7 +10,7 @@ import javafx.application.Platform;
 
 import java.time.LocalTime;
 
-public class RemoteCommand<TArgs> implements Command<TArgs> {
+public class RemoteCommand<TArgs extends CommandArgs> implements Command<TArgs> {
 
     private final Command<TArgs> command;
     private final ExecutedCommandList executedCommandList;

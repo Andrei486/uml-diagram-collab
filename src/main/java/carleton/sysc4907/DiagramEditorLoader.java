@@ -121,12 +121,13 @@ public class DiagramEditorLoader {
         TextFormattingModel textFormattingModel = new TextFormattingModel(fontOptionsFinder);
         diagramModel = new DiagramModel();
         ExecutedCommandList executedCommandList = new ExecutedCommandList();
+        CommandListCompressor commandListCompressor = new CommandListCompressor(diagramModel, elementIdManager);
         MovePreviewCreator movePreviewCreator = new MovePreviewCreator(elementIdManager);
         ResizeHandleCreator resizeHandleCreator = new ResizeHandleCreator();
         ResizePreviewCreator resizePreviewCreator = new ResizePreviewCreator(elementIdManager);
         ConnectorHandleCreator connectorHandleCreator = new ConnectorHandleCreator();
         DependencyInjector elementControllerInjector = new DependencyInjector();
-        FileSaver fileSaver = new FileSaver(diagramModel, executedCommandList);
+        FileSaver fileSaver = new FileSaver(diagramModel, executedCommandList, commandListCompressor);
         ElementCreator elementCreator;
         try {
             elementCreator = new ElementCreator(elementControllerInjector, TEMPLATE_FILE_PATH, elementIdManager);
@@ -227,13 +228,12 @@ public class DiagramEditorLoader {
     public void runPreviousCommands(Object[] commandArgsList) {
         for (Object args : commandArgsList) {
             Class<?> argType = args.getClass();
-            System.out.println("Looking for type " + argType);
             var factory = commandFactories.get(argType);
             if (factory == null) {
                 throw new IllegalArgumentException("The given message did not correspond to a known type of command arguments.");
             }
             // Use remote commands to add them to the command list without transmitting them elsewhere
-            Command<?> command = factory.createRemote(argType.cast(args));
+            Command<?> command = factory.createRemote((CommandArgs) argType.cast(args));
             command.execute();
         }
     }

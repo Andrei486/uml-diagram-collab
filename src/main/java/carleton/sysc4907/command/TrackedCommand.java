@@ -1,5 +1,6 @@
 package carleton.sysc4907.command;
 
+import carleton.sysc4907.command.args.CommandArgs;
 import carleton.sysc4907.communications.Manager;
 import carleton.sysc4907.communications.Message;
 import carleton.sysc4907.communications.MessageType;
@@ -14,7 +15,7 @@ import java.time.LocalTime;
  * Tracked commands are put on the command stack and sent over TCP.
  * @param <TArgs> The type of args the command takes
  */
-public class TrackedCommand<TArgs> implements Command<TArgs>{
+public class TrackedCommand<TArgs extends CommandArgs> implements Command<TArgs>{
 
     private final Command<TArgs> command;
     private final Manager manager;

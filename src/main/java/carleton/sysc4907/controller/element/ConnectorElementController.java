@@ -251,10 +251,21 @@ public class ConnectorElementController extends DiagramElementController {
             return;
         }
         movePointDragging = false;
+        double startX;
+        double startY;
+        if (isStart) {
+            startX = dragStartX - getStartX();
+            startY = dragStartY - getStartY();
+        } else {
+            startX = dragStartX - getEndX();
+            startY = dragStartY - getEndY();
+        }
         var args = new ConnectorMovePointCommandArgs(
                 isStart,
-                event.getSceneX() - dragStartX,
-                event.getSceneY() - dragStartY,
+                startX,
+                startY,
+                event.getSceneX(),
+                event.getSceneY(),
                 element.getElementId());
         var command = connectorMovePointCommandFactory.createTracked(args);
         command.execute();
