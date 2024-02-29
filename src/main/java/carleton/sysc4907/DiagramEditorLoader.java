@@ -136,6 +136,9 @@ public class DiagramEditorLoader {
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
+        ConnectorMovePointPreviewCreator connectorMovePointPreviewCreator = new ConnectorMovePointPreviewCreator(
+                elementIdManager, elementCreator
+        );
 
         MoveCommandFactory moveCommandFactory = new MoveCommandFactory(
                 elementIdManager, manager, executedCommandList);
@@ -185,6 +188,7 @@ public class DiagramEditorLoader {
                         moveCommandFactory,
                         diagramModel,
                         connectorHandleCreator,
+                        connectorMovePointPreviewCreator,
                         connectorMovePointCommandFactory,
                         new CurvedPathStrategy()));
 
