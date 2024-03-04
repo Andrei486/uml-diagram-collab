@@ -1,14 +1,12 @@
 package carleton.sysc4907.controller.element.arrows;
 
-import javafx.beans.property.DoubleProperty;
-import javafx.beans.property.SimpleDoubleProperty;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.ClosePath;
 import javafx.scene.shape.LineTo;
 import javafx.scene.shape.MoveTo;
 import javafx.scene.shape.Path;
 
-public class AggregationArrowhead extends AbstractArrowhead {
+public class CompositionArrowhead extends AbstractArrowhead {
 
     @Override
     protected void drawArrowhead(
@@ -28,6 +26,6 @@ public class AggregationArrowhead extends AbstractArrowhead {
         pointY = endY - 0.7*size*mainDirectionY - 0.5*size*orthogonalDirectionY;
         path.getElements().add(new LineTo(pointX, pointY));
         path.getElements().add(new ClosePath());
-        path.setFill(Color.WHITE);
+        path.setFill(Color.BLACK);
     }
 }

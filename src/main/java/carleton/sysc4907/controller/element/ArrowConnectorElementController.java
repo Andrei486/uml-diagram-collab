@@ -80,6 +80,6 @@ public class ArrowConnectorElementController extends ConnectorElementController 
     @Override
     public void initialize() {
         super.initialize();
-        setArrowheadType(ArrowheadType.AGGREGATION); // default arrowhead
+        setArrowheadType(ArrowheadType.ASSOCIATION); // default arrowhead
     }
 }

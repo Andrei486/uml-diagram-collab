@@ -9,6 +9,15 @@ public class ArrowheadFactory {
             case AGGREGATION -> {
                 return new AggregationArrowhead();
             }
+            case INHERITANCE -> {
+                return new InheritanceArrowhead();
+            }
+            case COMPOSITION -> {
+                return new CompositionArrowhead();
+            }
+            case ASSOCIATION -> {
+                return new AssociationArrowhead();
+            }
             default -> {
                 return null;
             }
