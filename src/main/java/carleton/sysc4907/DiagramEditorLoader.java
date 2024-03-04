@@ -11,9 +11,11 @@ import carleton.sysc4907.controller.SessionInfoBarController;
 import carleton.sysc4907.controller.SessionUsersMenuController;
 import carleton.sysc4907.controller.*;
 import carleton.sysc4907.controller.element.*;
+import carleton.sysc4907.controller.element.arrows.ArrowheadFactory;
 import carleton.sysc4907.controller.element.pathing.CurvedPathStrategy;
 import carleton.sysc4907.controller.element.pathing.DirectPathStrategy;
 import carleton.sysc4907.controller.element.pathing.OrthogonalPathStrategy;
+import carleton.sysc4907.controller.element.pathing.PathingStrategyFactory;
 import carleton.sysc4907.model.*;
 import carleton.sysc4907.processing.ElementCreator;
 import carleton.sysc4907.processing.ElementIdManager;
@@ -126,6 +128,8 @@ public class DiagramEditorLoader {
         ResizeHandleCreator resizeHandleCreator = new ResizeHandleCreator();
         ResizePreviewCreator resizePreviewCreator = new ResizePreviewCreator(elementIdManager);
         ConnectorHandleCreator connectorHandleCreator = new ConnectorHandleCreator();
+        ArrowheadFactory arrowheadFactory = new ArrowheadFactory();
+        PathingStrategyFactory pathingStrategyFactory = new PathingStrategyFactory();
         DependencyInjector elementControllerInjector = new DependencyInjector();
         FileSaver fileSaver = new FileSaver(diagramModel, executedCommandList, commandListCompressor);
         ElementCreator elementCreator;
@@ -187,6 +191,15 @@ public class DiagramEditorLoader {
                         connectorHandleCreator,
                         connectorMovePointCommandFactory,
                         new CurvedPathStrategy()));
+        elementControllerInjector.addInjectionMethod(ArrowConnectorElementController.class,
+                () -> new ArrowConnectorElementController(
+                        movePreviewCreator,
+                        moveCommandFactory,
+                        diagramModel,
+                        connectorHandleCreator,
+                        connectorMovePointCommandFactory,
+                        new DirectPathStrategy(),
+                        arrowheadFactory));
 
         // Add instantiation methods to the main dependency injector, used to create UI elements
         injector.addInjectionMethod(SessionInfoBarController.class,
