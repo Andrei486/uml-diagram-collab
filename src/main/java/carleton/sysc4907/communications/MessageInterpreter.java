@@ -2,11 +2,14 @@ package carleton.sysc4907.communications;
 
 import carleton.sysc4907.command.*;
 import carleton.sysc4907.command.args.*;
+import carleton.sysc4907.controller.JoinRequestDialogController;
 import javafx.application.Platform;
+import javafx.stage.Window;
 
 import java.time.LocalTime;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
 
 /**
  * Interprets messages received from other users
@@ -17,6 +20,7 @@ public class MessageInterpreter {
     private Manager manager;
     private boolean isHost;
     private MessageConstructor messageConstructor;
+    private Window window;
 
     /**
      * Constructs a MessageInterpreter
@@ -34,6 +38,11 @@ public class MessageInterpreter {
     public void setManager(Manager manager) {
         this.manager = manager;
         this.isHost = manager.isHost();
+    }
+
+    public void setWindow(Window window) {
+        this.window = window;
+        System.out.println("Window Set");
     }
 
     /**
@@ -131,11 +140,20 @@ public class MessageInterpreter {
      * @param userId the user id who sent the message
      */
     private void interpretJoinRequest(Message message, long userId){
-        if (isHost) {
-            manager.validateClient(userId);
-            messageConstructor.sendToInvalid(new Message(MessageType.JOIN_RESPONSE, null), userId);
-        }
-        System.out.println("Join Request Received");
+        Platform.runLater(
+                () -> {
+                    if (isHost) {
+
+                        var controller = new JoinRequestDialogController(window, (String) message.payload());
+                        Optional<Boolean> result = controller.showAndWait();
+                        if (result.isPresent() && result.get()) {
+                            manager.validateClient(userId);
+                            messageConstructor.sendToInvalid(new Message(MessageType.JOIN_RESPONSE, null), userId);
+                        }
+                    }
+                    System.out.println("Join Request Received");
+                }
+        );
     }
 
     /**
