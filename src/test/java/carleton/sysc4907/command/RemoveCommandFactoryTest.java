@@ -25,7 +25,7 @@ public class RemoveCommandFactoryTest {
     @Mock
     private ExecutedCommandList mockExecutedCommandList;
     @Mock
-    private MessageConstructor messageConstructor;
+    private MessageConstructor mockMessageConstructor;
 
     @Test
     void createCommand() {
@@ -33,7 +33,7 @@ public class RemoveCommandFactoryTest {
         RemoveCommandArgs args = new RemoveCommandArgs(ids);
         DiagramModel diagramModel = new DiagramModel();
         Manager mockManager = Mockito.mock(Manager.class);
-        RemoveCommandFactory factory = new RemoveCommandFactory(diagramModel, mockElementIdManager, mockManager, mockExecutedCommandList, messageConstructor);
+        RemoveCommandFactory factory = new RemoveCommandFactory(diagramModel, mockElementIdManager, mockManager, mockExecutedCommandList, mockMessageConstructor);
 
         var command = factory.create(args);
 

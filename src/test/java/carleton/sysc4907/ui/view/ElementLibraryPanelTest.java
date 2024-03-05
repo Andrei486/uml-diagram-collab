@@ -65,7 +65,7 @@ public class ElementLibraryPanelTest {
     private ElementIdManager mockElementIdManager;
 
     @Mock
-    private MessageConstructor messageConstructor;
+    private MessageConstructor mockMessageConstructor;
 
     @Start
     private void start(Stage stage) throws IOException {
@@ -78,7 +78,7 @@ public class ElementLibraryPanelTest {
             DependencyInjector injector = new DependencyInjector();
 
             Manager mockManager = Mockito.mock(Manager.class);
-            AddCommandFactory addCommandFactory = new AddCommandFactory(mockDiagramModel, mockElementCreator, mockManager, mockExecutedCommandList, messageConstructor);
+            AddCommandFactory addCommandFactory = new AddCommandFactory(mockDiagramModel, mockElementCreator, mockManager, mockExecutedCommandList, mockMessageConstructor);
             injector.addInjectionMethod(ElementLibraryPanelController.class,
                     () -> {
                         var controller = new ElementLibraryPanelController(

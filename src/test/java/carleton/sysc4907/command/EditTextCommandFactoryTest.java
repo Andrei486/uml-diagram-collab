@@ -22,7 +22,7 @@ public class EditTextCommandFactoryTest {
     @Mock
     private ExecutedCommandList mockExecutedCommandList;
     @Mock
-    private MessageConstructor messageConstructor;
+    private MessageConstructor mockMessageConstructor;
 
     @Test
     void createCommand() {
@@ -30,7 +30,7 @@ public class EditTextCommandFactoryTest {
         String testString = "Test";
         Manager mockManager = Mockito.mock(Manager.class);
         var args = new EditTextCommandArgs(testString, testId);
-        EditTextCommandFactory factory = new EditTextCommandFactory(mockElementIdManager, mockManager, mockExecutedCommandList, messageConstructor);
+        EditTextCommandFactory factory = new EditTextCommandFactory(mockElementIdManager, mockManager, mockExecutedCommandList, mockMessageConstructor);
 
         var command = factory.create(args);
 

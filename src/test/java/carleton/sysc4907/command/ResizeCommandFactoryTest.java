@@ -26,7 +26,7 @@ public class ResizeCommandFactoryTest {
     @Mock
     private ExecutedCommandList mockExecutedCommandList;
     @Mock
-    private MessageConstructor messageConstructor;
+    private MessageConstructor mockMessageConstructor;
 
     @Test
     void createCommand() {
@@ -35,7 +35,7 @@ public class ResizeCommandFactoryTest {
         ResizeCommandArgs args = new ResizeCommandArgs(true, true,
                 10, 0, 40, -30, 0, 0, 100, 200, testId);
         Manager mockManager = Mockito.mock(Manager.class);
-        ResizeCommandFactory factory = new ResizeCommandFactory(mockElementIdManager, mockManager, mockExecutedCommandList, messageConstructor);
+        ResizeCommandFactory factory = new ResizeCommandFactory(mockElementIdManager, mockManager, mockExecutedCommandList, mockMessageConstructor);
 
         var command = factory.create(args);
 

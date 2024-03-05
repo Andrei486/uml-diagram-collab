@@ -32,7 +32,7 @@ public abstract class ResizableElementTest extends DiagramElementTest {
     protected void start(Stage stage) throws IOException {
         resizeHandleCreator = new ResizeHandleCreator();
         Manager mockManager = Mockito.mock(Manager.class);
-        resizeCommandFactory = new ResizeCommandFactory(elementIdManager, mockManager, mockExecutedCommandList, messageConstructor);
+        resizeCommandFactory = new ResizeCommandFactory(elementIdManager, mockManager, mockExecutedCommandList, mockMessageConstructor);
         super.start(stage);
     }
 

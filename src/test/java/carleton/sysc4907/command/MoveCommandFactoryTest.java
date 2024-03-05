@@ -24,14 +24,14 @@ public class MoveCommandFactoryTest {
     @Mock
     private ExecutedCommandList mockExecutedCommandList;
     @Mock
-    private MessageConstructor messageConstructor;
+    private MessageConstructor mockMessageConstructor;
 
     @Test
     void createCommand() {
         long testId = 12L;
         MoveCommandArgs args = new MoveCommandArgs(10, 0, 40, -30, testId);
         Manager mockManager = Mockito.mock(Manager.class);
-        MoveCommandFactory factory = new MoveCommandFactory(mockElementIdManager, mockManager, mockExecutedCommandList, messageConstructor);
+        MoveCommandFactory factory = new MoveCommandFactory(mockElementIdManager, mockManager, mockExecutedCommandList, mockMessageConstructor);
 
         var command = factory.create(args);
 
@@ -43,7 +43,7 @@ public class MoveCommandFactoryTest {
         long testId = 12L;
         MoveCommandArgs args = new MoveCommandArgs(10, 0, 40, -30, testId);
         Manager mockManager = Mockito.mock(Manager.class);
-        MoveCommandFactory factory = new MoveCommandFactory(mockElementIdManager, mockManager, mockExecutedCommandList, messageConstructor);
+        MoveCommandFactory factory = new MoveCommandFactory(mockElementIdManager, mockManager, mockExecutedCommandList, mockMessageConstructor);
 
         var command = factory.createTracked(args);
 

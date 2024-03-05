@@ -69,7 +69,7 @@ public abstract class DiagramElementTest {
     @Mock
     protected ExecutedCommandList mockExecutedCommandList;
     @Mock
-    protected MessageConstructor messageConstructor;
+    protected MessageConstructor mockMessageConstructor;
 
     /**
      * Sets up the scene before each test, loading an editing area and adding the element inside it.
@@ -79,7 +79,7 @@ public abstract class DiagramElementTest {
     @Start
     protected void start(Stage stage) throws IOException {
         diagramModel = new DiagramModel();
-        moveCommandFactory = new MoveCommandFactory(elementIdManager, mockManager, mockExecutedCommandList, messageConstructor);
+        moveCommandFactory = new MoveCommandFactory(elementIdManager, mockManager, mockExecutedCommandList, mockMessageConstructor);
         initializeDependencyInjector();
         // Load the scroll pane and get the editing area from it
         ScrollPane root = (ScrollPane) dependencyInjector.load("view/DiagramEditingArea.fxml");

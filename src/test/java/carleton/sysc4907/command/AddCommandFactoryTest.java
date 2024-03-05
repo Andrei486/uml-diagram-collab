@@ -22,8 +22,8 @@ public class AddCommandFactoryTest {
         ExecutedCommandList mockExecutedCommandList = Mockito.mock(ExecutedCommandList.class);
         AddCommandArgs args = new AddCommandArgs(fxmlPath, 0);
         Manager mockManager = Mockito.mock(Manager.class);
-        MessageConstructor mockConstructor = Mockito.mock(MessageConstructor.class);
-        AddCommandFactory factory = new AddCommandFactory(diagramModel, mockElementCreator, mockManager, mockExecutedCommandList, mockConstructor);
+        MessageConstructor mockMessageConstructor = Mockito.mock(MessageConstructor.class);
+        AddCommandFactory factory = new AddCommandFactory(diagramModel, mockElementCreator, mockManager, mockExecutedCommandList, mockMessageConstructor);
 
         var command = factory.create(args);
 

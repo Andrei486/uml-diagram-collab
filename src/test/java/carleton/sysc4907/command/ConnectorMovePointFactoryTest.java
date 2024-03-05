@@ -24,14 +24,14 @@ public class ConnectorMovePointFactoryTest {
     private ExecutedCommandList mockExecutedCommandList;
 
     @Mock
-    private MessageConstructor messageConstructor;
+    private MessageConstructor mockMessageConstructor;
 
     @Test
     void createCommand() {
         long testId = 12L;
         Manager mockManager = Mockito.mock(Manager.class);
         var args = new ConnectorMovePointCommandArgs(false, 0, 20, 0, -30, testId);
-        var factory = new ConnectorMovePointCommandFactory(mockElementIdManager, mockManager, mockExecutedCommandList, messageConstructor);
+        var factory = new ConnectorMovePointCommandFactory(mockElementIdManager, mockManager, mockExecutedCommandList, mockMessageConstructor);
 
         var command = factory.create(args);
 

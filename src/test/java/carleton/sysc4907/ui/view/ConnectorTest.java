@@ -26,13 +26,13 @@ public class ConnectorTest extends DiagramElementTest {
     private ConnectorHandleCreator connectorHandleCreator;
     private ConnectorMovePointCommandFactory connectorMovePointCommandFactory;
     @Mock
-    private MessageConstructor messageConstructor;
+    private MessageConstructor mockMessageConstructor;
 
     @Start
     @Override
     protected void start(Stage stage) throws IOException {
         connectorHandleCreator = new ConnectorHandleCreator();
-        connectorMovePointCommandFactory = new ConnectorMovePointCommandFactory(elementIdManager, mockManager, mockExecutedCommandList, messageConstructor);
+        connectorMovePointCommandFactory = new ConnectorMovePointCommandFactory(elementIdManager, mockManager, mockExecutedCommandList, mockMessageConstructor);
         super.start(stage);
         controller = (ConnectorElementController) element.getProperties().get("controller");
     }
