@@ -147,8 +147,9 @@ public class MessageInterpreter {
                         var controller = new JoinRequestDialogController(window, (String) message.payload());
                         Optional<Boolean> result = controller.showAndWait();
                         if (result.isPresent() && result.get()) {
+                            System.out.println((String) message.payload() + "is Valid");
                             manager.validateClient(userId);
-                            messageConstructor.sendToInvalid(new Message(MessageType.JOIN_RESPONSE, null), userId);
+                            messageConstructor.sendTo(new Message(MessageType.JOIN_RESPONSE, null), userId);
                         }
                     }
                     System.out.println("Join Request Received");

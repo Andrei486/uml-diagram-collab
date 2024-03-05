@@ -49,7 +49,7 @@ public class TrackedCommand<TArgs extends CommandArgs> implements Command<TArgs>
         //Create a message to send over TCP
         TargetedMessage message = new TargetedMessage(
                 new long[0],
-                true,
+                false,
                 false,
                 new Message(MessageType.UPDATE, command.getArgs())
         );
