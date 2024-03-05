@@ -2,6 +2,7 @@ package carleton.sysc4907.command;
 
 import carleton.sysc4907.command.args.RemoveCommandArgs;
 import carleton.sysc4907.communications.Manager;
+import carleton.sysc4907.communications.MessageConstructor;
 import carleton.sysc4907.model.DiagramModel;
 import carleton.sysc4907.model.ExecutedCommandList;
 import carleton.sysc4907.processing.ElementIdManager;
@@ -23,13 +24,16 @@ public class RemoveCommandFactoryTest {
     private ElementIdManager mockElementIdManager;
     @Mock
     private ExecutedCommandList mockExecutedCommandList;
+    @Mock
+    private MessageConstructor messageConstructor;
+
     @Test
     void createCommand() {
         long[] ids = new long[0];
         RemoveCommandArgs args = new RemoveCommandArgs(ids);
         DiagramModel diagramModel = new DiagramModel();
         Manager mockManager = Mockito.mock(Manager.class);
-        RemoveCommandFactory factory = new RemoveCommandFactory(diagramModel, mockElementIdManager, mockManager, mockExecutedCommandList);
+        RemoveCommandFactory factory = new RemoveCommandFactory(diagramModel, mockElementIdManager, mockManager, mockExecutedCommandList, messageConstructor);
 
         var command = factory.create(args);
 

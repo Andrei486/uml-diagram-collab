@@ -4,6 +4,7 @@ import carleton.sysc4907.DependencyInjector;
 import carleton.sysc4907.EditingAreaProvider;
 import carleton.sysc4907.command.AddCommandFactory;
 import carleton.sysc4907.communications.Manager;
+import carleton.sysc4907.communications.MessageConstructor;
 import carleton.sysc4907.controller.ElementLibraryPanelController;
 import carleton.sysc4907.model.DiagramModel;
 import carleton.sysc4907.model.ExecutedCommandList;
@@ -63,6 +64,9 @@ public class ElementLibraryPanelTest {
     @Mock
     private ElementIdManager mockElementIdManager;
 
+    @Mock
+    private MessageConstructor messageConstructor;
+
     @Start
     private void start(Stage stage) throws IOException {
         try (MockedStatic<EditingAreaProvider> utilities = Mockito.mockStatic(EditingAreaProvider.class)) {
@@ -74,7 +78,7 @@ public class ElementLibraryPanelTest {
             DependencyInjector injector = new DependencyInjector();
 
             Manager mockManager = Mockito.mock(Manager.class);
-            AddCommandFactory addCommandFactory = new AddCommandFactory(mockDiagramModel, mockElementCreator, mockManager, mockExecutedCommandList);
+            AddCommandFactory addCommandFactory = new AddCommandFactory(mockDiagramModel, mockElementCreator, mockManager, mockExecutedCommandList, messageConstructor);
             injector.addInjectionMethod(ElementLibraryPanelController.class,
                     () -> {
                         var controller = new ElementLibraryPanelController(

@@ -2,6 +2,7 @@ package carleton.sysc4907.command;
 
 import carleton.sysc4907.command.args.ConnectorMovePointCommandArgs;
 import carleton.sysc4907.communications.Manager;
+import carleton.sysc4907.communications.MessageConstructor;
 import carleton.sysc4907.model.ExecutedCommandList;
 import carleton.sysc4907.processing.ElementIdManager;
 import javafx.collections.ObservableMap;
@@ -22,12 +23,15 @@ public class ConnectorMovePointFactoryTest {
     @Mock
     private ExecutedCommandList mockExecutedCommandList;
 
+    @Mock
+    private MessageConstructor messageConstructor;
+
     @Test
     void createCommand() {
         long testId = 12L;
         Manager mockManager = Mockito.mock(Manager.class);
         var args = new ConnectorMovePointCommandArgs(false, 0, 20, 0, -30, testId);
-        var factory = new ConnectorMovePointCommandFactory(mockElementIdManager, mockManager, mockExecutedCommandList);
+        var factory = new ConnectorMovePointCommandFactory(mockElementIdManager, mockManager, mockExecutedCommandList, messageConstructor);
 
         var command = factory.create(args);
 

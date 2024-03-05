@@ -1,6 +1,7 @@
 package carleton.sysc4907.command;
 import carleton.sysc4907.command.args.MoveCommandArgs;
 import carleton.sysc4907.communications.Manager;
+import carleton.sysc4907.communications.MessageConstructor;
 import carleton.sysc4907.communications.TargetedMessage;
 import carleton.sysc4907.model.ExecutedCommandList;
 import carleton.sysc4907.processing.ElementIdManager;
@@ -25,11 +26,13 @@ public class TrackedCommandTest {
     private MoveCommand mockMoveCommand;
     @Mock
     private ExecutedCommandList mockExecutedCommandList;
+    @Mock
+    private MessageConstructor messageConstructor;
 
     @Test
     void executeTrackedCommand() {
         //setup
-        Command<MoveCommandArgs> trackedCommand = new TrackedCommand<>(mockMoveCommand, mockManager, mockExecutedCommandList);
+        Command<MoveCommandArgs> trackedCommand = new TrackedCommand<>(mockMoveCommand, mockManager, mockExecutedCommandList, messageConstructor);
         Mockito.when(mockManager.isHost()).thenReturn(true);
         Mockito.when(mockExecutedCommandList.getCommandList()).thenReturn(new LinkedList<>());
 
@@ -47,7 +50,7 @@ public class TrackedCommandTest {
     @Test
     void executeTrackedCommandClient() {
         //setup
-        Command<MoveCommandArgs> trackedCommand = new TrackedCommand<>(mockMoveCommand, mockManager, mockExecutedCommandList);
+        Command<MoveCommandArgs> trackedCommand = new TrackedCommand<>(mockMoveCommand, mockManager, mockExecutedCommandList, messageConstructor);
         Mockito.when(mockManager.isHost()).thenReturn(false);
 
         try (MockedStatic<Platform> platformMockedStatic = Mockito.mockStatic(Platform.class)) {

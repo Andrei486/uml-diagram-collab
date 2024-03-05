@@ -3,6 +3,7 @@ import carleton.sysc4907.DependencyInjector;
 import carleton.sysc4907.command.args.AddCommandArgs;
 import carleton.sysc4907.command.args.MoveCommandArgs;
 import carleton.sysc4907.communications.Manager;
+import carleton.sysc4907.communications.MessageConstructor;
 import carleton.sysc4907.model.DiagramModel;
 import carleton.sysc4907.model.ExecutedCommandList;
 import carleton.sysc4907.processing.ElementCreator;
@@ -21,7 +22,8 @@ public class AddCommandFactoryTest {
         ExecutedCommandList mockExecutedCommandList = Mockito.mock(ExecutedCommandList.class);
         AddCommandArgs args = new AddCommandArgs(fxmlPath, 0);
         Manager mockManager = Mockito.mock(Manager.class);
-        AddCommandFactory factory = new AddCommandFactory(diagramModel, mockElementCreator, mockManager, mockExecutedCommandList);
+        MessageConstructor mockConstructor = Mockito.mock(MessageConstructor.class);
+        AddCommandFactory factory = new AddCommandFactory(diagramModel, mockElementCreator, mockManager, mockExecutedCommandList, mockConstructor);
 
         var command = factory.create(args);
 

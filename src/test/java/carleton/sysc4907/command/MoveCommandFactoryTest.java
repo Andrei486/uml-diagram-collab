@@ -2,6 +2,7 @@ package carleton.sysc4907.command;
 
 import carleton.sysc4907.command.args.MoveCommandArgs;
 import carleton.sysc4907.communications.Manager;
+import carleton.sysc4907.communications.MessageConstructor;
 import carleton.sysc4907.model.ExecutedCommandList;
 import carleton.sysc4907.processing.ElementIdManager;
 import javafx.scene.Node;
@@ -22,13 +23,15 @@ public class MoveCommandFactoryTest {
     private ElementIdManager mockElementIdManager;
     @Mock
     private ExecutedCommandList mockExecutedCommandList;
+    @Mock
+    private MessageConstructor messageConstructor;
 
     @Test
     void createCommand() {
         long testId = 12L;
         MoveCommandArgs args = new MoveCommandArgs(10, 0, 40, -30, testId);
         Manager mockManager = Mockito.mock(Manager.class);
-        MoveCommandFactory factory = new MoveCommandFactory(mockElementIdManager, mockManager, mockExecutedCommandList);
+        MoveCommandFactory factory = new MoveCommandFactory(mockElementIdManager, mockManager, mockExecutedCommandList, messageConstructor);
 
         var command = factory.create(args);
 
@@ -40,7 +43,7 @@ public class MoveCommandFactoryTest {
         long testId = 12L;
         MoveCommandArgs args = new MoveCommandArgs(10, 0, 40, -30, testId);
         Manager mockManager = Mockito.mock(Manager.class);
-        MoveCommandFactory factory = new MoveCommandFactory(mockElementIdManager, mockManager, mockExecutedCommandList);
+        MoveCommandFactory factory = new MoveCommandFactory(mockElementIdManager, mockManager, mockExecutedCommandList, messageConstructor);
 
         var command = factory.createTracked(args);
 

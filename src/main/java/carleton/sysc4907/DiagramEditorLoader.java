@@ -153,17 +153,17 @@ public class DiagramEditorLoader {
         }
 
         MoveCommandFactory moveCommandFactory = new MoveCommandFactory(
-                elementIdManager, manager, executedCommandList);
+                elementIdManager, manager, executedCommandList, constructor);
         ResizeCommandFactory resizeCommandFactory = new ResizeCommandFactory(
-                elementIdManager, manager, executedCommandList);
+                elementIdManager, manager, executedCommandList, constructor);
         AddCommandFactory addCommandFactory = new AddCommandFactory(
-                diagramModel, elementCreator, manager, executedCommandList);
+                diagramModel, elementCreator, manager, executedCommandList, constructor);
         RemoveCommandFactory removeCommandFactory = new RemoveCommandFactory(
-                diagramModel, elementIdManager, manager, executedCommandList);
+                diagramModel, elementIdManager, manager, executedCommandList, constructor);
         EditTextCommandFactory editTextCommandFactory = new EditTextCommandFactory(
-                elementIdManager, manager, executedCommandList);
+                elementIdManager, manager, executedCommandList, constructor);
         ConnectorMovePointCommandFactory connectorMovePointCommandFactory = new ConnectorMovePointCommandFactory(
-                elementIdManager, manager, executedCommandList);
+                elementIdManager, manager, executedCommandList, constructor);
         // Add factories to message interpreter: avoids circular dependencies
         interpreter.addFactories(
                 addCommandFactory,

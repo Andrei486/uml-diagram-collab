@@ -1,6 +1,7 @@
 package carleton.sysc4907.ui.view;
 
 import carleton.sysc4907.command.ConnectorMovePointCommandFactory;
+import carleton.sysc4907.communications.MessageConstructor;
 import carleton.sysc4907.controller.element.ConnectorElementController;
 import carleton.sysc4907.controller.element.ConnectorHandleCreator;
 import carleton.sysc4907.controller.element.pathing.OrthogonalPathStrategy;
@@ -8,6 +9,7 @@ import carleton.sysc4907.view.DiagramElement;
 import javafx.scene.shape.Rectangle;
 import javafx.stage.Stage;
 import org.junit.jupiter.api.Test;
+import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.testfx.api.FxRobot;
 import org.testfx.framework.junit5.Start;
@@ -23,12 +25,14 @@ public class ConnectorTest extends DiagramElementTest {
     private ConnectorElementController controller;
     private ConnectorHandleCreator connectorHandleCreator;
     private ConnectorMovePointCommandFactory connectorMovePointCommandFactory;
+    @Mock
+    private MessageConstructor messageConstructor;
 
     @Start
     @Override
     protected void start(Stage stage) throws IOException {
         connectorHandleCreator = new ConnectorHandleCreator();
-        connectorMovePointCommandFactory = new ConnectorMovePointCommandFactory(elementIdManager, mockManager, mockExecutedCommandList);
+        connectorMovePointCommandFactory = new ConnectorMovePointCommandFactory(elementIdManager, mockManager, mockExecutedCommandList, messageConstructor);
         super.start(stage);
         controller = (ConnectorElementController) element.getProperties().get("controller");
     }
