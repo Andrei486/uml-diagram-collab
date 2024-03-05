@@ -72,7 +72,7 @@ public class ConnectorElementController extends DiagramElementController {
         this.pathingStrategy.set(pathingStrategy);
         this.handles = new LinkedList<>();
         isStartHorizontal.set(true);
-        isEndHorizontal.set(false);
+        isEndHorizontal.set(true);
         diagramModel.getSelectedElements().addListener((ListChangeListener<DiagramElement>) change -> {
             while (change.next()) {
                 if (change.wasAdded() && change.getAddedSubList().contains(element)) {

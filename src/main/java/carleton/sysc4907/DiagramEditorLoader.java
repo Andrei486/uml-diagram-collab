@@ -198,7 +198,7 @@ public class DiagramEditorLoader {
                         diagramModel,
                         connectorHandleCreator,
                         connectorMovePointCommandFactory,
-                        new DirectPathStrategy(),
+                        new CurvedPathStrategy(),
                         arrowheadFactory));
 
         // Add instantiation methods to the main dependency injector, used to create UI elements

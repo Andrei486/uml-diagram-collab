@@ -39,8 +39,9 @@ public abstract class AbstractArrowhead implements Arrowhead {
             return; // make no arrowhead, this would cause division by 0 and the path is a point
         }
 
-        var mainX = endX - startX;
-        var mainY = endY - startY;
+        var mainX = (!isDirectPath && !isEndHorizontal) ? 0 : endX - startX;
+        var mainY = (!isDirectPath && isEndHorizontal) ? 0 : endY - startY;
+
         var mainLength = Math.sqrt(mainX*mainX + mainY*mainY);
         mainX /= mainLength;
         mainY /= mainLength;

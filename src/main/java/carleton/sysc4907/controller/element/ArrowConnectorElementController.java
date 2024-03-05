@@ -44,7 +44,7 @@ public class ArrowConnectorElementController extends ConnectorElementController 
                     arrowheadPath,
                     adjustX(getStartX()), adjustY(getStartY()),
                     adjustX(getEndX()), adjustY(getEndY()),
-                    isEndHorizontal.get(), true
+                    isEndHorizontal.get(), this.pathingStrategy.get().isDirectPath()
             );
         };
 
@@ -62,7 +62,7 @@ public class ArrowConnectorElementController extends ConnectorElementController 
                 arrowheadPath,
                 adjustX(getStartX()), adjustY(getStartY()),
                 adjustX(getEndX()), adjustY(getEndY()),
-                isEndHorizontal.get(), true
+                isEndHorizontal.get(), this.pathingStrategy.get().isDirectPath()
         );
     }
 
@@ -73,7 +73,7 @@ public class ArrowConnectorElementController extends ConnectorElementController 
                 arrowheadPath,
                 adjustX(getStartX()), adjustY(getStartY()),
                 adjustX(getEndX()), adjustY(getEndY()),
-                isEndHorizontal.get(), true
+                isEndHorizontal.get(), this.pathingStrategy.get().isDirectPath()
         );
     }
 
