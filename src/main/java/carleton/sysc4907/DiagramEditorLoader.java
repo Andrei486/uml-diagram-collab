@@ -118,6 +118,7 @@ public class DiagramEditorLoader {
         ElementIdManager elementIdManager = new ElementIdManager(sessionModel);
         TextFormattingModel textFormattingModel = new TextFormattingModel(fontOptionsFinder);
         diagramModel = new DiagramModel();
+        EditableLabelTracker editableLabelTracker = new EditableLabelTracker();
         ExecutedCommandList executedCommandList = new ExecutedCommandList();
         MovePreviewCreator movePreviewCreator = new MovePreviewCreator(elementIdManager);
         ResizeHandleCreator resizeHandleCreator = new ResizeHandleCreator();
@@ -179,7 +180,7 @@ public class DiagramEditorLoader {
                 () -> new UmlClassController(movePreviewCreator, moveCommandFactory, diagramModel,
                         resizeHandleCreator, resizePreviewCreator, resizeCommandFactory));
         elementControllerInjector.addInjectionMethod(EditableLabelController.class,
-                () -> new EditableLabelController(editTextCommandFactory));
+                () -> new EditableLabelController(editTextCommandFactory, editableLabelTracker));
         elementControllerInjector.addInjectionMethod(ConnectorElementController.class,
                 () -> new ConnectorElementController(
                         movePreviewCreator,
@@ -193,7 +194,7 @@ public class DiagramEditorLoader {
         injector.addInjectionMethod(SessionInfoBarController.class,
                 () -> new SessionInfoBarController(sessionModel));
         injector.addInjectionMethod(FormattingPanelController.class,
-                () -> new FormattingPanelController(textFormattingModel, changeTextStyleCommandFactory, diagramModel));
+                () -> new FormattingPanelController(textFormattingModel, changeTextStyleCommandFactory, diagramModel, editableLabelTracker));
         injector.addInjectionMethod(SessionUsersMenuController.class,
                 () -> new SessionUsersMenuController(sessionModel));
         injector.addInjectionMethod(DiagramMenuBarController.class,

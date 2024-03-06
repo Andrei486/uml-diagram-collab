@@ -84,3 +84,16 @@
     -fx-border-color: red;
     -fx-border-style: dashed;
 }
+
+.italicized {
+    -fx-font-style: italic;
+}
+
+.bolded {
+    -fx-font-weight: bold;
+}
+
+.underlined .text {
+    -fx-underline: true;
+}
+
