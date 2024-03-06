@@ -1,25 +1,19 @@
 package carleton.sysc4907.controller;
 
-import carleton.sysc4907.command.ChangeTextStyleCommand;
 import carleton.sysc4907.command.ChangeTextStyleCommandFactory;
 import carleton.sysc4907.command.Command;
 import carleton.sysc4907.command.TextStyleProperty;
 import carleton.sysc4907.command.args.ChangeTextStyleCommandArgs;
-import carleton.sysc4907.controller.element.EditableLabelController;
 import carleton.sysc4907.model.DiagramModel;
 import carleton.sysc4907.model.EditableLabelTracker;
 import carleton.sysc4907.model.TextFormattingModel;
 import carleton.sysc4907.processing.ElementIdManager;
 import carleton.sysc4907.view.DiagramElement;
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
 import javafx.collections.ListChangeListener;
-import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
 import javafx.scene.control.*;
 
-import java.util.EventListener;
 import java.util.Objects;
 
 /**
@@ -50,6 +44,8 @@ public class FormattingPanelController {
     private final EditableLabelTracker editableLabelTracker;
 
     private final ElementIdManager elementIdManager;
+
+    private Long selectedLabelId = null;
 
     /**
      * Constructs a FormattingPanelController.
@@ -96,6 +92,7 @@ public class FormattingPanelController {
             boldButton.setSelected(false);
             italicsButton.setSelected(false);
             underlineButton.setSelected(false);
+            selectedLabelId = null;
             return;
         }
         Long id = (Long) idNum;
@@ -109,10 +106,11 @@ public class FormattingPanelController {
         boldButton.setSelected(styleClass.contains("bolded"));
         italicsButton.setSelected(styleClass.contains("italicized"));
         underlineButton.setSelected(styleClass.contains("underlined"));
+        selectedLabelId = id;
     }
 
     private void onFontSizeChanged(Integer val) {
-        if (editableLabelTracker.getIdLastEditedLabel() == null) {
+        if (editableLabelTracker.getIdLastEditedLabel() == null || !Objects.equals(editableLabelTracker.getIdLastEditedLabel(), selectedLabelId)) {
             return;
         }
         System.out.println("The font size has been changed! Val = " + val);
@@ -122,7 +120,7 @@ public class FormattingPanelController {
     }
 
     private void onUnderlineButtonToggled(Boolean t1) {
-        if (editableLabelTracker.getIdLastEditedLabel() == null) {
+        if (editableLabelTracker.getIdLastEditedLabel() == null || !Objects.equals(editableLabelTracker.getIdLastEditedLabel(), selectedLabelId)) {
             return;
         }
         //should do a check here to see if the value is the same 
@@ -133,7 +131,7 @@ public class FormattingPanelController {
     }
 
     private void onItalicsButtonToggled(Boolean t1) {
-        if (editableLabelTracker.getIdLastEditedLabel() == null) {
+        if (editableLabelTracker.getIdLastEditedLabel() == null || !Objects.equals(editableLabelTracker.getIdLastEditedLabel(), selectedLabelId)) {
             return;
         }
         System.out.println("The italics button has been toggled! Val = " + t1);
@@ -143,7 +141,7 @@ public class FormattingPanelController {
     }
 
     private void onBoldButtonToggled(Boolean t1) {
-        if (editableLabelTracker.getIdLastEditedLabel() == null) {
+        if (editableLabelTracker.getIdLastEditedLabel() == null || !Objects.equals(editableLabelTracker.getIdLastEditedLabel(), selectedLabelId)) {
             return;
         }
         System.out.println("The bold button has been toggled! Val = " + t1);
@@ -153,7 +151,7 @@ public class FormattingPanelController {
     }
 
     private void onFontFamilyChanged(String newFont) {
-        if (editableLabelTracker.getIdLastEditedLabel() == null) {
+        if (editableLabelTracker.getIdLastEditedLabel() == null || !Objects.equals(editableLabelTracker.getIdLastEditedLabel(), selectedLabelId)) {
             return;
         }
         System.out.println("The font family has been changed! Val = " + newFont);
