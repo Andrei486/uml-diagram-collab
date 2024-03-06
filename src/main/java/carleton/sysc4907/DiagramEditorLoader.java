@@ -194,7 +194,7 @@ public class DiagramEditorLoader {
         injector.addInjectionMethod(SessionInfoBarController.class,
                 () -> new SessionInfoBarController(sessionModel));
         injector.addInjectionMethod(FormattingPanelController.class,
-                () -> new FormattingPanelController(textFormattingModel, changeTextStyleCommandFactory, diagramModel, editableLabelTracker));
+                () -> new FormattingPanelController(textFormattingModel, changeTextStyleCommandFactory, diagramModel, editableLabelTracker, elementIdManager));
         injector.addInjectionMethod(SessionUsersMenuController.class,
                 () -> new SessionUsersMenuController(sessionModel));
         injector.addInjectionMethod(DiagramMenuBarController.class,

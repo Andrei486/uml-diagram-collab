@@ -18,7 +18,7 @@
             <ComboBox fx:id="fontName">
                 <!--- Set possible font names dynamically -->
             </ComboBox>
-            <Spinner fx:id="fontSize" prefWidth="60">
+            <Spinner fx:id="fontSize" prefWidth="60" editable="true">
                 <valueFactory>
                     <SpinnerValueFactory.IntegerSpinnerValueFactory min="6" max="60"/>
                 </valueFactory>

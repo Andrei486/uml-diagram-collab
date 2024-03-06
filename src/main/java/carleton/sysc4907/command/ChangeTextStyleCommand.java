@@ -27,10 +27,12 @@ public class ChangeTextStyleCommand implements Command<ChangeTextStyleCommandArg
 
     @Override
     public void execute() {
+        if (args.elementId() == null) {
+            return;
+        }
         TextStyleProperty propertyToChange = args.property();
         Object valueToApply = args.value();
 
-        //after null check cast to label
         Node labelNode = idManager.getElementById(args.elementId());
         if (labelNode == null) {
             return;
@@ -56,20 +58,13 @@ public class ChangeTextStyleCommand implements Command<ChangeTextStyleCommandArg
                     textField.getStyleClass().removeAll("bolded");
                     label.getStyleClass().removeAll("bolded");
                 }
-                /*
-                textField.setStyle("-fx-font-weight: " + valueToApply);
-                label.setStyle("-fx-font-weight: "+ valueToApply);
-
-                 */
                 break;
             }
             case SIZE -> {
                 System.out.println("size");
                 String fontFamily = label.getFont().getFamily();
-                Font newFont = new Font(fontFamily, (Double) valueToApply);
-
-                //textField.setFont(newFont);
-                //label.setFont(newFont);
+                textField.setStyle("-fx-font-family: " + fontFamily + "; -fx-font-size: " + valueToApply + ";");
+                label.setStyle("-fx-font-family: " + fontFamily + "; -fx-font-size: " + valueToApply + ";");
                 break;
             }
             case ITALICS -> {
@@ -85,11 +80,6 @@ public class ChangeTextStyleCommand implements Command<ChangeTextStyleCommandArg
                     textField.getStyleClass().removeAll("italicized");
                     label.getStyleClass().removeAll("italicized");
                 }
-                /*
-                textField.setStyle("-fx-font-style: " + valueToApply);
-                label.setStyle("-fx-font-style: "+ valueToApply);
-
-                 */
                 break;
             }
             case UNDERLINE -> {
@@ -112,25 +102,6 @@ public class ChangeTextStyleCommand implements Command<ChangeTextStyleCommandArg
             case FONT_FAMILY -> {
                 System.out.println("font-family");
                 double oldFontSize = label.getFont().getSize();
-
-                //set font to normal font first (it will not change otherwise)
-                //Font normalFont = Font.font(20);
-                //label.setFont(normalFont);
-                //textField.setFont(normalFont);
-
-                //try 1
-                //textField.setFont(Font.font ((String) valueToApply, oldFontSize));
-                //label.setFont(Font.font ((String) valueToApply, oldFontSize));
-
-                //try 2
-                //textField.setStyle("-fx-font-family: " + valueToApply + "; -fx-font-size: " + oldFontSize + ";");
-
-                //try 3
-                //Font newFont = new Font((String) valueToApply, oldFontSize);
-                //textField.setFont(newFont);
-                //label.setFont(newFont);
-
-                //try 4
                 textField.setStyle("-fx-font-family: " + valueToApply + "; -fx-font-size: " + oldFontSize + ";");
                 label.setStyle("-fx-font-family: " + valueToApply + "; -fx-font-size: " + oldFontSize + ";");
                 break;

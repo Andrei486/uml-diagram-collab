@@ -87,6 +87,9 @@ public class ElementIdManager {
      * @return the element as a Node if it exists, or null if there is no element with the ID
      */
     public Node getElementById(Long id) {
+        if (id == null) {
+            return null;
+        }
         Parent parent = EditingAreaProvider.getEditingArea();
         return getElementByIdInParent(parent, id);
     }
@@ -98,6 +101,9 @@ public class ElementIdManager {
      * @return the controller if the DiagramElement exists and has one, null otherwise
      */
     public DiagramElementController getElementControllerById(Long id) {
+        if (id == null) {
+            return null;
+        }
         var node = getElementById(id);
         if (node == null) return null;
         var controller = node.getProperties().get("controller");
