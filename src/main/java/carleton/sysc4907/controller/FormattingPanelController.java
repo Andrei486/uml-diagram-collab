@@ -98,6 +98,7 @@ public class FormattingPanelController {
         Long id = (Long) idNum;
         Node labelNode = elementIdManager.getElementById(id);
         if (labelNode == null) {
+            selectedLabelId = null; // could also set to id but both are no longer valid values for new selections
             return;
         }
         Label label = (Label) labelNode;
