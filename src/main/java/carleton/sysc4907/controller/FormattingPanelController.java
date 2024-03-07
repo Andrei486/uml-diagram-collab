@@ -22,7 +22,7 @@ import java.util.Objects;
 public class FormattingPanelController {
 
     @FXML
-    private Spinner<Integer> fontSize;
+    private Spinner<Double> fontSize;
     @FXML
     private ComboBox<String> fontName;
     @FXML
@@ -92,25 +92,42 @@ public class FormattingPanelController {
             boldButton.setSelected(false);
             italicsButton.setSelected(false);
             underlineButton.setSelected(false);
+            fontName.valueProperty().setValue("");
             selectedLabelId = null;
+
+            fontSize.setDisable(true);
+            fontName.setDisable(true);
+            boldButton.setDisable(true);
+            italicsButton.setDisable(true);
+            underlineButton.setDisable(true);
             return;
         }
+
         Long id = (Long) idNum;
         Node labelNode = elementIdManager.getElementById(id);
         if (labelNode == null) {
             selectedLabelId = null; // could also set to id but both are no longer valid values for new selections
             return;
         }
+
         Label label = (Label) labelNode;
         var styleClass = label.getStyleClass();
-        //these *will* trigger the change listeners and make a new command
+
+        fontSize.setDisable(false);
+        fontName.setDisable(false);
+        boldButton.setDisable(false);
+        italicsButton.setDisable(false);
+        underlineButton.setDisable(false);
+
         boldButton.setSelected(styleClass.contains("bolded"));
         italicsButton.setSelected(styleClass.contains("italicized"));
         underlineButton.setSelected(styleClass.contains("underlined"));
+        fontName.valueProperty().setValue(label.getFont().getFamily());
+        fontSize.getValueFactory().setValue(label.getFont().getSize());
         selectedLabelId = id;
     }
 
-    private void onFontSizeChanged(Integer val) {
+    private void onFontSizeChanged(Double val) {
         if (editableLabelTracker.getIdLastEditedLabel() == null || !Objects.equals(editableLabelTracker.getIdLastEditedLabel(), selectedLabelId)) {
             return;
         }

@@ -63,8 +63,8 @@ public class ChangeTextStyleCommand implements Command<ChangeTextStyleCommandArg
             case SIZE -> {
                 System.out.println("size");
                 String fontFamily = label.getFont().getFamily();
-                textField.setStyle("-fx-font-family: " + fontFamily + "; -fx-font-size: " + valueToApply + ";");
-                label.setStyle("-fx-font-family: " + fontFamily + "; -fx-font-size: " + valueToApply + ";");
+                textField.setStyle("-fx-font-family: \"" + fontFamily + "\"; -fx-font-size: " + valueToApply + ";");
+                label.setStyle("-fx-font-family: \"" + fontFamily + "\"; -fx-font-size: " + valueToApply + ";");
                 break;
             }
             case ITALICS -> {
@@ -102,8 +102,8 @@ public class ChangeTextStyleCommand implements Command<ChangeTextStyleCommandArg
             case FONT_FAMILY -> {
                 System.out.println("font-family");
                 double oldFontSize = label.getFont().getSize();
-                textField.setStyle("-fx-font-family: " + valueToApply + "; -fx-font-size: " + oldFontSize + ";");
-                label.setStyle("-fx-font-family: " + valueToApply + "; -fx-font-size: " + oldFontSize + ";");
+                textField.setStyle("-fx-font-family: \"" + valueToApply + "\"; -fx-font-size: " + oldFontSize + ";");
+                label.setStyle("-fx-font-family: \"" + valueToApply + "\"; -fx-font-size: " + oldFontSize + ";");
                 break;
             }
         }
