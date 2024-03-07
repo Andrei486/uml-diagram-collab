@@ -40,6 +40,8 @@ public abstract class DiagramElementController {
 
     protected final DiagramModel diagramModel;
 
+    protected EventHandler<MouseEvent> mouseEventHandler;
+
     /**
      * Constructs a new DiagramElementController.
      *
@@ -68,13 +70,14 @@ public abstract class DiagramElementController {
     @FXML
     public void initialize() {
         // Adds registered mouse handlers to the element.
-        element.addEventHandler(MouseEvent.ANY, mouseEvent -> {
+        mouseEventHandler = mouseEvent -> {
             List<EventHandler<MouseEvent>> existingHandlers = mouseHandlers.get(mouseEvent.getEventType());
             if (existingHandlers != null) {
                 existingHandlers.forEach(handler -> handler.handle(mouseEvent));
             }
             mouseEvent.consume(); // Make it so only one element receives the event
-        });
+        };
+        element.addEventHandler(MouseEvent.ANY, mouseEventHandler);
         diagramModel.getSelectedElements().addListener((ListChangeListener<DiagramElement>) change -> {
             while (change.next()) {
                 if (change.wasAdded() && change.getAddedSubList().contains(element)) {

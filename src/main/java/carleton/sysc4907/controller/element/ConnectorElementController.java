@@ -49,6 +49,9 @@ public class ConnectorElementController extends DiagramElementController {
     @FXML
     private Path connectorPath;
 
+    @FXML
+    private Path pathHitbox;
+
     private PathingStrategy pathingStrategy;
 
     private boolean movePointDragging = false;
@@ -96,6 +99,8 @@ public class ConnectorElementController extends DiagramElementController {
     @Override
     public void initialize() {
         super.initialize();
+        element.removeEventHandler(MouseEvent.ANY, mouseEventHandler);
+        pathHitbox.addEventHandler(MouseEvent.ANY, mouseEventHandler);
         ChangeListener<Number> listener = (observableValue, number, t1) -> {
             reposition();
             recalculatePath();
@@ -181,6 +186,11 @@ public class ConnectorElementController extends DiagramElementController {
     private void recalculatePath() {
         pathingStrategy.makePath(
                 connectorPath,
+                adjustX(getStartX()), adjustY(getStartY()), isStartHorizontal.get(),
+                adjustX(getEndX()), adjustY(getEndY()), isEndHorizontal.get()
+        );
+        pathingStrategy.makePath(
+                pathHitbox,
                 adjustX(getStartX()), adjustY(getStartY()), isStartHorizontal.get(),
                 adjustX(getEndX()), adjustY(getEndY()), isEndHorizontal.get()
         );

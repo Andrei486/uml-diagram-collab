@@ -2,6 +2,7 @@ package carleton.sysc4907.command;
 
 import carleton.sysc4907.command.args.CommandArgs;
 import carleton.sysc4907.communications.Manager;
+import carleton.sysc4907.communications.MessageConstructor;
 import carleton.sysc4907.model.ExecutedCommandList;
 
 /**
@@ -13,13 +14,15 @@ public abstract class TrackedCommandFactory<T extends Command<TArgs>, TArgs exte
 
     private final Manager manager;
     private final ExecutedCommandList executedCommandList;
-    public TrackedCommandFactory(Manager manager, ExecutedCommandList executedCommandList) {
+    private final MessageConstructor messageConstructor;
+    public TrackedCommandFactory(Manager manager, ExecutedCommandList executedCommandList, MessageConstructor messageConstructor) {
         this.manager = manager;
         this.executedCommandList = executedCommandList;
+        this.messageConstructor = messageConstructor;
     }
     @Override
     public Command<TArgs> createTracked(TArgs args) {
-        return new TrackedCommand<>(create(args), manager, executedCommandList);
+        return new TrackedCommand<>(create(args), manager, executedCommandList, messageConstructor);
     }
 
     @Override

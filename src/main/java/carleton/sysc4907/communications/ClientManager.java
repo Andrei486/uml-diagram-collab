@@ -1,6 +1,7 @@
 package carleton.sysc4907.communications;
 
 import carleton.sysc4907.model.DiagramModel;
+import carleton.sysc4907.model.SessionModel;
 import carleton.sysc4907.processing.ElementCreator;
 import carleton.sysc4907.processing.ElementIdManager;
 
@@ -28,7 +29,8 @@ public class ClientManager extends Manager{
             int port,
             String ip,
             MessageInterpreter messageInterpreter,
-            MessageConstructor messageConstructor)
+            MessageConstructor messageConstructor,
+            SessionModel sessionModel)
             throws IOException {
         this.isHost = false;
         messageInterpreter.setManager(this);
@@ -39,7 +41,7 @@ public class ClientManager extends Manager{
 
         this.senderThread = new Thread(sender);
         this.senderThread.start();
-        this.clientConnectionManger = new ClientConnectionManager(ip, port, this.clientList, messageConstructor);
+        this.clientConnectionManger = new ClientConnectionManager(ip, port, this.clientList, messageConstructor, sessionModel);
     }
 
     @Override

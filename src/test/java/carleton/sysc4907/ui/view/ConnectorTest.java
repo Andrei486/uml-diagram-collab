@@ -1,6 +1,7 @@
 package carleton.sysc4907.ui.view;
 
 import carleton.sysc4907.command.ConnectorMovePointCommandFactory;
+import carleton.sysc4907.communications.MessageConstructor;
 import carleton.sysc4907.controller.element.ConnectorElementController;
 import carleton.sysc4907.controller.element.ConnectorHandleCreator;
 import carleton.sysc4907.controller.element.ConnectorMovePointPreviewCreator;
@@ -27,12 +28,14 @@ public class ConnectorTest extends DiagramElementTest {
     @Mock
     private ConnectorMovePointPreviewCreator mockConnectorMovePointPreviewCreator;
     private ConnectorMovePointCommandFactory connectorMovePointCommandFactory;
+    @Mock
+    private MessageConstructor mockMessageConstructor;
 
     @Start
     @Override
     protected void start(Stage stage) throws IOException {
         connectorHandleCreator = new ConnectorHandleCreator();
-        connectorMovePointCommandFactory = new ConnectorMovePointCommandFactory(elementIdManager, mockManager, mockExecutedCommandList);
+        connectorMovePointCommandFactory = new ConnectorMovePointCommandFactory(elementIdManager, mockManager, mockExecutedCommandList, mockMessageConstructor);
         super.start(stage);
         controller = (ConnectorElementController) element.getProperties().get("controller");
     }
