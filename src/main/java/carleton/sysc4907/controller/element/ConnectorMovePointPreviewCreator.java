@@ -33,7 +33,7 @@ public class ConnectorMovePointPreviewCreator {
         previewController.setSnapEnd(controller.getSnapEnd());
 
         Pane editingArea = EditingAreaProvider.getEditingArea();
-        editingArea.getChildren().add(previewController.element);
+        editingArea.getChildren().add(element);
 
         return previewController;
     }
