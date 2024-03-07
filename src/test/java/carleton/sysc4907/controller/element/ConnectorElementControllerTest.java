@@ -25,6 +25,9 @@ public class ConnectorElementControllerTest {
     private DiagramModel diagramModel;
     @Mock
     private ConnectorHandleCreator connectorHandleCreator;
+
+    @Mock
+    private ConnectorMovePointPreviewCreator connectorMovePointPreviewCreator;
     @Mock
     private ConnectorMovePointCommandFactory connectorMovePointCommandFactory;
     @Mock
@@ -41,6 +44,7 @@ public class ConnectorElementControllerTest {
                 moveCommandFactory,
                 diagramModel,
                 connectorHandleCreator,
+                connectorMovePointPreviewCreator,
                 connectorMovePointCommandFactory,
                 pathingStrategy
         );
@@ -70,6 +74,7 @@ public class ConnectorElementControllerTest {
                 moveCommandFactory,
                 diagramModel,
                 connectorHandleCreator,
+                connectorMovePointPreviewCreator,
                 connectorMovePointCommandFactory,
                 pathingStrategy
         );
@@ -97,6 +102,7 @@ public class ConnectorElementControllerTest {
                 moveCommandFactory,
                 diagramModel,
                 connectorHandleCreator,
+                connectorMovePointPreviewCreator,
                 connectorMovePointCommandFactory,
                 pathingStrategy
         );
@@ -123,6 +129,7 @@ public class ConnectorElementControllerTest {
                 moveCommandFactory,
                 diagramModel,
                 connectorHandleCreator,
+                connectorMovePointPreviewCreator,
                 connectorMovePointCommandFactory,
                 pathingStrategy
         );
@@ -152,6 +159,7 @@ public class ConnectorElementControllerTest {
                 moveCommandFactory,
                 diagramModel,
                 connectorHandleCreator,
+                connectorMovePointPreviewCreator,
                 connectorMovePointCommandFactory,
                 pathingStrategy
         );

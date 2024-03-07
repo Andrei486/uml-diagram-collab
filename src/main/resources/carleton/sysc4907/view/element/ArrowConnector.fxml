@@ -19,4 +19,6 @@
     </Path>
     <Path fx:id="arrowheadPath">
     </Path>
+    <Path fx:id="pathHitbox" styleClass="connector-path-hitbox">
+    </Path>
 </DiagramElement>

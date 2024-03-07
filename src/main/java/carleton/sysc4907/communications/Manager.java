@@ -1,5 +1,7 @@
 package carleton.sysc4907.communications;
 
+import carleton.sysc4907.model.SessionModel;
+
 import java.util.concurrent.LinkedBlockingQueue;
 
 /**

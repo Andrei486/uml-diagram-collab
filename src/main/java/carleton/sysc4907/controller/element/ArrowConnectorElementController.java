@@ -26,6 +26,7 @@ public class ArrowConnectorElementController extends ConnectorElementController 
             MoveCommandFactory moveCommandFactory,
             DiagramModel diagramModel,
             ConnectorHandleCreator connectorHandleCreator,
+            ConnectorMovePointPreviewCreator connectorMovePointPreviewCreator,
             ConnectorMovePointCommandFactory connectorMovePointCommandFactory,
             PathingStrategy pathingStrategy,
             ArrowheadFactory arrowheadFactory) {
@@ -34,19 +35,13 @@ public class ArrowConnectorElementController extends ConnectorElementController 
                 moveCommandFactory,
                 diagramModel,
                 connectorHandleCreator,
+                connectorMovePointPreviewCreator,
                 connectorMovePointCommandFactory,
                 pathingStrategy
         );
         this.arrowheadFactory = arrowheadFactory;
 
-        InvalidationListener listener = observable -> {
-            arrowhead.makeArrowheadPath(
-                    arrowheadPath,
-                    adjustX(getStartX()), adjustY(getStartY()),
-                    adjustX(getEndX()), adjustY(getEndY()),
-                    isEndHorizontal.get(), this.pathingStrategy.get().isDirectPath()
-            );
-        };
+        InvalidationListener listener = observable -> makeArrowheadPath();
 
         startX.addListener(listener);
         startY.addListener(listener);
@@ -58,23 +53,24 @@ public class ArrowConnectorElementController extends ConnectorElementController 
 
     public void setArrowheadType(ArrowheadType type) {
         arrowhead = arrowheadFactory.createArrowhead(type);
-        arrowhead.makeArrowheadPath(
-                arrowheadPath,
-                adjustX(getStartX()), adjustY(getStartY()),
-                adjustX(getEndX()), adjustY(getEndY()),
-                isEndHorizontal.get(), this.pathingStrategy.get().isDirectPath()
-        );
+        makeArrowheadPath();
     }
 
     @Override
     protected void recalculatePath() {
         super.recalculatePath();
-        arrowhead.makeArrowheadPath(
-                arrowheadPath,
-                adjustX(getStartX()), adjustY(getStartY()),
-                adjustX(getEndX()), adjustY(getEndY()),
-                isEndHorizontal.get(), this.pathingStrategy.get().isDirectPath()
-        );
+        makeArrowheadPath();
+    }
+
+    private void makeArrowheadPath() {
+        if (arrowhead != null) {
+            arrowhead.makeArrowheadPath(
+                    arrowheadPath,
+                    adjustX(getStartX()), adjustY(getStartY()),
+                    adjustX(getEndX()), adjustY(getEndY()),
+                    isEndHorizontal.get(), this.pathingStrategy.get().isDirectPath()
+            );
+        }
     }
 
     @Override
