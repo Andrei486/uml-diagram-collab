@@ -12,10 +12,18 @@ public abstract class AbstractArrowhead implements Arrowhead {
 
     protected final DoubleProperty size = new SimpleDoubleProperty();
 
+    /**
+     * Constructs an arrowhead with a default size.
+     */
     public AbstractArrowhead() {
         this(12);
     }
 
+    /**
+     * Constructs an arrowhead with a specified size (in pixels).
+     * Not inherited by default.
+     * @param size the size of the arrowhead, in pixels. Typically refers to the maximum width of the arrowhead.
+     */
     public AbstractArrowhead(double size) {
         setSize(size);
     }
@@ -25,6 +33,10 @@ public abstract class AbstractArrowhead implements Arrowhead {
             throw new IllegalArgumentException("Arrowhead size must be greater than 0.");
         }
         this.size.set(size);
+    }
+
+    public double getSize() {
+        return size.get();
     }
 
     public void makeArrowheadPath(
