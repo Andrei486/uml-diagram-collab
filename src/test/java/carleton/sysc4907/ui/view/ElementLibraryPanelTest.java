@@ -33,8 +33,7 @@ import java.util.LinkedList;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyInt;
-import static org.mockito.Mockito.doNothing;
-import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 @ExtendWith(ApplicationExtension.class)
@@ -78,6 +77,7 @@ public class ElementLibraryPanelTest {
             DependencyInjector injector = new DependencyInjector();
 
             Manager mockManager = Mockito.mock(Manager.class);
+            lenient().when(mockManager.isHost()).thenReturn(true);
             AddCommandFactory addCommandFactory = new AddCommandFactory(mockDiagramModel, mockElementCreator, mockManager, mockExecutedCommandList, mockMessageConstructor);
             injector.addInjectionMethod(ElementLibraryPanelController.class,
                     () -> {
