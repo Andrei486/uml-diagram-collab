@@ -92,13 +92,15 @@ public class MessageInterpreter {
             MoveCommandFactory moveCommandFactory,
             ResizeCommandFactory resizeCommandFactory,
             EditTextCommandFactory editTextCommandFactory,
-            ConnectorMovePointCommandFactory connectorMovePointCommandFactory, ChangeTextStyleCommandFactory changeTextStyleCommandFactory) {
+            ConnectorMovePointCommandFactory connectorMovePointCommandFactory,
+            ChangeTextStyleCommandFactory changeTextStyleCommandFactory) {
         commandFactories.put(AddCommandArgs.class, addCommandFactory);
         commandFactories.put(RemoveCommandArgs.class, removeCommandFactory);
         commandFactories.put(MoveCommandArgs.class, moveCommandFactory);
         commandFactories.put(ResizeCommandArgs.class, resizeCommandFactory);
         commandFactories.put(EditTextCommandArgs.class, editTextCommandFactory);
         commandFactories.put(ConnectorMovePointCommandArgs.class, connectorMovePointCommandFactory);
+        commandFactories.put(ChangeTextStyleCommandArgs.class, changeTextStyleCommandFactory);
     }
 
     /**
