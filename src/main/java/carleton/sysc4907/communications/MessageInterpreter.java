@@ -44,6 +44,7 @@ public class MessageInterpreter {
      * @param resizeCommandFactory the systems ResizeCommandFactory
      * @param editTextCommandFactory the systems EditTextCommandFactory
      * @param messageConstructor the MessageConstructor of the system
+     * @param changeTextStyleCommandFactory the systems ChangeTextStyleCommandFactory
      */
     public MessageInterpreter(
         AddCommandFactory addCommandFactory,
@@ -74,7 +75,7 @@ public class MessageInterpreter {
      * @param moveCommandFactory            the systems MoveCommandFactory
      * @param resizeCommandFactory          the systems ResizeCommandFactory
      * @param editTextCommandFactory        the systems EditTextCommandFactory
-     * @param changeTextStyleCommandFactory
+     * @param changeTextStyleCommandFactory the systems ChangeTextStyleCommandFactory
      */
     public void addFactories(
             AddCommandFactory addCommandFactory,

@@ -38,7 +38,6 @@ public class FormattingPanelController {
 
     private final ChangeTextStyleCommandFactory changeTextStyleCommandFactory;
 
-    //use this for seeing if selected element is bold etc?
     private final DiagramModel diagramModel;
 
     private final EditableLabelTracker editableLabelTracker;
@@ -68,7 +67,6 @@ public class FormattingPanelController {
      */
     @FXML
     public void initialize() {
-        // deselect and disable all formatting options
         fontName.setItems(textFormattingModel.getFontFamilyNames());
 
         //Toggle buttons do not trigger any events, so we need to use a change listener
@@ -81,13 +79,21 @@ public class FormattingPanelController {
         diagramModel.getSelectedElements().addListener((ListChangeListener<DiagramElement>) change -> onSelectedElementChange());
     }
 
+    /**
+     * Handler for when the selected element changes.
+     */
     private void onSelectedElementChange() {
         if(diagramModel.getSelectedElements().isEmpty()) {
             editableLabelTracker.setIdLastEditedLabel(null);
         }
     }
 
+    /**
+     * Handler for when the selected label changes.
+     * @param idNum the ID of the selected label.
+     */
     private void onSelectedLabelChanged(Number idNum) {
+        //if no label is selected, disable all buttons and set them to the default state.
         if (idNum == null) {
             boldButton.setSelected(false);
             italicsButton.setSelected(false);
@@ -110,15 +116,20 @@ public class FormattingPanelController {
             return;
         }
 
-        Label label = (Label) labelNode;
+        //if the ID is not for a label, return without enabling the buttons
+        if (!(labelNode instanceof Label label)) {
+            return;
+        }
         var styleClass = label.getStyleClass();
 
+        //enable buttons
         fontSize.setDisable(false);
         fontName.setDisable(false);
         boldButton.setDisable(false);
         italicsButton.setDisable(false);
         underlineButton.setDisable(false);
 
+        //set buttons to the style of the currently selected label.
         boldButton.setSelected(styleClass.contains("bolded"));
         italicsButton.setSelected(styleClass.contains("italicized"));
         underlineButton.setSelected(styleClass.contains("underlined"));
@@ -127,6 +138,10 @@ public class FormattingPanelController {
         selectedLabelId = id;
     }
 
+    /**
+     * Handler for changing the font size of some text.
+     * @param val the new font size.
+     */
     private void onFontSizeChanged(Double val) {
         if (editableLabelTracker.getIdLastEditedLabel() == null || !Objects.equals(editableLabelTracker.getIdLastEditedLabel(), selectedLabelId)) {
             return;
@@ -137,17 +152,24 @@ public class FormattingPanelController {
         command.execute();
     }
 
+    /**
+     * Handler for changing the underline of some text.
+     * @param t1 true if the text should be underlined, false otherwise.
+     */
     private void onUnderlineButtonToggled(Boolean t1) {
         if (editableLabelTracker.getIdLastEditedLabel() == null || !Objects.equals(editableLabelTracker.getIdLastEditedLabel(), selectedLabelId)) {
             return;
         }
-        //should do a check here to see if the value is the same 
         System.out.println("The underline button has been toggled! Val = " + t1);
         ChangeTextStyleCommandArgs args = new ChangeTextStyleCommandArgs(TextStyleProperty.UNDERLINE, t1, editableLabelTracker.getIdLastEditedLabel());
         Command<ChangeTextStyleCommandArgs> command = changeTextStyleCommandFactory.createTracked(args);
         command.execute();
     }
 
+    /**
+     * Handler for changing if the text is italic.
+     * @param t1 true if the text should be italic, false otherwise.
+     */
     private void onItalicsButtonToggled(Boolean t1) {
         if (editableLabelTracker.getIdLastEditedLabel() == null || !Objects.equals(editableLabelTracker.getIdLastEditedLabel(), selectedLabelId)) {
             return;
@@ -158,6 +180,10 @@ public class FormattingPanelController {
         command.execute();
     }
 
+    /**
+     * Handler for changing if the text is bold.
+     * @param t1 true if the text should be bolded, false otherwise.
+     */
     private void onBoldButtonToggled(Boolean t1) {
         if (editableLabelTracker.getIdLastEditedLabel() == null || !Objects.equals(editableLabelTracker.getIdLastEditedLabel(), selectedLabelId)) {
             return;
@@ -168,6 +194,10 @@ public class FormattingPanelController {
         command.execute();
     }
 
+    /**
+     * Handler for changing the font of some text.
+     * @param newFont the new font to apply.
+     */
     private void onFontFamilyChanged(String newFont) {
         if (editableLabelTracker.getIdLastEditedLabel() == null || !Objects.equals(editableLabelTracker.getIdLastEditedLabel(), selectedLabelId)) {
             return;
@@ -177,7 +207,4 @@ public class FormattingPanelController {
         Command<ChangeTextStyleCommandArgs> command = changeTextStyleCommandFactory.createTracked(args);
         command.execute();
     }
-
-
-
 }

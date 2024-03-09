@@ -156,6 +156,10 @@ public class EditableLabelController {
         return label;
     }
 
+    /**
+     * Exposes the TextArea element for advanced formatting.
+     * @return the editable text.
+     */
     public TextArea getEditableText() {
         return editableText;
     }

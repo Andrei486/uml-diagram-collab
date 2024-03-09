@@ -14,12 +14,20 @@ import org.w3c.dom.Text;
 import java.util.EnumMap;
 import java.util.HashMap;
 
+/**
+ * A command to change the styling of the text in a label.
+ */
 public class ChangeTextStyleCommand implements Command<ChangeTextStyleCommandArgs>{
 
     private final ElementIdManager idManager;
 
     private final ChangeTextStyleCommandArgs args;
 
+    /**
+     * Constructs a ChangeTextStyleCommand.
+     * @param args the arguments for the command.
+     * @param idManager the element ID manager.
+     */
     public ChangeTextStyleCommand(ChangeTextStyleCommandArgs args, ElementIdManager idManager) {
         this.idManager = idManager;
         this.args = args;
@@ -33,22 +41,35 @@ public class ChangeTextStyleCommand implements Command<ChangeTextStyleCommandArg
         TextStyleProperty propertyToChange = args.property();
         Object valueToApply = args.value();
 
+        //get the label from the ID
         Node labelNode = idManager.getElementById(args.elementId());
         if (labelNode == null) {
             return;
         }
-        Label label = (Label) labelNode;
+        if (!(labelNode instanceof Label label)) {
+            System.out.println("Error: ID was not for a label (in ChangeTextStyleCommand)");
+            return;
+        }
 
-        //check if cast fails?
-        EditableLabelController controller = (EditableLabelController) label.getParent().getProperties().get("controller");
+        //get the controller for the label
+        if (!(label.getParent().getProperties().get("controller") instanceof EditableLabelController controller)) {
+            System.out.println("Error: The controller for the given ID was not found (in ChangeTextStyleCommand)");
+            return;
+        }
 
         TextArea textField = controller.getEditableText();
 
+        // The action taken depends on the property to change.
+        // Bold, underline, and italics are done by adding and removing style classes as changing the style directly
+        // overwrites all other styling.
+        // Size and font family cannot be done with classes so they both need to set font family and size.
         switch (propertyToChange) {
             case BOLD -> {
                 System.out.println("bold");
-                //should probably handle this potential casting error
-                boolean value = (boolean) valueToApply;
+
+                if (!(valueToApply instanceof Boolean value)) {
+                    return;
+                }
 
                 if (value) {
                     textField.getStyleClass().add("bolded");
@@ -69,8 +90,10 @@ public class ChangeTextStyleCommand implements Command<ChangeTextStyleCommandArg
             }
             case ITALICS -> {
                 System.out.println("italics");
-                //should probably handle this potential casting error
-                boolean value = (boolean) valueToApply;
+
+                if (!(valueToApply instanceof Boolean value)) {
+                    return;
+                }
 
                 if (value) {
                     textField.getStyleClass().add("italicized");
@@ -84,8 +107,10 @@ public class ChangeTextStyleCommand implements Command<ChangeTextStyleCommandArg
             }
             case UNDERLINE -> {
                 System.out.println("underline " + valueToApply);
-                //should probably handle this potential casting error
-                boolean value = (boolean) valueToApply;
+
+                if (!(valueToApply instanceof Boolean value)) {
+                    return;
+                }
 
                 if (value) {
                     textField.getStyleClass().add("underlined");
@@ -95,8 +120,6 @@ public class ChangeTextStyleCommand implements Command<ChangeTextStyleCommandArg
                     textField.getStyleClass().removeAll("underlined");
                     label.getStyleClass().removeAll("underlined");
                 }
-
-
                 break;
             }
             case FONT_FAMILY -> {
@@ -107,11 +130,6 @@ public class ChangeTextStyleCommand implements Command<ChangeTextStyleCommandArg
                 break;
             }
         }
-    }
-
-    private HashMap<TextStyleProperty, String> parseOldFontStyle(Font oldFont) {
-        System.out.print(oldFont.getStyle());
-        return null;
     }
 
     @Override
