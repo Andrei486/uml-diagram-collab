@@ -76,6 +76,11 @@
     -fx-border-style: dashed;
 }
 
+.connector-path-hitbox {
+    -fx-stroke-width: 20;
+    -fx-stroke: #00000000;
+}
+
 .debug {
     -fx-fill: #00000000;
     -fx-stroke: red;

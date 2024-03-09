@@ -1,6 +1,7 @@
 package carleton.sysc4907.communications;
 
 import carleton.sysc4907.model.DiagramModel;
+import carleton.sysc4907.model.SessionModel;
 import carleton.sysc4907.processing.ElementCreator;
 import carleton.sysc4907.processing.ElementIdManager;
 
@@ -11,8 +12,6 @@ import java.util.concurrent.LinkedBlockingQueue;
  * This class manages to connect between the client and the host
  */
 public class ClientManager extends Manager{
-
-    private ClientList clientList;
     private TCPSender sender;
     private ClientConnectionManager clientConnectionManger;
     private Thread senderThread;
@@ -30,18 +29,19 @@ public class ClientManager extends Manager{
             int port,
             String ip,
             MessageInterpreter messageInterpreter,
-            MessageConstructor messageConstructor)
+            MessageConstructor messageConstructor,
+            SessionModel sessionModel)
             throws IOException {
         this.isHost = false;
         messageInterpreter.setManager(this);
         this.clientList = new ClientList(messageInterpreter);
-        this.clientConnectionManger = new ClientConnectionManager(ip, port, this.clientList);
+        messageConstructor.setManager(this, clientList);
         this.sendingQueue = new LinkedBlockingQueue<TargetedMessage>();
         this.sender = new TCPSender(this.sendingQueue, this.clientList, this);
-        messageConstructor.setManager(this, clientList);
 
         this.senderThread = new Thread(sender);
         this.senderThread.start();
+        this.clientConnectionManger = new ClientConnectionManager(ip, port, this.clientList, messageConstructor, sessionModel);
     }
 
     @Override

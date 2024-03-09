@@ -12,6 +12,8 @@ import carleton.sysc4907.controller.SessionUsersMenuController;
 import carleton.sysc4907.controller.*;
 import carleton.sysc4907.controller.element.*;
 import carleton.sysc4907.controller.element.pathing.CurvedPathStrategy;
+import carleton.sysc4907.controller.element.pathing.DirectPathStrategy;
+import carleton.sysc4907.controller.element.pathing.OrthogonalPathStrategy;
 import carleton.sysc4907.model.*;
 import carleton.sysc4907.processing.ElementCreator;
 import carleton.sysc4907.processing.ElementIdManager;
@@ -41,7 +43,10 @@ public class DiagramEditorLoader {
     private DependencyInjector injector;
 
     private MessageInterpreter interpreter;
+
     private MessageConstructor constructor;
+
+    private SessionModel sessionModel;
 
     /**
      * Constructs a new DiagramEditorLoader.
@@ -60,8 +65,12 @@ public class DiagramEditorLoader {
      * @throws IOException when an error has occurred loading the editor or initializing TCP
      */
     public void createAndLoad(Stage stage, String username, String roomCode, Object[] commandArgsList) throws IOException {
+        UserFactory userFactory = new UserFactory();
+        User hostUser = userFactory.createHostUser(username);
+        this.sessionModel = new SessionModel(roomCode, hostUser);
+
         var manager = initializeTCPHost();
-        load(username, roomCode, manager, commandArgsList);
+        load(stage, username, roomCode, manager, userFactory, commandArgsList);
         showScene(stage, injector, manager);
     }
 
@@ -74,8 +83,12 @@ public class DiagramEditorLoader {
      * @throws IOException when an error has occurred loading the editor or initializing TCP
      */
     public void createAndLoad(Stage stage, String username, String roomCode) throws IOException {
+        UserFactory userFactory = new UserFactory();
+        User hostUser = userFactory.createHostUser(username);
+        this.sessionModel = new SessionModel(roomCode, hostUser);
+
         var manager = initializeTCPHost();
-        load(username, roomCode, manager, new Object[0]);
+        load(stage, username, roomCode, manager, userFactory, new Object[0]);
         showScene(stage, injector, manager);
     }
 
@@ -89,8 +102,13 @@ public class DiagramEditorLoader {
      * @throws IOException when an error has occurred loading the editor or initializing TCP
      */
     public void loadJoin(Stage stage, String username, String host, int port, Object[] commandArgsList) throws IOException {
+        UserFactory userFactory = new UserFactory();
+        User hostUser = userFactory.createHostUser(username);
+        String roomCode = "111111111111";
+        this.sessionModel = new SessionModel(roomCode, hostUser);
+
         var manager = initializeTCPClient(host, port);
-        load(username, "111111111111", manager, commandArgsList);
+        load(stage, username, roomCode, manager, userFactory, commandArgsList);
         showScene(stage, injector, manager);
     }
 
@@ -100,32 +118,30 @@ public class DiagramEditorLoader {
      * @param roomCode the room code of the room to load
      * @param manager the TCP manager
      */
-    private void load(String username, String roomCode, Manager manager, Object[] commandArgsList) {
+    private void load(Stage stage, String username, String roomCode, Manager manager, UserFactory userFactory, Object[] commandArgsList) {
         //Create dependency injector to link models and controllers
         injector = new DependencyInjector();
         //Create the models and supporting classes
         FontOptionsFinder fontOptionsFinder = new FontOptionsFinder();
-        UserFactory userFactory = new UserFactory();
         List<User> guestUsers = new LinkedList<>();
         //create example guest users
         for (int i = 0; i < 4; i++) {
             guestUsers.add(userFactory.createGuestUser("Guest" + i));
         }
 
-        User hostUser = userFactory.createHostUser(username);
-        SessionModel sessionModel = new SessionModel(roomCode, hostUser);
         guestUsers.forEach(sessionModel::addUser);
         ElementIdManager elementIdManager = new ElementIdManager(sessionModel);
         TextFormattingModel textFormattingModel = new TextFormattingModel(fontOptionsFinder);
         diagramModel = new DiagramModel();
         EditableLabelTracker editableLabelTracker = new EditableLabelTracker();
         ExecutedCommandList executedCommandList = new ExecutedCommandList();
+        CommandListCompressor commandListCompressor = new CommandListCompressor(diagramModel, elementIdManager);
         MovePreviewCreator movePreviewCreator = new MovePreviewCreator(elementIdManager);
         ResizeHandleCreator resizeHandleCreator = new ResizeHandleCreator();
         ResizePreviewCreator resizePreviewCreator = new ResizePreviewCreator(elementIdManager);
         ConnectorHandleCreator connectorHandleCreator = new ConnectorHandleCreator();
         DependencyInjector elementControllerInjector = new DependencyInjector();
-        FileSaver fileSaver = new FileSaver(diagramModel, executedCommandList);
+        FileSaver fileSaver = new FileSaver(diagramModel, executedCommandList, commandListCompressor);
         ElementCreator elementCreator;
         try {
             elementCreator = new ElementCreator(elementControllerInjector, TEMPLATE_FILE_PATH, elementIdManager);
@@ -134,21 +150,24 @@ public class DiagramEditorLoader {
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
+        ConnectorMovePointPreviewCreator connectorMovePointPreviewCreator = new ConnectorMovePointPreviewCreator(
+                elementIdManager, elementCreator
+        );
 
         MoveCommandFactory moveCommandFactory = new MoveCommandFactory(
-                elementIdManager, manager, executedCommandList);
+                elementIdManager, manager, executedCommandList, constructor);
         ResizeCommandFactory resizeCommandFactory = new ResizeCommandFactory(
-                elementIdManager, manager, executedCommandList);
+                elementIdManager, manager, executedCommandList, constructor);
         AddCommandFactory addCommandFactory = new AddCommandFactory(
-                diagramModel, elementCreator, manager, executedCommandList);
+                diagramModel, elementCreator, manager, executedCommandList, constructor);
         RemoveCommandFactory removeCommandFactory = new RemoveCommandFactory(
-                diagramModel, elementIdManager, manager, executedCommandList);
+                diagramModel, elementIdManager, manager, executedCommandList, constructor);
         EditTextCommandFactory editTextCommandFactory = new EditTextCommandFactory(
-                elementIdManager, manager, executedCommandList);
+                elementIdManager, manager, executedCommandList, constructor);
         ConnectorMovePointCommandFactory connectorMovePointCommandFactory = new ConnectorMovePointCommandFactory(
-                elementIdManager, manager, executedCommandList);
+                elementIdManager, manager, executedCommandList, constructor);
         ChangeTextStyleCommandFactory changeTextStyleCommandFactory = new ChangeTextStyleCommandFactory(
-                elementIdManager, manager, executedCommandList);
+                elementIdManager, manager, executedCommandList, constructor);
         // Add factories to message interpreter: avoids circular dependencies
         interpreter.addFactories(
                 addCommandFactory,
@@ -187,6 +206,7 @@ public class DiagramEditorLoader {
                         moveCommandFactory,
                         diagramModel,
                         connectorHandleCreator,
+                        connectorMovePointPreviewCreator,
                         connectorMovePointCommandFactory,
                         new CurvedPathStrategy()));
 
@@ -206,6 +226,8 @@ public class DiagramEditorLoader {
 
         // Run the previous commands
         runPreviousCommands(commandArgsList);
+
+
     }
 
     public void addFactories(
@@ -230,13 +252,12 @@ public class DiagramEditorLoader {
     public void runPreviousCommands(Object[] commandArgsList) {
         for (Object args : commandArgsList) {
             Class<?> argType = args.getClass();
-            System.out.println("Looking for type " + argType);
             var factory = commandFactories.get(argType);
             if (factory == null) {
                 throw new IllegalArgumentException("The given message did not correspond to a known type of command arguments.");
             }
             // Use remote commands to add them to the command list without transmitting them elsewhere
-            Command<?> command = factory.createRemote(argType.cast(args));
+            Command<?> command = factory.createRemote((CommandArgs) argType.cast(args));
             command.execute();
         }
     }
@@ -256,6 +277,8 @@ public class DiagramEditorLoader {
         stage.setMaximized(true);
         stage.setTitle("Diagram Editor");
         stage.getScene().getWindow().addEventFilter(WindowEvent.WINDOW_CLOSE_REQUEST, windowEvent -> manager.close());
+        interpreter.setWindow(stage.getScene().getWindow());
+        System.out.println("Window Was Set");
         stage.show();
     }
 
@@ -275,7 +298,7 @@ public class DiagramEditorLoader {
     private Manager initializeTCPHost() throws IOException {
         constructor = new MessageConstructor();
         interpreter = new MessageInterpreter(constructor);
-        return new HostManager(4000, interpreter, constructor);
+        return new HostManager(4000, interpreter, constructor, sessionModel);
     }
 
     /**
@@ -290,6 +313,6 @@ public class DiagramEditorLoader {
             int port) throws IOException {
         constructor = new MessageConstructor();
         interpreter = new MessageInterpreter(constructor);
-        return new ClientManager(port, host, interpreter, constructor);
+        return new ClientManager(port, host, interpreter, constructor, sessionModel);
     }
 }

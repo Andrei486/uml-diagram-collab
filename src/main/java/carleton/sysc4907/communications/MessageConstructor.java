@@ -27,11 +27,59 @@ public class MessageConstructor {
 
 
     /**
-     * Wrap a message in a TargetedMessage and place it into the managers sending queue
+     * Wrap a message in a TargetedMessage and place it into the managers sending queue,
+     * that will send to all valid clients
      * @param message the message to be wrapped
      */
     public void send(Message message) {
-        manager.send(new TargetedMessage(new long[0], true, false, message));
+        manager.send(new TargetedMessage(new long[0], false, false, message));
+    }
+
+    /**
+     * Wrap a message in a TargetedMessage and place it into the managers sending queue,
+     * that will send to all clients
+     * @param message the message to be wrapped
+     */
+    public void sendInvalid(Message message) {manager.send(new TargetedMessage(new long[0], true, false, message));}
+
+    /**
+     * Wrap a message in a TargetedMessage and place it into the managers sending queue,
+     * that will send to a valid client
+     * @param message the message to be wrapped
+     * @param ids the ids of the clients
+     */
+    public void sendTo(Message message, long[] ids) {
+        manager.send(new TargetedMessage(ids, false, false, message));
+    }
+
+    /**
+     * Wrap a message in a TargetedMessage and place it into the managers sending queue,
+     * that will send to a valid client
+     * @param message the message to be wrapped
+     * @param id the id of the client
+     */
+    public void sendTo(Message message, long id) {
+        sendTo(message, new long[]{id});
+    }
+
+    /**
+     * Wrap a message in a TargetedMessage and place it into the managers sending queue,
+     * that will send to a client
+     * @param message the message to be wrapped
+     * @param ids the ids of the clients
+     */
+    public void sendToInvalid(Message message, long[] ids) {
+        manager.send(new TargetedMessage(ids, true, false, message));
+    }
+
+    /**
+     * Wrap a message in a TargetedMessage and place it into the managers sending queue,
+     * that will send to a client
+     * @param message the message to be wrapped
+     * @param id the id of the client
+     */
+    public void sendToInvalid(Message message, long id) {
+        sendToInvalid(message, new long[]{id});
     }
 
     /**
@@ -45,7 +93,9 @@ public class MessageConstructor {
         long[] ids = clients.getClientIds(new long[]{id});
 
         if (ids.length > 0) {
-            manager.send(new TargetedMessage(ids, true, false, message));
+            manager.send(new TargetedMessage(ids, false, false, message));
         }
     }
+
+
 }

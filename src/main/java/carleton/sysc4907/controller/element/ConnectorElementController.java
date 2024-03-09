@@ -3,6 +3,7 @@ package carleton.sysc4907.controller.element;
 import carleton.sysc4907.command.ConnectorMovePointCommandFactory;
 import carleton.sysc4907.command.MoveCommandFactory;
 import carleton.sysc4907.command.args.ConnectorMovePointCommandArgs;
+import carleton.sysc4907.command.args.MoveCommandArgs;
 import carleton.sysc4907.controller.element.pathing.PathingStrategy;
 import carleton.sysc4907.model.DiagramModel;
 import carleton.sysc4907.view.DiagramElement;
@@ -28,6 +29,7 @@ public class ConnectorElementController extends DiagramElementController {
 
     private final double AUTO_DIRECTION_THRESHOLD = 4.0;
     private final ConnectorHandleCreator connectorHandleCreator;
+    private final ConnectorMovePointPreviewCreator connectorMovePointPreviewCreator;
     private final ConnectorMovePointCommandFactory connectorMovePointCommandFactory;
     private final List<Node> handles;
 
@@ -47,6 +49,9 @@ public class ConnectorElementController extends DiagramElementController {
     @FXML
     private Path connectorPath;
 
+    @FXML
+    private Path pathHitbox;
+
     private PathingStrategy pathingStrategy;
 
     private boolean movePointDragging = false;
@@ -54,6 +59,8 @@ public class ConnectorElementController extends DiagramElementController {
     private double dragStartY;
 
     private boolean repositioning = false;
+
+    private ConnectorElementController previewController;
 
     /**
      * Constructs a new ConnectorElementController.
@@ -67,10 +74,12 @@ public class ConnectorElementController extends DiagramElementController {
             MoveCommandFactory moveCommandFactory,
             DiagramModel diagramModel,
             ConnectorHandleCreator connectorHandleCreator,
+            ConnectorMovePointPreviewCreator connectorMovePointPreviewCreator,
             ConnectorMovePointCommandFactory connectorMovePointCommandFactory,
             PathingStrategy pathingStrategy) {
         super(previewCreator, moveCommandFactory, diagramModel);
         this.connectorHandleCreator = connectorHandleCreator;
+        this.connectorMovePointPreviewCreator = connectorMovePointPreviewCreator;
         this.connectorMovePointCommandFactory = connectorMovePointCommandFactory;
         this.pathingStrategy = pathingStrategy;
         this.handles = new LinkedList<>();
@@ -90,6 +99,8 @@ public class ConnectorElementController extends DiagramElementController {
     @Override
     public void initialize() {
         super.initialize();
+        element.removeEventHandler(MouseEvent.ANY, mouseEventHandler);
+        pathHitbox.addEventHandler(MouseEvent.ANY, mouseEventHandler);
         ChangeListener<Number> listener = (observableValue, number, t1) -> {
             reposition();
             recalculatePath();
@@ -140,10 +151,12 @@ public class ConnectorElementController extends DiagramElementController {
         if (showHandles) {
             var handle = connectorHandleCreator.createMovePointHandle(element, startX, startY);
             handle.setOnDragDetected(this::handleDragDetectedStartMovePoint);
+            handle.setOnMouseDragged(event -> handleMouseDraggedMovePreviewPoint(event, true));
             handle.setOnMouseReleased(event -> handleMouseReleasedResize(event, true));
             handles.add(handle);
             handle = connectorHandleCreator.createMovePointHandle(element, endX, endY);
             handle.setOnDragDetected(this::handleDragDetectedStartMovePoint);
+            handle.setOnMouseDragged(event -> handleMouseDraggedMovePreviewPoint(event, false));
             handle.setOnMouseReleased(event -> handleMouseReleasedResize(event, false));
             handles.add(handle);
         } else {
@@ -173,6 +186,11 @@ public class ConnectorElementController extends DiagramElementController {
     private void recalculatePath() {
         pathingStrategy.makePath(
                 connectorPath,
+                adjustX(getStartX()), adjustY(getStartY()), isStartHorizontal.get(),
+                adjustX(getEndX()), adjustY(getEndY()), isEndHorizontal.get()
+        );
+        pathingStrategy.makePath(
+                pathHitbox,
                 adjustX(getStartX()), adjustY(getStartY()), isStartHorizontal.get(),
                 adjustX(getEndX()), adjustY(getEndY()), isEndHorizontal.get()
         );
@@ -236,9 +254,37 @@ public class ConnectorElementController extends DiagramElementController {
      */
     private void handleDragDetectedStartMovePoint(MouseEvent event) {
         movePointDragging = true;
+        previewController = connectorMovePointPreviewCreator.createMovePointPreview(this);
         dragStartX = event.getSceneX();
         dragStartY = event.getSceneY();
         event.consume();
+    }
+
+    private void handleMouseDraggedMovePreviewPoint(MouseEvent event, boolean isStart) {
+        // Handle left click only
+        if (!event.isPrimaryButtonDown()) {
+            return;
+        }
+        if (previewController != null) {
+            double startX;
+            double startY;
+            if (isStart) {
+                startX = dragStartX - getStartX();
+                startY = dragStartY - getStartY();
+            } else {
+                startX = dragStartX - getEndX();
+                startY = dragStartY - getEndY();
+            }
+            var args = new ConnectorMovePointCommandArgs(
+                    isStart,
+                    startX,
+                    startY,
+                    event.getSceneX(),
+                    event.getSceneY(),
+                    previewController.element.getElementId());
+            var command = connectorMovePointCommandFactory.create(args);
+            command.execute();
+        }
     }
 
     /**
@@ -251,10 +297,23 @@ public class ConnectorElementController extends DiagramElementController {
             return;
         }
         movePointDragging = false;
+        connectorMovePointPreviewCreator.deleteMovePreview(element, previewController);
+        previewController = null;
+        double startX;
+        double startY;
+        if (isStart) {
+            startX = dragStartX - getStartX();
+            startY = dragStartY - getStartY();
+        } else {
+            startX = dragStartX - getEndX();
+            startY = dragStartY - getEndY();
+        }
         var args = new ConnectorMovePointCommandArgs(
                 isStart,
-                event.getSceneX() - dragStartX,
-                event.getSceneY() - dragStartY,
+                startX,
+                startY,
+                event.getSceneX(),
+                event.getSceneY(),
                 element.getElementId());
         var command = connectorMovePointCommandFactory.createTracked(args);
         command.execute();
@@ -268,6 +327,10 @@ public class ConnectorElementController extends DiagramElementController {
     public void setPathingStrategy(PathingStrategy strategy) {
         this.pathingStrategy = strategy;
         recalculatePath();
+    }
+
+    public PathingStrategy getPathingStrategy() {
+        return this.pathingStrategy;
     }
 
     public double getStartX() {
@@ -322,8 +385,16 @@ public class ConnectorElementController extends DiagramElementController {
         isStartSnapping = isSnap;
     }
 
+    public boolean getSnapStart() {
+        return this.isStartSnapping;
+    }
+
     public void setSnapEnd(boolean isSnap) {
         isEndSnapping = isSnap;
+    }
+
+    public boolean getSnapEnd() {
+        return this.isEndSnapping;
     }
 
     private double adjustX(double x) {

@@ -46,6 +46,10 @@ public class ClientData {
         return isValid;
     }
 
+    public void setValid(Boolean valid) {
+        isValid = valid;
+    }
+
     /**
      * Closes the socket that connects to the client
      * @throws IOException the connection is already

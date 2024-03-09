@@ -3,6 +3,7 @@ package carleton.sysc4907.command;
 import carleton.sysc4907.command.args.ChangeTextStyleCommandArgs;
 import carleton.sysc4907.command.args.MoveCommandArgs;
 import carleton.sysc4907.communications.Manager;
+import carleton.sysc4907.communications.MessageConstructor;
 import carleton.sysc4907.model.ExecutedCommandList;
 import carleton.sysc4907.processing.ElementIdManager;
 
@@ -18,11 +19,13 @@ public class ChangeTextStyleCommandFactory extends TrackedCommandFactory<Command
      * @param elementIdManager the element ID manager.
      * @param manager the TCP manager.
      * @param executedCommandList the list of executed commands.
+     * @param messageConstructor the message constructor.
      */
     public ChangeTextStyleCommandFactory(ElementIdManager elementIdManager,
                                          Manager manager,
-                                         ExecutedCommandList executedCommandList) {
-        super(manager, executedCommandList);
+                                         ExecutedCommandList executedCommandList,
+                                         MessageConstructor messageConstructor) {
+        super(manager, executedCommandList, messageConstructor);
         this.elementIdManager = elementIdManager;
     }
 

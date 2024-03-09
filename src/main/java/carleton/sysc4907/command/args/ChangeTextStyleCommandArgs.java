@@ -11,5 +11,9 @@ import java.util.HashMap;
  * @param value the new value of the style property.
  * @param elementId the ID of the label to change the style of the text of.
  */
-public record ChangeTextStyleCommandArgs(TextStyleProperty property, Object value, Long elementId) implements Serializable {
+public record ChangeTextStyleCommandArgs(TextStyleProperty property, Object value, Long elementId) implements Serializable, CommandArgs {
+    @Override
+    public long[] getElementIds() {
+        return new long[] {elementId};
+    }
 }

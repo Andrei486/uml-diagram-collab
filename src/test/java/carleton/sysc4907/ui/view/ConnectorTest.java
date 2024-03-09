@@ -1,19 +1,21 @@
 package carleton.sysc4907.ui.view;
 
 import carleton.sysc4907.command.ConnectorMovePointCommandFactory;
+import carleton.sysc4907.communications.MessageConstructor;
 import carleton.sysc4907.controller.element.ConnectorElementController;
 import carleton.sysc4907.controller.element.ConnectorHandleCreator;
+import carleton.sysc4907.controller.element.ConnectorMovePointPreviewCreator;
 import carleton.sysc4907.controller.element.pathing.OrthogonalPathStrategy;
 import carleton.sysc4907.view.DiagramElement;
 import javafx.scene.shape.Rectangle;
 import javafx.stage.Stage;
 import org.junit.jupiter.api.Test;
+import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.testfx.api.FxRobot;
 import org.testfx.framework.junit5.Start;
 
 import java.io.IOException;
-import java.util.Comparator;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -22,13 +24,18 @@ public class ConnectorTest extends DiagramElementTest {
 
     private ConnectorElementController controller;
     private ConnectorHandleCreator connectorHandleCreator;
+
+    @Mock
+    private ConnectorMovePointPreviewCreator mockConnectorMovePointPreviewCreator;
     private ConnectorMovePointCommandFactory connectorMovePointCommandFactory;
+    @Mock
+    private MessageConstructor mockMessageConstructor;
 
     @Start
     @Override
     protected void start(Stage stage) throws IOException {
         connectorHandleCreator = new ConnectorHandleCreator();
-        connectorMovePointCommandFactory = new ConnectorMovePointCommandFactory(elementIdManager, mockManager, mockExecutedCommandList);
+        connectorMovePointCommandFactory = new ConnectorMovePointCommandFactory(elementIdManager, mockManager, mockExecutedCommandList, mockMessageConstructor);
         super.start(stage);
         controller = (ConnectorElementController) element.getProperties().get("controller");
     }
@@ -43,6 +50,7 @@ public class ConnectorTest extends DiagramElementTest {
                         moveCommandFactory,
                         diagramModel,
                         connectorHandleCreator,
+                        mockConnectorMovePointPreviewCreator,
                         connectorMovePointCommandFactory,
                         new OrthogonalPathStrategy()));
     }

@@ -17,4 +17,6 @@
     </properties>
     <Path fx:id="connectorPath">
     </Path>
+    <Path fx:id="pathHitbox" styleClass="connector-path-hitbox">
+    </Path>
 </DiagramElement>

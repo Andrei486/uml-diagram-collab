@@ -2,11 +2,14 @@ package carleton.sysc4907.communications;
 
 import carleton.sysc4907.command.*;
 import carleton.sysc4907.command.args.*;
+import carleton.sysc4907.controller.JoinRequestDialogController;
 import javafx.application.Platform;
+import javafx.stage.Window;
 
 import java.time.LocalTime;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
 
 /**
  * Interprets messages received from other users
@@ -17,6 +20,7 @@ public class MessageInterpreter {
     private Manager manager;
     private boolean isHost;
     private MessageConstructor messageConstructor;
+    private Window window;
 
     /**
      * Constructs a MessageInterpreter
@@ -34,6 +38,11 @@ public class MessageInterpreter {
     public void setManager(Manager manager) {
         this.manager = manager;
         this.isHost = manager.isHost();
+    }
+
+    public void setWindow(Window window) {
+        this.window = window;
+        System.out.println("Window Set");
     }
 
     /**
@@ -101,6 +110,8 @@ public class MessageInterpreter {
         System.out.println(message.type() + " - " + message.payload());
         switch (message.type()) {
             case UPDATE -> interpretUpdate(message, userId);
+            case JOIN_REQUEST -> interpretJoinRequest(message, userId);
+            case JOIN_RESPONSE -> interpretJoinResponse(message, userId);
             default -> System.out.println(message);
         }
     }
@@ -118,7 +129,7 @@ public class MessageInterpreter {
         if (factory == null) {
             throw new IllegalArgumentException("The given message did not correspond to a known type of command arguments.");
         }
-        Command<?> command = factory.createRemote(argType.cast(args));
+        Command<?> command = factory.createRemote((CommandArgs) argType.cast(args));
 
         Platform.runLater(command::execute);
         System.out.println("Interpreted command finished executing (on platform) at time " + LocalTime.now());
@@ -126,5 +137,40 @@ public class MessageInterpreter {
         if (isHost) {
             messageConstructor.send(message);
         }
+    }
+
+    /**
+     * Interpret the Join Request received
+     * @param message the message
+     * @param userId the user id who sent the message
+     */
+    private void interpretJoinRequest(Message message, long userId){
+        Platform.runLater(
+                () -> {
+                    if (isHost) {
+
+                        var controller = new JoinRequestDialogController(window, (String) message.payload());
+                        Optional<Boolean> result = controller.showAndWait();
+                        if (result.isPresent() && result.get()) {
+                            System.out.println((String) message.payload() + "is Valid");
+                            manager.validateClient(userId);
+                            messageConstructor.sendTo(new Message(MessageType.JOIN_RESPONSE, null), userId);
+                        }
+                    }
+                    System.out.println("Join Request Received");
+                }
+        );
+    }
+
+    /**
+     * Interpret the Join Response received
+     * @param message the message
+     * @param userId the user id who sent the message
+     */
+    private void interpretJoinResponse(Message message, long userId){
+        if (!isHost) {
+            manager.validateClient(userId);
+        }
+        System.out.println("Join Response Received");
     }
 }

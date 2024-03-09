@@ -1,6 +1,7 @@
 package carleton.sysc4907.communications;
 
 import carleton.sysc4907.model.DiagramModel;
+import carleton.sysc4907.model.SessionModel;
 import carleton.sysc4907.processing.ElementCreator;
 import carleton.sysc4907.processing.ElementIdManager;
 
@@ -12,7 +13,6 @@ import java.util.concurrent.LinkedBlockingQueue;
  * This class manages to connect between the host and the clients
  */
 public class HostManager extends Manager {
-    private ClientList clientList;
     private TCPSender sender;
     private HostConnectionManager hostConnectionManager;
     private Thread senderThread;
@@ -28,7 +28,8 @@ public class HostManager extends Manager {
     public HostManager(
             int port,
             MessageInterpreter messageInterpreter,
-            MessageConstructor messageConstructor)
+            MessageConstructor messageConstructor,
+            SessionModel sessionModel)
             throws IOException
     {
         this.isHost = true;
