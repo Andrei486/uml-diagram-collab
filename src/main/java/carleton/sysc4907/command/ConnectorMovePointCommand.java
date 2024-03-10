@@ -35,9 +35,11 @@ public class ConnectorMovePointCommand implements Command<ConnectorMovePointComm
         ConnectorElementController controller = (ConnectorElementController) element.getProperties().get("controller");
         if (controller == null) throw new IllegalArgumentException();
         if (args.isStart()) {
+            controller.unsnapFromHandle(true);
             controller.setStartX(args.endX() - args.startX());
             controller.setStartY(args.endY() - args.startY());
         } else {
+            controller.unsnapFromHandle(false);
             controller.setEndX(args.endX() - args.startX());
             controller.setEndY(args.endY() - args.startY());
         }

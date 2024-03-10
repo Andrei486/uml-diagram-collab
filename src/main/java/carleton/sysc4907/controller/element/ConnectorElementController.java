@@ -1,12 +1,17 @@
 package carleton.sysc4907.controller.element;
 
 import carleton.sysc4907.command.ConnectorMovePointCommandFactory;
+import carleton.sysc4907.command.ConnectorSnapCommandFactory;
 import carleton.sysc4907.command.MoveCommandFactory;
 import carleton.sysc4907.command.args.ConnectorMovePointCommandArgs;
+import carleton.sysc4907.command.args.ConnectorSnapCommandArgs;
 import carleton.sysc4907.command.args.MoveCommandArgs;
 import carleton.sysc4907.controller.element.pathing.PathingStrategy;
 import carleton.sysc4907.model.DiagramModel;
+import carleton.sysc4907.model.SnapHandleProvider;
 import carleton.sysc4907.view.DiagramElement;
+import carleton.sysc4907.view.EditingAreaLayer;
+import carleton.sysc4907.view.SnapHandle;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.SimpleBooleanProperty;
@@ -31,6 +36,7 @@ public class ConnectorElementController extends DiagramElementController {
     private final ConnectorHandleCreator connectorHandleCreator;
     private final ConnectorMovePointPreviewCreator connectorMovePointPreviewCreator;
     private final ConnectorMovePointCommandFactory connectorMovePointCommandFactory;
+    private final ConnectorSnapCommandFactory connectorSnapCommandFactory;
     private final List<Node> handles;
 
     // All coordinates relative to the parent element (editing area)!
@@ -42,9 +48,12 @@ public class ConnectorElementController extends DiagramElementController {
     private final BooleanProperty isStartHorizontal = new SimpleBooleanProperty();
 
     private boolean isStartSnapping = false;
+
+    private SnapHandle startSnapHandle;
     private final BooleanProperty isEndHorizontal = new SimpleBooleanProperty();
 
     private boolean isEndSnapping = false;
+    private SnapHandle endSnapHandle;
 
     @FXML
     private Path connectorPath;
@@ -76,11 +85,13 @@ public class ConnectorElementController extends DiagramElementController {
             ConnectorHandleCreator connectorHandleCreator,
             ConnectorMovePointPreviewCreator connectorMovePointPreviewCreator,
             ConnectorMovePointCommandFactory connectorMovePointCommandFactory,
+            ConnectorSnapCommandFactory connectorSnapCommandFactory,
             PathingStrategy pathingStrategy) {
         super(previewCreator, moveCommandFactory, diagramModel);
         this.connectorHandleCreator = connectorHandleCreator;
         this.connectorMovePointPreviewCreator = connectorMovePointPreviewCreator;
         this.connectorMovePointCommandFactory = connectorMovePointCommandFactory;
+        this.connectorSnapCommandFactory = connectorSnapCommandFactory;
         this.pathingStrategy = pathingStrategy;
         this.handles = new LinkedList<>();
         isStartHorizontal.set(true);
@@ -120,6 +131,8 @@ public class ConnectorElementController extends DiagramElementController {
                 return;
             }
             double deltaX = t1.doubleValue() - number.doubleValue();
+            unsnapFromHandle(true);
+            unsnapFromHandle(false);
             setStartX(deltaX + getStartX());
             setEndX(deltaX + getEndX());
         });
@@ -128,11 +141,14 @@ public class ConnectorElementController extends DiagramElementController {
                 return;
             }
             double deltaY = t1.doubleValue() - number.doubleValue();
+            unsnapFromHandle(true);
+            unsnapFromHandle(false);
             setStartY(deltaY + getStartY());
             setEndY(deltaY + getEndY());
         });
         setEndX(100);
         setEndY(20);
+        element.setViewOrder(EditingAreaLayer.CONNECTOR.getViewOrder());
     }
 
     @Override
@@ -257,6 +273,7 @@ public class ConnectorElementController extends DiagramElementController {
         previewController = connectorMovePointPreviewCreator.createMovePointPreview(this);
         dragStartX = event.getSceneX();
         dragStartY = event.getSceneY();
+        snapHandleProvider.setAllHandlesVisible(true);
         event.consume();
     }
 
@@ -299,6 +316,23 @@ public class ConnectorElementController extends DiagramElementController {
         movePointDragging = false;
         connectorMovePointPreviewCreator.deleteMovePreview(element, previewController);
         previewController = null;
+
+        var handleUnderCursor = snapHandleProvider.getSnapHandleAtPosition(event.getSceneX(), event.getSceneY(), snapHandles);
+        if (handleUnderCursor != null) {
+            System.out.println("Snapping to handle");
+            snapHandleProvider.setAllHandlesVisible(false);
+            var snapArgs = new ConnectorSnapCommandArgs(
+                    element.getElementId(),
+                    isStart,
+                    false,
+                    handleUnderCursor.getElementId());
+            var command = connectorSnapCommandFactory.createTracked(snapArgs);
+            command.execute();
+            event.consume();
+            return;
+        }
+
+        System.out.println("Moving connector");
         double startX;
         double startY;
         if (isStart) {
@@ -318,6 +352,42 @@ public class ConnectorElementController extends DiagramElementController {
         var command = connectorMovePointCommandFactory.createTracked(args);
         command.execute();
         event.consume();
+    }
+
+    public void snapToHandle(SnapHandle snapHandle, boolean isStart) {
+        if (isStart) {
+            isStartSnapping = true;
+            startX.bind(snapHandle.getCenterXBinding());
+            startY.bind(snapHandle.getCenterYBinding());
+            isStartHorizontal.set(snapHandle.isHorizontal());
+            startSnapHandle = snapHandle;
+        } else {
+            isEndSnapping = true;
+            endX.bind(snapHandle.getCenterXBinding());
+            endY.bind(snapHandle.getCenterYBinding());
+            isEndHorizontal.set(snapHandle.isHorizontal());
+            endSnapHandle = snapHandle;
+        }
+        snapHandle.getSnappedConnectorIds().add(element.getElementId());
+    }
+
+    public void unsnapFromHandle(boolean isStart) {
+        var snapHandle = isStart ? startSnapHandle : endSnapHandle;
+        if (snapHandle == null) {
+            return;
+        }
+        if (isStart) {
+            isStartSnapping = false;
+            startX.unbind();
+            startY.unbind();
+            startSnapHandle = null;
+        } else {
+            isEndSnapping = false;
+            endX.unbind();
+            endY.unbind();
+            endSnapHandle = null;
+        }
+        snapHandle.getSnappedConnectorIds().remove(element.getElementId());
     }
 
     /**

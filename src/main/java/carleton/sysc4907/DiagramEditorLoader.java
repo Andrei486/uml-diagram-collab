@@ -167,6 +167,8 @@ public class DiagramEditorLoader {
                 elementIdManager, manager, executedCommandList, constructor);
         ConnectorMovePointCommandFactory connectorMovePointCommandFactory = new ConnectorMovePointCommandFactory(
                 elementIdManager, manager, executedCommandList, constructor);
+        ConnectorSnapCommandFactory connectorSnapCommandFactory = new ConnectorSnapCommandFactory(
+                elementIdManager, manager, executedCommandList, constructor);
         // Add factories to message interpreter: avoids circular dependencies
         interpreter.addFactories(
                 addCommandFactory,
@@ -205,6 +207,7 @@ public class DiagramEditorLoader {
                         connectorHandleCreator,
                         connectorMovePointPreviewCreator,
                         connectorMovePointCommandFactory,
+                        connectorSnapCommandFactory,
                         new CurvedPathStrategy()));
 
         // Add instantiation methods to the main dependency injector, used to create UI elements
