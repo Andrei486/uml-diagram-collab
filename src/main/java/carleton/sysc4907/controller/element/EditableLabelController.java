@@ -47,6 +47,9 @@ public class EditableLabelController {
      */
     @FXML
     public void initialize() {
+        String DEFAULT_FONT_FAMILY = "Segoe UI";
+        int DEFAULT_FONT_SIZE = 14;
+
         textProperty.bind(label.textProperty());
         label.setWrapText(true);
         editableText.setFocusTraversable(false);
@@ -58,6 +61,8 @@ public class EditableLabelController {
         label.minWidthProperty().bind(widthProperty.multiply(0.8));
         label.setAlignment(Pos.CENTER);
         label.setTextAlignment(TextAlignment.CENTER);
+        label.setStyle("-fx-font-family: \"" + DEFAULT_FONT_FAMILY + "\"; -fx-font-size: " + DEFAULT_FONT_SIZE + ";");
+        editableText.setStyle("-fx-font-family: \"" + DEFAULT_FONT_FAMILY + "\"; -fx-font-size: " + DEFAULT_FONT_SIZE + ";");
         editableText.setWrapText(true);
         toggleEditable(false);
         editableText.focusedProperty().addListener(((observableValue, oldValue, newValue) -> toggleEditable(newValue)));
