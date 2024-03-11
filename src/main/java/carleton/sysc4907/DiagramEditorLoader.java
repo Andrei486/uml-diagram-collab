@@ -176,7 +176,8 @@ public class DiagramEditorLoader {
                 moveCommandFactory,
                 resizeCommandFactory,
                 editTextCommandFactory,
-                connectorMovePointCommandFactory
+                connectorMovePointCommandFactory,
+                connectorSnapCommandFactory
         );
         addFactories(
                 addCommandFactory,
@@ -184,7 +185,8 @@ public class DiagramEditorLoader {
                 moveCommandFactory,
                 resizeCommandFactory,
                 editTextCommandFactory,
-                connectorMovePointCommandFactory
+                connectorMovePointCommandFactory,
+                connectorSnapCommandFactory
         );
 
         // Add instantiation methods for the element injector, used to create diagram element controllers
@@ -236,13 +238,16 @@ public class DiagramEditorLoader {
             MoveCommandFactory moveCommandFactory,
             ResizeCommandFactory resizeCommandFactory,
             EditTextCommandFactory editTextCommandFactory,
-            ConnectorMovePointCommandFactory connectorMovePointCommandFactory) {
+            ConnectorMovePointCommandFactory connectorMovePointCommandFactory,
+            ConnectorSnapCommandFactory connectorSnapCommandFactory
+    ) {
         commandFactories.put(AddCommandArgs.class, addCommandFactory);
         commandFactories.put(RemoveCommandArgs.class, removeCommandFactory);
         commandFactories.put(MoveCommandArgs.class, moveCommandFactory);
         commandFactories.put(ResizeCommandArgs.class, resizeCommandFactory);
         commandFactories.put(EditTextCommandArgs.class, editTextCommandFactory);
         commandFactories.put(ConnectorMovePointCommandArgs.class, connectorMovePointCommandFactory);
+        commandFactories.put(ConnectorSnapCommandArgs.class, connectorSnapCommandFactory);
     }
 
     /**

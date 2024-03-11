@@ -16,7 +16,6 @@ public class CommandListCompressor {
     private final Class[] commandArgsClasses = new Class[] {
             AddCommandArgs.class,
             RemoveCommandArgs.class,
-            ConnectorMovePointCommandArgs.class,
             EditTextCommandArgs.class,
             MoveCommandArgs.class,
             RemoveCommandArgs.class,
@@ -60,9 +59,27 @@ public class CommandListCompressor {
     }
 
     private List<Command<?>> findLastConnectorMoves(List<Command<?>> commandList) {
-        var movePointCommands = commandList.stream().filter(cmd ->  cmd.getArgs() instanceof ConnectorMovePointCommandArgs).toList();
-        var startMoves = movePointCommands.stream().filter(cmd -> ((ConnectorMovePointCommandArgs) (cmd.getArgs())).isStart()).toList();
-        var endMoves = movePointCommands.stream().filter(cmd -> !((ConnectorMovePointCommandArgs) (cmd.getArgs())).isStart()).toList();
+        var movePointCommands = commandList.stream().filter(cmd ->
+                cmd.getArgs() instanceof ConnectorMovePointCommandArgs
+                        || cmd.getArgs() instanceof ConnectorSnapCommandArgs).toList();
+        List<Command<?>> startMoves = new LinkedList<>();
+        List<Command<?>> endMoves = new LinkedList<>();
+        for (var command : movePointCommands) {
+            var args = command.getArgs();
+            if (args instanceof ConnectorMovePointCommandArgs connectorMovePointCommandArgs) {
+                if (connectorMovePointCommandArgs.isStart()) {
+                    startMoves.add(command);
+                } else {
+                    endMoves.add(command);
+                }
+            } else if (args instanceof ConnectorSnapCommandArgs connectorSnapCommandArgs) {
+                if (connectorSnapCommandArgs.isStart()) {
+                    startMoves.add(command);
+                } else {
+                    endMoves.add(command);
+                }
+            }
+        }
         List<Command<?>> lastCommands = new LinkedList<>();
         if (!startMoves.isEmpty()) {
             lastCommands.add(startMoves.get(startMoves.size() - 1));
