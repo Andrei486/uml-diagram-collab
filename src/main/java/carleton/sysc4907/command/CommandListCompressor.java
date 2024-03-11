@@ -50,7 +50,7 @@ public class CommandListCompressor {
                 )).toList();
     }
 
-    private Command<?> findLastOfType(List<Command<?>> commandList, Class type) {
+    private Command<?> findLastCommandOfType(List<Command<?>> commandList, Class type) {
         var commandsOfType = commandList.stream().filter(cmd ->  type.isInstance(cmd.getArgs())).toList();
         if (commandsOfType.isEmpty()) {
             return null;
@@ -59,20 +59,49 @@ public class CommandListCompressor {
         }
     }
 
-    private List<Command<?>> findLastConnectorMoves(List<Command<?>> commandList) {
+    /**
+     * Finds the last connector move point commands from the command list. One command will be returned for the start point,
+     * another for the end point.
+     * @param commandList the list of commands that have been run for a given ID
+     * @return the commands that should be saved
+     */
+    private List<Command<?>> findLastConnectorMoveCommands(List<Command<?>> commandList) {
         var movePointCommands = commandList.stream().filter(cmd ->  cmd.getArgs() instanceof ConnectorMovePointCommandArgs).toList();
-        var startMoves = movePointCommands.stream().filter(cmd -> ((ConnectorMovePointCommandArgs) (cmd.getArgs())).isStart()).toList();
-        var endMoves = movePointCommands.stream().filter(cmd -> !((ConnectorMovePointCommandArgs) (cmd.getArgs())).isStart()).toList();
+        var startMovesStream = movePointCommands.stream().filter(cmd -> ((ConnectorMovePointCommandArgs) (cmd.getArgs())).isStart());
+        var endMovesStream = movePointCommands.stream().filter(cmd -> !((ConnectorMovePointCommandArgs) (cmd.getArgs())).isStart());
         List<Command<?>> lastCommands = new LinkedList<>();
-        if (!startMoves.isEmpty()) {
-            lastCommands.add(startMoves.get(startMoves.size() - 1));
+        startMovesStream.reduce((first, second) -> second).ifPresent(lastCommands::add);
+        endMovesStream.reduce((first, second) -> second).ifPresent(lastCommands::add);
+        return lastCommands;
+    }
+
+    /**
+     * Finds the last text styling commands from the command list. One command will be returned for each
+     * text styling property that has been modified.
+     * @param commandList the list of commands that have been run for a given ID
+     * @return the commands that should be saved
+     */
+    private List<Command<?>> findLastTextStylingCommands(List<Command<?>> commandList) {
+        var textStylingCommands = commandList.stream().filter(cmd ->  cmd.getArgs() instanceof ChangeTextStyleCommandArgs).toList();
+        List<Command<?>> lastCommands = new LinkedList<>();
+
+        for (TextStyleProperty property : TextStyleProperty.values()) {
+            var propertyCommandsStream = textStylingCommands.stream().filter(
+                    cmd -> ((ChangeTextStyleCommandArgs) (cmd.getArgs())).property() == property);
+            propertyCommandsStream.reduce((first, second) -> second).ifPresent(lastCommands::add);
         }
-        if (!endMoves.isEmpty()) {
-            lastCommands.add(endMoves.get(endMoves.size() - 1));
+        for (var command : lastCommands) {
+            ChangeTextStyleCommandArgs args = (ChangeTextStyleCommandArgs) command.getArgs();
+            System.out.println(args.property() + " " + args.value());
         }
         return lastCommands;
     }
 
+    /**
+     * Finds the last command from the command list that causes the element to move.
+     * @param commandList the list of commands that have been run for a given ID
+     * @return the command that should be saved
+     */
     private Command<?> findLastMove(List<Command<?>> commandList) {
         var moveCommands = commandList.stream().filter(this::isMove).toList();
         if (moveCommands.isEmpty()) {
@@ -100,7 +129,7 @@ public class CommandListCompressor {
     private List<Command<?>> compressCommandListForId(List<Command<?>> idCommandList) {
         List<Command<?>> compressedList = new LinkedList<>();
         for (Class argsType : commandArgsClasses) {
-            var lastCommandOfType = findLastOfType(idCommandList, argsType);
+            var lastCommandOfType = findLastCommandOfType(idCommandList, argsType);
             if (lastCommandOfType != null) {
                 compressedList.add(lastCommandOfType);
             }
@@ -109,7 +138,8 @@ public class CommandListCompressor {
         if (lastMove != null) {
             compressedList.add(lastMove);
         }
-        compressedList.addAll(findLastConnectorMoves(idCommandList));
+        compressedList.addAll(findLastConnectorMoveCommands(idCommandList));
+        compressedList.addAll(findLastTextStylingCommands(idCommandList));
         return compressedList;
     }
 }

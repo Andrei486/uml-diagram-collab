@@ -13,6 +13,8 @@ import org.w3c.dom.Text;
 
 import java.util.EnumMap;
 import java.util.HashMap;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * A command to change the styling of the text in a label.
@@ -84,6 +86,12 @@ public class ChangeTextStyleCommand implements Command<ChangeTextStyleCommandArg
             case SIZE -> {
                 System.out.println("size");
                 String fontFamily = label.getFont().getFamily();
+                Pattern pattern = Pattern.compile("-fx-font-family:\\s*\"(.+)\"\\s*;");
+                var matcher = pattern.matcher(label.getStyle());
+                if (matcher.find()) {
+                    fontFamily = matcher.group(1);
+                    System.out.println("fontFamily found from style: " + fontFamily);
+                }
                 textField.setStyle("-fx-font-family: \"" + fontFamily + "\"; -fx-font-size: " + valueToApply + ";");
                 label.setStyle("-fx-font-family: \"" + fontFamily + "\"; -fx-font-size: " + valueToApply + ";");
                 break;
@@ -125,6 +133,16 @@ public class ChangeTextStyleCommand implements Command<ChangeTextStyleCommandArg
             case FONT_FAMILY -> {
                 System.out.println("font-family");
                 double oldFontSize = label.getFont().getSize();
+                Pattern pattern = Pattern.compile("-fx-font-size:\\s*(\\d+)");
+                var matcher = pattern.matcher(label.getStyle());
+                if (matcher.find()) {
+                    try {
+                        oldFontSize = Double.parseDouble(matcher.group(1));
+                        System.out.println("fontSize found from style: " + oldFontSize);
+                    } catch (NumberFormatException e) {
+                        System.out.println("Invalid number in style, using value found from font " + oldFontSize);
+                    }
+                }
                 textField.setStyle("-fx-font-family: \"" + valueToApply + "\"; -fx-font-size: " + oldFontSize + ";");
                 label.setStyle("-fx-font-family: \"" + valueToApply + "\"; -fx-font-size: " + oldFontSize + ";");
                 break;
