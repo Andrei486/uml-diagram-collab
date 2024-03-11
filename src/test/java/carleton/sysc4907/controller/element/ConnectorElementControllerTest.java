@@ -1,6 +1,7 @@
 package carleton.sysc4907.controller.element;
 
 import carleton.sysc4907.command.ConnectorMovePointCommandFactory;
+import carleton.sysc4907.command.ConnectorSnapCommandFactory;
 import carleton.sysc4907.command.MoveCommandFactory;
 import carleton.sysc4907.controller.element.pathing.PathingStrategy;
 import carleton.sysc4907.model.DiagramModel;
@@ -31,6 +32,8 @@ public class ConnectorElementControllerTest {
     @Mock
     private ConnectorMovePointCommandFactory connectorMovePointCommandFactory;
     @Mock
+    private ConnectorSnapCommandFactory connectorSnapCommandFactory;
+    @Mock
     private PathingStrategy pathingStrategy;
     @Mock
     private ObservableList<DiagramElement> mockSelectedElementsList;
@@ -46,6 +49,7 @@ public class ConnectorElementControllerTest {
                 connectorHandleCreator,
                 connectorMovePointPreviewCreator,
                 connectorMovePointCommandFactory,
+                connectorSnapCommandFactory,
                 pathingStrategy
         );
         // Snap to vertical
@@ -76,6 +80,7 @@ public class ConnectorElementControllerTest {
                 connectorHandleCreator,
                 connectorMovePointPreviewCreator,
                 connectorMovePointCommandFactory,
+                connectorSnapCommandFactory,
                 pathingStrategy
         );
         // Don't snap
@@ -104,6 +109,7 @@ public class ConnectorElementControllerTest {
                 connectorHandleCreator,
                 connectorMovePointPreviewCreator,
                 connectorMovePointCommandFactory,
+                connectorSnapCommandFactory,
                 pathingStrategy
         );
         // Don't snap
@@ -131,6 +137,7 @@ public class ConnectorElementControllerTest {
                 connectorHandleCreator,
                 connectorMovePointPreviewCreator,
                 connectorMovePointCommandFactory,
+                connectorSnapCommandFactory,
                 pathingStrategy
         );
         // Snap only start to vertical, shouldn't change
@@ -161,6 +168,7 @@ public class ConnectorElementControllerTest {
                 connectorHandleCreator,
                 connectorMovePointPreviewCreator,
                 connectorMovePointCommandFactory,
+                connectorSnapCommandFactory,
                 pathingStrategy
         );
         // Snap only end to vertical, shouldn't change
