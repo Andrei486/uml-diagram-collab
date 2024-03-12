@@ -19,6 +19,7 @@ import carleton.sysc4907.processing.ElementCreator;
 import carleton.sysc4907.processing.ElementIdManager;
 import carleton.sysc4907.processing.FileSaver;
 import carleton.sysc4907.processing.FontOptionsFinder;
+import javafx.application.Platform;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
@@ -236,13 +237,15 @@ public class DiagramEditorLoader {
             MoveCommandFactory moveCommandFactory,
             ResizeCommandFactory resizeCommandFactory,
             EditTextCommandFactory editTextCommandFactory,
-            ConnectorMovePointCommandFactory connectorMovePointCommandFactory, ChangeTextStyleCommandFactory changeTextStyleCommandFactory) {
+            ConnectorMovePointCommandFactory connectorMovePointCommandFactory,
+            ChangeTextStyleCommandFactory changeTextStyleCommandFactory) {
         commandFactories.put(AddCommandArgs.class, addCommandFactory);
         commandFactories.put(RemoveCommandArgs.class, removeCommandFactory);
         commandFactories.put(MoveCommandArgs.class, moveCommandFactory);
         commandFactories.put(ResizeCommandArgs.class, resizeCommandFactory);
         commandFactories.put(EditTextCommandArgs.class, editTextCommandFactory);
         commandFactories.put(ConnectorMovePointCommandArgs.class, connectorMovePointCommandFactory);
+        commandFactories.put(ChangeTextStyleCommandArgs.class, changeTextStyleCommandFactory);
     }
 
     /**
@@ -258,7 +261,7 @@ public class DiagramEditorLoader {
             }
             // Use remote commands to add them to the command list without transmitting them elsewhere
             Command<?> command = factory.createRemote((CommandArgs) argType.cast(args));
-            command.execute();
+            Platform.runLater(command::execute);
         }
     }
 
