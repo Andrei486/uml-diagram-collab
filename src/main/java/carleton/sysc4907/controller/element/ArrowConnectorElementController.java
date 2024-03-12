@@ -12,6 +12,9 @@ import javafx.beans.Observable;
 import javafx.fxml.FXML;
 import javafx.scene.shape.Path;
 
+/**
+ * Controller for a connector element with an arrow on the end point.
+ */
 public class ArrowConnectorElementController extends ConnectorElementController {
 
     private final ArrowheadFactory arrowheadFactory;
@@ -21,6 +24,17 @@ public class ArrowConnectorElementController extends ConnectorElementController 
     @FXML
     private Path arrowheadPath;
 
+    /**
+     * Constructs a new ArrowConnectorElementController.
+     * @param previewCreator the move preview creator to use
+     * @param moveCommandFactory the factory for making move commands
+     * @param diagramModel the active diagram's diagram model
+     * @param connectorHandleCreator the connector handle creator to use
+     * @param connectorMovePointPreviewCreator the connector preview creator to use
+     * @param connectorMovePointCommandFactory the factory for making move point commands
+     * @param pathingStrategy the pathing strategy to use for the connector's pathing
+     * @param arrowheadFactory the factory for making arrowheads
+     */
     public ArrowConnectorElementController(
             MovePreviewCreator previewCreator,
             MoveCommandFactory moveCommandFactory,
@@ -41,16 +55,20 @@ public class ArrowConnectorElementController extends ConnectorElementController 
         );
         this.arrowheadFactory = arrowheadFactory;
 
+        // When most things change, the arrowhead needs to be redrawn.
         InvalidationListener listener = observable -> makeArrowheadPath();
-
-        startX.addListener(listener);
+        startX.addListener(listener); // start point affects orientation for direct paths
         startY.addListener(listener);
-        endX.addListener(listener);
+        endX.addListener(listener); // end point affects where the arrow is drawn
         endY.addListener(listener);
-        isEndHorizontal.addListener(listener);
-        this.pathingStrategy.addListener(listener);
+        isEndHorizontal.addListener(listener); // direction affects arrow direction
+        this.pathingStrategy.addListener(listener); // pathing strategy could be direct or horizontal/vertical only
     }
 
+    /**
+     * Sets the arrowhead type to use for this connector.
+     * @param type the new ArrowheadType to use for this connector
+     */
     public void setArrowheadType(ArrowheadType type) {
         arrowhead = arrowheadFactory.createArrowhead(type);
         makeArrowheadPath();
@@ -62,6 +80,9 @@ public class ArrowConnectorElementController extends ConnectorElementController 
         makeArrowheadPath();
     }
 
+    /**
+     * Draws the arrowhead, if one has been set.
+     */
     private void makeArrowheadPath() {
         if (arrowhead != null) {
             arrowhead.makeArrowheadPath(

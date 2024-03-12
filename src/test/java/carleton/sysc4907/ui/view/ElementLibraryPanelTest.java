@@ -77,6 +77,7 @@ public class ElementLibraryPanelTest {
             DependencyInjector injector = new DependencyInjector();
 
             Manager mockManager = Mockito.mock(Manager.class);
+            // Make sure commands are run as host, running them as client does nothing
             lenient().when(mockManager.isHost()).thenReturn(true);
             AddCommandFactory addCommandFactory = new AddCommandFactory(mockDiagramModel, mockElementCreator, mockManager, mockExecutedCommandList, mockMessageConstructor);
             injector.addInjectionMethod(ElementLibraryPanelController.class,

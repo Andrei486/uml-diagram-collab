@@ -89,6 +89,7 @@ public abstract class DiagramElementTest {
         element.setUserData(12L);
         editingArea.getChildren().add(element);
         diagramModel.getElements().add(element);
+        // Make sure commands are run as host, running them as client does nothing
         lenient().when(mockManager.isHost()).thenReturn(true);
         // Show the scene
         Scene scene = new Scene(root);
