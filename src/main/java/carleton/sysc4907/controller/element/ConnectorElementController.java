@@ -3,23 +3,16 @@ package carleton.sysc4907.controller.element;
 import carleton.sysc4907.command.ConnectorMovePointCommandFactory;
 import carleton.sysc4907.command.MoveCommandFactory;
 import carleton.sysc4907.command.args.ConnectorMovePointCommandArgs;
-import carleton.sysc4907.command.args.MoveCommandArgs;
 import carleton.sysc4907.controller.element.pathing.PathingStrategy;
 import carleton.sysc4907.model.DiagramModel;
 import carleton.sysc4907.view.DiagramElement;
-import javafx.beans.property.BooleanProperty;
-import javafx.beans.property.DoubleProperty;
-import javafx.beans.property.SimpleBooleanProperty;
-import javafx.beans.property.SimpleDoubleProperty;
+import javafx.beans.property.*;
 import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
 import javafx.collections.ListChangeListener;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
-import javafx.scene.shape.LineTo;
-import javafx.scene.shape.MoveTo;
 import javafx.scene.shape.Path;
 
 import java.util.LinkedList;
@@ -34,25 +27,23 @@ public class ConnectorElementController extends DiagramElementController {
     private final List<Node> handles;
 
     // All coordinates relative to the parent element (editing area)!
-    private final DoubleProperty startX = new SimpleDoubleProperty();
-    private final DoubleProperty startY = new SimpleDoubleProperty();
-    private final DoubleProperty endX = new SimpleDoubleProperty();
-    private final DoubleProperty endY = new SimpleDoubleProperty();
+    protected final DoubleProperty startX = new SimpleDoubleProperty();
+    protected final DoubleProperty startY = new SimpleDoubleProperty();
+    protected final DoubleProperty endX = new SimpleDoubleProperty();
+    protected final DoubleProperty endY = new SimpleDoubleProperty();
 
-    private final BooleanProperty isStartHorizontal = new SimpleBooleanProperty();
+    protected final BooleanProperty isStartHorizontal = new SimpleBooleanProperty();
 
     private boolean isStartSnapping = false;
-    private final BooleanProperty isEndHorizontal = new SimpleBooleanProperty();
+    protected final BooleanProperty isEndHorizontal = new SimpleBooleanProperty();
 
     private boolean isEndSnapping = false;
 
     @FXML
     private Path connectorPath;
-
+    protected ObjectProperty<PathingStrategy> pathingStrategy = new SimpleObjectProperty<>();
     @FXML
     private Path pathHitbox;
-
-    private PathingStrategy pathingStrategy;
 
     private boolean movePointDragging = false;
     private double dragStartX;
@@ -81,10 +72,10 @@ public class ConnectorElementController extends DiagramElementController {
         this.connectorHandleCreator = connectorHandleCreator;
         this.connectorMovePointPreviewCreator = connectorMovePointPreviewCreator;
         this.connectorMovePointCommandFactory = connectorMovePointCommandFactory;
-        this.pathingStrategy = pathingStrategy;
+        this.pathingStrategy.set(pathingStrategy);
         this.handles = new LinkedList<>();
         isStartHorizontal.set(true);
-        isEndHorizontal.set(false);
+        isEndHorizontal.set(true);
         diagramModel.getSelectedElements().addListener((ListChangeListener<DiagramElement>) change -> {
             while (change.next()) {
                 if (change.wasAdded() && change.getAddedSubList().contains(element)) {
@@ -183,13 +174,13 @@ public class ConnectorElementController extends DiagramElementController {
     /**
      * Uses this connector's pathing strategy to re-make the connector's path. Overwrites the previous path.
      */
-    private void recalculatePath() {
-        pathingStrategy.makePath(
+    protected void recalculatePath() {
+        pathingStrategy.get().makePath(
                 connectorPath,
                 adjustX(getStartX()), adjustY(getStartY()), isStartHorizontal.get(),
                 adjustX(getEndX()), adjustY(getEndY()), isEndHorizontal.get()
         );
-        pathingStrategy.makePath(
+        pathingStrategy.get().makePath(
                 pathHitbox,
                 adjustX(getStartX()), adjustY(getStartY()), isStartHorizontal.get(),
                 adjustX(getEndX()), adjustY(getEndY()), isEndHorizontal.get()
@@ -325,12 +316,12 @@ public class ConnectorElementController extends DiagramElementController {
      * @param strategy the new PathingStrategy to use when calculating paths
      */
     public void setPathingStrategy(PathingStrategy strategy) {
-        this.pathingStrategy = strategy;
+        this.pathingStrategy.set(strategy);
         recalculatePath();
     }
 
     public PathingStrategy getPathingStrategy() {
-        return this.pathingStrategy;
+        return this.pathingStrategy.get();
     }
 
     public double getStartX() {
@@ -397,11 +388,11 @@ public class ConnectorElementController extends DiagramElementController {
         return this.isEndSnapping;
     }
 
-    private double adjustX(double x) {
+    protected double adjustX(double x) {
         return x - element.getLayoutX();
     }
 
-    private double adjustY(double y) {
+    protected double adjustY(double y) {
         return y - element.getLayoutY();
     }
 }
