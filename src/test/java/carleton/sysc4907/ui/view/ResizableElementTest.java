@@ -16,6 +16,7 @@ import java.io.IOException;
 import java.util.Comparator;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.when;
 
 public abstract class ResizableElementTest extends DiagramElementTest {
 
@@ -31,7 +32,6 @@ public abstract class ResizableElementTest extends DiagramElementTest {
     @Override
     protected void start(Stage stage) throws IOException {
         resizeHandleCreator = new ResizeHandleCreator();
-        Manager mockManager = Mockito.mock(Manager.class);
         resizeCommandFactory = new ResizeCommandFactory(elementIdManager, mockManager, mockExecutedCommandList, mockMessageConstructor);
         super.start(stage);
     }
@@ -61,11 +61,11 @@ public abstract class ResizableElementTest extends DiagramElementTest {
             }
         }
         assertNotNull(brHandle);
-        robot.drag(brHandle).dropBy(200, 300);
+        robot.drag(brHandle).dropBy(200, 100);
         var newWidth = element.getWidth();
         var newHeight = element.getHeight();
         var deltaX = Math.abs(width + 200 - newWidth);
-        var deltaY = Math.abs(height + 300 - newHeight);
+        var deltaY = Math.abs(height + 100 - newHeight);
         // Check that new size is correct
         assertTrue(deltaX < 10);
         assertTrue(deltaY < 10);

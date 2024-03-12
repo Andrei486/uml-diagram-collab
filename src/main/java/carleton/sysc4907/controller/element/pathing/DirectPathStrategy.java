@@ -29,4 +29,15 @@ public class DirectPathStrategy implements PathingStrategy {
         path.getElements().add(new MoveTo(startX, startY));
         path.getElements().add(new LineTo(endX, endY));
     }
+
+    /**
+     * Returns true if the path is a direct path (straight line from point A to B), false if the path is orthogonal
+     * (follows horizontal/vertical directions instead of straight line).
+     *
+     * @return true if path is direct, false if path is orthogonal
+     */
+    @Override
+    public boolean isDirectPath() {
+        return true;
+    }
 }

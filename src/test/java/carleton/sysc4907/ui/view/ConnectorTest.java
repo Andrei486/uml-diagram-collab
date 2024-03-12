@@ -23,13 +23,13 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class ConnectorTest extends DiagramElementTest {
 
-    private ConnectorElementController controller;
-    private ConnectorHandleCreator connectorHandleCreator;
+    protected ConnectorElementController controller;
+    protected ConnectorHandleCreator connectorHandleCreator;
 
     @Mock
-    private ConnectorMovePointPreviewCreator mockConnectorMovePointPreviewCreator;
-    private ConnectorMovePointCommandFactory connectorMovePointCommandFactory;
-    private ConnectorSnapCommandFactory connectorSnapCommandFactory;
+    protected ConnectorMovePointPreviewCreator mockConnectorMovePointPreviewCreator;
+    protected ConnectorMovePointCommandFactory connectorMovePointCommandFactory;
+    protected ConnectorSnapCommandFactory connectorSnapCommandFactory;
     @Mock
     private MessageConstructor mockMessageConstructor;
 
