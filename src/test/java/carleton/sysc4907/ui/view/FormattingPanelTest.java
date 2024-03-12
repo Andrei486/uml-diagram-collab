@@ -1,13 +1,18 @@
 package carleton.sysc4907.ui.view;
 
 import carleton.sysc4907.DependencyInjector;
+import carleton.sysc4907.command.ChangeTextStyleCommandFactory;
 import carleton.sysc4907.controller.FormattingPanelController;
+import carleton.sysc4907.model.DiagramModel;
+import carleton.sysc4907.model.EditableLabelTracker;
 import carleton.sysc4907.model.TextFormattingModel;
+import carleton.sysc4907.processing.ElementIdManager;
 import javafx.collections.FXCollections;
 import javafx.scene.Scene;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.ToggleButton;
 import javafx.stage.Stage;
+import org.mockito.Mock;
 import org.testfx.assertions.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -25,18 +30,26 @@ import static org.junit.jupiter.api.Assertions.*;
 @ExtendWith(ApplicationExtension.class)
 public class FormattingPanelTest {
 
+    @Mock
+    private ChangeTextStyleCommandFactory changeTextStyleCommandFactory;
+
+    @Mock
+    private ElementIdManager elementIdManager;
+
     private TextFormattingModel mockTextFormattingModel;
 
     @Start
     private void start(Stage stage) throws IOException {
         mockTextFormattingModel = Mockito.mock(TextFormattingModel.class);
+        DiagramModel diagramModel = new DiagramModel();
+        EditableLabelTracker editableLabelTracker = new EditableLabelTracker();
         List<String> fonts = new LinkedList<>();
         fonts.add("Test Font 1");
         fonts.add("Test Font 2");
         Mockito.when(mockTextFormattingModel.getFontFamilyNames()).thenReturn(FXCollections.observableList(fonts));
         DependencyInjector injector = new DependencyInjector();
         injector.addInjectionMethod(FormattingPanelController.class,
-                () -> new FormattingPanelController(mockTextFormattingModel));
+                () -> new FormattingPanelController(mockTextFormattingModel, changeTextStyleCommandFactory, diagramModel, editableLabelTracker, elementIdManager));
         Scene scene = new Scene(injector.load("view/FormattingPanel.fxml"));
         stage.setScene(scene);
         stage.show();

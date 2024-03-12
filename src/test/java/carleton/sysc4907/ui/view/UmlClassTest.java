@@ -3,6 +3,7 @@ package carleton.sysc4907.ui.view;
 import carleton.sysc4907.command.EditTextCommandFactory;
 import carleton.sysc4907.controller.element.EditableLabelController;
 import carleton.sysc4907.controller.element.UmlClassController;
+import carleton.sysc4907.model.EditableLabelTracker;
 import carleton.sysc4907.view.DiagramElement;
 import javafx.scene.Node;
 import javafx.scene.control.Label;
@@ -39,7 +40,7 @@ public class UmlClassTest extends ResizableElementTest {
                         resizePreviewCreator,
                         resizeCommandFactory));
         dependencyInjector.addInjectionMethod(EditableLabelController.class,
-                () -> new EditableLabelController(new EditTextCommandFactory(elementIdManager, mockManager, mockExecutedCommandList, mockMessageConstructor)));
+                () -> new EditableLabelController(new EditTextCommandFactory(elementIdManager, mockManager, mockExecutedCommandList, mockMessageConstructor), new EditableLabelTracker()));
     }
 
     @Override

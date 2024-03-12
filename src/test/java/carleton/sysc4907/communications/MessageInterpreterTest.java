@@ -30,6 +30,8 @@ public class MessageInterpreterTest {
     @Mock
     private ConnectorMovePointCommandFactory connectorMovePointCommandFactory;
     @Mock
+    private ChangeTextStyleCommandFactory changeTextStyleCommandFactory;
+    @Mock
     private MessageConstructor messageConstructor;
     @Mock
     private Manager manager;
@@ -51,7 +53,8 @@ public class MessageInterpreterTest {
                 resizeCommandFactory,
                 editTextCommandFactory,
                 connectorMovePointCommandFactory,
-                messageConstructor
+                messageConstructor,
+                changeTextStyleCommandFactory
         );
         interpreter.setManager(manager);
 
@@ -80,7 +83,8 @@ public class MessageInterpreterTest {
                 resizeCommandFactory,
                 editTextCommandFactory,
                 connectorMovePointCommandFactory,
-                messageConstructor
+                messageConstructor,
+                changeTextStyleCommandFactory
         );
         interpreter.setManager(manager);
 
@@ -106,7 +110,8 @@ public class MessageInterpreterTest {
                 resizeCommandFactory,
                 editTextCommandFactory,
                 connectorMovePointCommandFactory,
-                messageConstructor
+                messageConstructor,
+                changeTextStyleCommandFactory
         );
         var payload = "Not an args object";
         try (MockedStatic<Platform> platformMockedStatic = Mockito.mockStatic(Platform.class)) {
