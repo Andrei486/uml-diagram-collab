@@ -25,7 +25,7 @@ public class SnapHandleProvider {
         includedHandleList.removeAll(handlesToExclude);
         for (var handle : includedHandleList) {
             var boundsInScene = handle.localToScene(handle.getBoundsInLocal());
-            if (boundsInScene.contains(x, y)) {
+            if (handle.isHandleVisible() && boundsInScene.contains(x, y)) {
                 return handle;
             }
         }
