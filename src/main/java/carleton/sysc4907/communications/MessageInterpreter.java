@@ -3,16 +3,22 @@ package carleton.sysc4907.communications;
 import carleton.sysc4907.command.*;
 import carleton.sysc4907.command.args.*;
 import carleton.sysc4907.controller.JoinRequestDialogController;
+import carleton.sysc4907.model.ExecutedCommandList;
+import carleton.sysc4907.processing.ExecutedCommandRunner;
+import carleton.sysc4907.communications.records.*;
 import javafx.application.Platform;
 import javafx.stage.Window;
 
 import java.time.LocalTime;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 
 /**
  * Interprets messages received from other users
+ * - give access to the executedCommandList
+ * - use file loader to load commands
  */
 public class MessageInterpreter {
 
@@ -21,6 +27,8 @@ public class MessageInterpreter {
     private boolean isHost;
     private MessageConstructor messageConstructor;
     private Window window;
+    private ExecutedCommandList executedCommandList;
+    private ExecutedCommandRunner executedCommandRunner;
 
     /**
      * Constructs a MessageInterpreter
@@ -43,6 +51,14 @@ public class MessageInterpreter {
     public void setWindow(Window window) {
         this.window = window;
         System.out.println("Window Set");
+    }
+
+    public void setExecutedCommandList(ExecutedCommandList executedCommandList) {
+        this.executedCommandList = executedCommandList;
+    }
+
+    public void setExecutedCommandRunner(ExecutedCommandRunner executedCommandRunner) {
+        this.executedCommandRunner = executedCommandRunner;
     }
 
     /**
@@ -143,16 +159,24 @@ public class MessageInterpreter {
         Platform.runLater(
                 () -> {
                     if (isHost) {
-
+                        System.out.println("Join Request Received");
                         var controller = new JoinRequestDialogController(window, (String) message.payload());
                         Optional<Boolean> result = controller.showAndWait();
                         if (result.isPresent() && result.get()) {
-                            System.out.println((String) message.payload() + "is Valid");
                             manager.validateClient(userId);
-                            messageConstructor.sendTo(new Message(MessageType.JOIN_RESPONSE, null), userId);
+                            System.out.println((String) message.payload() + " is Valid");
+                            for (Command command: executedCommandList.getCommandList()) {
+                                System.out.println(command);
+                            }
+                            ArrayList temp = new ArrayList(executedCommandList.getCommandList());
+                            for (Object command: temp) {
+                                System.out.println(command);
+                            }
+                            messageConstructor.sendTo(new Message(MessageType.JOIN_RESPONSE, new JoinResponse(new ArrayList(executedCommandList.getCommandList()))), userId);
+                            System.out.println((String) message.payload() + " has been sent a Response");
                         }
                     }
-                    System.out.println("Join Request Received");
+
                 }
         );
     }
@@ -163,9 +187,12 @@ public class MessageInterpreter {
      * @param userId the user id who sent the message
      */
     private void interpretJoinResponse(Message message, long userId){
+        System.out.println("Join Response Received");
         if (!isHost) {
             manager.validateClient(userId);
+            Object[] commandlist = ((JoinResponse) message.payload()).commandList().toArray();
+            executedCommandRunner.runPreviousCommands(commandlist);
         }
-        System.out.println("Join Response Received");
+
     }
 }

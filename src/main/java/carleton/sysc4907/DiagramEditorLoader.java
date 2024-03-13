@@ -17,10 +17,7 @@ import carleton.sysc4907.controller.element.pathing.DirectPathStrategy;
 import carleton.sysc4907.controller.element.pathing.OrthogonalPathStrategy;
 import carleton.sysc4907.controller.element.pathing.PathingStrategyFactory;
 import carleton.sysc4907.model.*;
-import carleton.sysc4907.processing.ElementCreator;
-import carleton.sysc4907.processing.ElementIdManager;
-import carleton.sysc4907.processing.FileSaver;
-import carleton.sysc4907.processing.FontOptionsFinder;
+import carleton.sysc4907.processing.*;
 import javafx.event.EventHandler;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
@@ -180,6 +177,14 @@ public class DiagramEditorLoader {
                 editTextCommandFactory,
                 connectorMovePointCommandFactory
         );
+        ExecutedCommandRunner executedCommandRunner = new ExecutedCommandRunner(
+                addCommandFactory,
+                removeCommandFactory,
+                moveCommandFactory,
+                resizeCommandFactory,
+                editTextCommandFactory,
+                connectorMovePointCommandFactory
+        );
         addFactories(
                 addCommandFactory,
                 removeCommandFactory,
@@ -188,6 +193,9 @@ public class DiagramEditorLoader {
                 editTextCommandFactory,
                 connectorMovePointCommandFactory
         );
+        //give the interpreter the executedCommandList
+        interpreter.setExecutedCommandList(executedCommandList);
+        interpreter.setExecutedCommandRunner(executedCommandRunner);
 
         // Add instantiation methods for the element injector, used to create diagram element controllers
         elementControllerInjector.addInjectionMethod(RectangleController.class,
@@ -236,9 +244,7 @@ public class DiagramEditorLoader {
                 () -> new ElementLibraryPanelController(diagramModel, addCommandFactory, elementCreator, elementIdManager));
 
         // Run the previous commands
-        runPreviousCommands(commandArgsList);
-
-
+        executedCommandRunner.runPreviousCommands(commandArgsList);
     }
 
     public void addFactories(
@@ -254,23 +260,6 @@ public class DiagramEditorLoader {
         commandFactories.put(ResizeCommandArgs.class, resizeCommandFactory);
         commandFactories.put(EditTextCommandArgs.class, editTextCommandFactory);
         commandFactories.put(ConnectorMovePointCommandArgs.class, connectorMovePointCommandFactory);
-    }
-
-    /**
-     * Runs a list of commands to bring back the diagram to the state it was previously in.
-     * @param commandArgsList the list of args objects for the previous commands run
-     */
-    public void runPreviousCommands(Object[] commandArgsList) {
-        for (Object args : commandArgsList) {
-            Class<?> argType = args.getClass();
-            var factory = commandFactories.get(argType);
-            if (factory == null) {
-                throw new IllegalArgumentException("The given message did not correspond to a known type of command arguments.");
-            }
-            // Use remote commands to add them to the command list without transmitting them elsewhere
-            Command<?> command = factory.createRemote((CommandArgs) argType.cast(args));
-            command.execute();
-        }
     }
 
     /**
