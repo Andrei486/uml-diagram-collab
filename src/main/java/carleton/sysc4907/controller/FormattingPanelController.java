@@ -85,23 +85,38 @@ public class FormattingPanelController {
     }
 
     private void onBoldPropertyChanged(Boolean t1) {
+        var previousFlag = stopChangeListenersFlag;
+        stopChangeListenersFlag = true;
         boldButton.setSelected(t1);
+        stopChangeListenersFlag = previousFlag;
     }
 
     private void onItalicPropertyChanged(Boolean t1) {
+        var previousFlag = stopChangeListenersFlag;
+        stopChangeListenersFlag = true;
         italicsButton.setSelected(t1);
+        stopChangeListenersFlag = previousFlag;
     }
 
     private void onUnderlinePropertyChanged(Boolean t1) {
+        var previousFlag = stopChangeListenersFlag;
+        stopChangeListenersFlag = true;
         underlineButton.setSelected(t1);
+        stopChangeListenersFlag = previousFlag;
     }
 
     private void onFontSizePropertyChanged(Double t1) {
+        var previousFlag = stopChangeListenersFlag;
+        stopChangeListenersFlag = true;
         fontSize.getValueFactory().setValue(t1);
+        stopChangeListenersFlag = previousFlag;
     }
 
     private void onFontFamilyPropertyChanged(String t1) {
+        var previousFlag = stopChangeListenersFlag;
+        stopChangeListenersFlag = true;
         fontName.valueProperty().setValue(t1);
+        stopChangeListenersFlag = previousFlag;
     }
 
     private void disableFormattingPanel() {
