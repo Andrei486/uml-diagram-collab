@@ -25,7 +25,7 @@ public class EditableLabelTrackerTest {
 
     @Test
     public void getIdLastEditedLabelProperty() {
-        ObjectProperty<Long> property = editableLabelTracker.idLastEditedLabelProperty();
+        var property = editableLabelTracker.idLastEditedLabelProperty();
         assertNotNull(property);
     }
 }

@@ -4,6 +4,7 @@ import carleton.sysc4907.command.args.ChangeTextStyleCommandArgs;
 import carleton.sysc4907.command.args.MoveCommandArgs;
 import carleton.sysc4907.communications.Manager;
 import carleton.sysc4907.communications.MessageConstructor;
+import carleton.sysc4907.model.EditableLabelTracker;
 import carleton.sysc4907.model.ExecutedCommandList;
 import carleton.sysc4907.processing.ElementIdManager;
 
@@ -13,6 +14,7 @@ import carleton.sysc4907.processing.ElementIdManager;
 public class ChangeTextStyleCommandFactory extends TrackedCommandFactory<Command<ChangeTextStyleCommandArgs>, ChangeTextStyleCommandArgs>{
 
     private final ElementIdManager elementIdManager;
+    private final EditableLabelTracker editableLabelTracker;
 
     /**
      * Constructor for the ChangeTextStyleCommandFactory.
@@ -24,9 +26,11 @@ public class ChangeTextStyleCommandFactory extends TrackedCommandFactory<Command
     public ChangeTextStyleCommandFactory(ElementIdManager elementIdManager,
                                          Manager manager,
                                          ExecutedCommandList executedCommandList,
-                                         MessageConstructor messageConstructor) {
+                                         MessageConstructor messageConstructor,
+                                         EditableLabelTracker editableLabelTracker) {
         super(manager, executedCommandList, messageConstructor);
         this.elementIdManager = elementIdManager;
+        this.editableLabelTracker = editableLabelTracker;
     }
 
     /**
@@ -36,6 +40,6 @@ public class ChangeTextStyleCommandFactory extends TrackedCommandFactory<Command
      */
     @Override
     public Command<ChangeTextStyleCommandArgs> create(ChangeTextStyleCommandArgs args) {
-        return new ChangeTextStyleCommand(args, elementIdManager);
+        return new ChangeTextStyleCommand(args, elementIdManager, editableLabelTracker);
     }
 }

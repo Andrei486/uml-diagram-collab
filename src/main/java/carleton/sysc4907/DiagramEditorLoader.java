@@ -134,7 +134,7 @@ public class DiagramEditorLoader {
         ElementIdManager elementIdManager = new ElementIdManager(sessionModel);
         TextFormattingModel textFormattingModel = new TextFormattingModel(fontOptionsFinder);
         diagramModel = new DiagramModel();
-        EditableLabelTracker editableLabelTracker = new EditableLabelTracker();
+        EditableLabelTracker editableLabelTracker = new EditableLabelTracker(elementIdManager);
         ExecutedCommandList executedCommandList = new ExecutedCommandList();
         CommandListCompressor commandListCompressor = new CommandListCompressor(diagramModel, elementIdManager);
         MovePreviewCreator movePreviewCreator = new MovePreviewCreator(elementIdManager);
@@ -168,7 +168,7 @@ public class DiagramEditorLoader {
         ConnectorMovePointCommandFactory connectorMovePointCommandFactory = new ConnectorMovePointCommandFactory(
                 elementIdManager, manager, executedCommandList, constructor);
         ChangeTextStyleCommandFactory changeTextStyleCommandFactory = new ChangeTextStyleCommandFactory(
-                elementIdManager, manager, executedCommandList, constructor);
+                elementIdManager, manager, executedCommandList, constructor, editableLabelTracker);
         // Add factories to message interpreter: avoids circular dependencies
         interpreter.addFactories(
                 addCommandFactory,

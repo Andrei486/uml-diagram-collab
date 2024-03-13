@@ -4,13 +4,14 @@ import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 
 public class PreferencesModel {
-    private StringProperty username = new SimpleStringProperty();
-    public final String getUsername() {return username.get();}
-    public final void setUsername(String val) {username.set(val);}
-    public StringProperty usernameProperty() {return username;}
+    private final StringProperty username = new SimpleStringProperty();
 
     public PreferencesModel() {
 
     }
+
+    public String getUsername() {return username.get();}
+    public void setUsername(String val) {username.set(val);}
+    public StringProperty usernameProperty() {return username;}
 
 }

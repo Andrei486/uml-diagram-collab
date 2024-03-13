@@ -3,6 +3,7 @@ package carleton.sysc4907.command;
 import carleton.sysc4907.command.args.ChangeTextStyleCommandArgs;
 import carleton.sysc4907.command.args.EditTextCommandArgs;
 import carleton.sysc4907.controller.element.EditableLabelController;
+import carleton.sysc4907.model.EditableLabelTracker;
 import carleton.sysc4907.processing.ElementIdManager;
 import javafx.beans.property.Property;
 import javafx.scene.Node;
@@ -25,14 +26,19 @@ public class ChangeTextStyleCommand implements Command<ChangeTextStyleCommandArg
 
     private final ChangeTextStyleCommandArgs args;
 
+    private final EditableLabelTracker editableLabelTracker;
+
     /**
      * Constructs a ChangeTextStyleCommand.
      * @param args the arguments for the command.
      * @param idManager the element ID manager.
      */
-    public ChangeTextStyleCommand(ChangeTextStyleCommandArgs args, ElementIdManager idManager) {
+    public ChangeTextStyleCommand(ChangeTextStyleCommandArgs args,
+                                  ElementIdManager idManager,
+                                  EditableLabelTracker editableLabelTracker) {
         this.idManager = idManager;
         this.args = args;
+        this.editableLabelTracker = editableLabelTracker;
     }
 
     @Override
@@ -81,6 +87,8 @@ public class ChangeTextStyleCommand implements Command<ChangeTextStyleCommandArg
                     textField.getStyleClass().removeAll("bolded");
                     label.getStyleClass().removeAll("bolded");
                 }
+                //update the editable label tracker
+                editableLabelTracker.getIsBoldProperty().set(value);
                 break;
             }
             case SIZE -> {
@@ -94,6 +102,8 @@ public class ChangeTextStyleCommand implements Command<ChangeTextStyleCommandArg
                 }
                 textField.setStyle("-fx-font-family: \"" + fontFamily + "\"; -fx-font-size: " + valueToApply + ";");
                 label.setStyle("-fx-font-family: \"" + fontFamily + "\"; -fx-font-size: " + valueToApply + ";");
+                //update the editable label tracker
+                editableLabelTracker.getFontSizeProperty().set((Double) valueToApply);
                 break;
             }
             case ITALICS -> {
@@ -111,6 +121,8 @@ public class ChangeTextStyleCommand implements Command<ChangeTextStyleCommandArg
                     textField.getStyleClass().removeAll("italicized");
                     label.getStyleClass().removeAll("italicized");
                 }
+                //update the editable label tracker
+                editableLabelTracker.getIsItalicProperty().set(value);
                 break;
             }
             case UNDERLINE -> {
@@ -128,6 +140,8 @@ public class ChangeTextStyleCommand implements Command<ChangeTextStyleCommandArg
                     textField.getStyleClass().removeAll("underlined");
                     label.getStyleClass().removeAll("underlined");
                 }
+                //update the editable label tracker
+                editableLabelTracker.getIsUnderlinedProperty().set(value);
                 break;
             }
             case FONT_FAMILY -> {
@@ -145,6 +159,8 @@ public class ChangeTextStyleCommand implements Command<ChangeTextStyleCommandArg
                 }
                 textField.setStyle("-fx-font-family: \"" + valueToApply + "\"; -fx-font-size: " + oldFontSize + ";");
                 label.setStyle("-fx-font-family: \"" + valueToApply + "\"; -fx-font-size: " + oldFontSize + ";");
+                //update the editable label tracker
+                editableLabelTracker.getFontFamilyProperty().set((String) valueToApply);
                 break;
             }
         }

@@ -11,7 +11,6 @@ import carleton.sysc4907.processing.ElementIdManager;
 import carleton.sysc4907.view.DiagramElement;
 import javafx.collections.ListChangeListener;
 import javafx.fxml.FXML;
-import javafx.scene.Node;
 import javafx.scene.control.*;
 
 import java.util.Objects;
@@ -75,8 +74,57 @@ public class FormattingPanelController {
         underlineButton.selectedProperty().addListener((observableValue, number, t1) -> onUnderlineButtonToggled(t1));
         fontName.valueProperty().addListener((observableValue, number, t1) -> onFontFamilyChanged(t1));
         fontSize.valueProperty().addListener((observableValue, number, t1) -> onFontSizeChanged(t1));
-        editableLabelTracker.idLastEditedLabelProperty().addListener((observableValue, number, t1) -> onSelectedLabelChanged(t1));
         diagramModel.getSelectedElements().addListener((ListChangeListener<DiagramElement>) change -> onSelectedElementChange());
+
+        //Listens for changes to the currently selected label's style properties
+        editableLabelTracker.idLastEditedLabelProperty().addListener((observableValue, number, t1) -> onSelectedLabelChanged(t1));
+        editableLabelTracker.getIsBoldProperty().addListener((observableValue, number, t1) -> onBoldPropertyChanged(t1));
+        editableLabelTracker.getIsItalicProperty().addListener((observableValue, number, t1) -> onItalicPropertyChanged(t1));
+        editableLabelTracker.getIsUnderlinedProperty().addListener((observableValue, number, t1) -> onUnderlinePropertyChanged(t1));
+        editableLabelTracker.getFontFamilyProperty().addListener((observableValue, number, t1) -> onFontFamilyPropertyChanged(t1));
+        editableLabelTracker.getFontSizeProperty().addListener((observableValue, number, t1) -> onFontSizePropertyChanged((Double) t1));
+    }
+
+    private void onBoldPropertyChanged(Boolean t1) {
+        boldButton.setSelected(t1);
+    }
+
+    private void onItalicPropertyChanged(Boolean t1) {
+        italicsButton.setSelected(t1);
+    }
+
+    private void onUnderlinePropertyChanged(Boolean t1) {
+        underlineButton.setSelected(t1);
+    }
+
+    private void onFontSizePropertyChanged(Double t1) {
+        fontSize.getValueFactory().setValue(t1);
+    }
+
+    private void onFontFamilyPropertyChanged(String t1) {
+        fontName.valueProperty().setValue(t1);
+    }
+
+    private void disableFormattingPanel() {
+        boldButton.setSelected(false);
+        italicsButton.setSelected(false);
+        underlineButton.setSelected(false);
+        //fontName.valueProperty().setValue("");
+        selectedLabelId = null;
+
+        fontSize.setDisable(true);
+        fontName.setDisable(true);
+        boldButton.setDisable(true);
+        italicsButton.setDisable(true);
+        underlineButton.setDisable(true);
+    }
+
+    private void enableFormattingPanel() {
+        fontSize.setDisable(false);
+        fontName.setDisable(false);
+        boldButton.setDisable(false);
+        italicsButton.setDisable(false);
+        underlineButton.setDisable(false);
     }
 
     /**
@@ -95,21 +143,14 @@ public class FormattingPanelController {
     private void onSelectedLabelChanged(Number idNum) {
         //if no label is selected, disable all buttons and set them to the default state.
         if (idNum == null) {
-            boldButton.setSelected(false);
-            italicsButton.setSelected(false);
-            underlineButton.setSelected(false);
-            fontName.valueProperty().setValue("");
-            selectedLabelId = null;
-
-            fontSize.setDisable(true);
-            fontName.setDisable(true);
-            boldButton.setDisable(true);
-            italicsButton.setDisable(true);
-            underlineButton.setDisable(true);
+            disableFormattingPanel();
             return;
         }
+        selectedLabelId = (Long) idNum;
+        //enable buttons
+        enableFormattingPanel();
 
-        Long id = (Long) idNum;
+        /*
         Node labelNode = elementIdManager.getElementById(id);
         if (labelNode == null) {
             selectedLabelId = null; // could also set to id but both are no longer valid values for new selections
@@ -121,21 +162,17 @@ public class FormattingPanelController {
             return;
         }
         var styleClass = label.getStyleClass();
-
-        //enable buttons
-        fontSize.setDisable(false);
-        fontName.setDisable(false);
-        boldButton.setDisable(false);
-        italicsButton.setDisable(false);
-        underlineButton.setDisable(false);
+         */
 
         //set buttons to the style of the currently selected label.
+        /*
         boldButton.setSelected(styleClass.contains("bolded"));
         italicsButton.setSelected(styleClass.contains("italicized"));
         underlineButton.setSelected(styleClass.contains("underlined"));
         fontName.valueProperty().setValue(label.getFont().getFamily());
         fontSize.getValueFactory().setValue(label.getFont().getSize());
-        selectedLabelId = id;
+         */
+
     }
 
     /**
