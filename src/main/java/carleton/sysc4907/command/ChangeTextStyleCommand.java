@@ -14,6 +14,7 @@ import org.w3c.dom.Text;
 
 import java.util.EnumMap;
 import java.util.HashMap;
+import java.util.Objects;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -87,8 +88,12 @@ public class ChangeTextStyleCommand implements Command<ChangeTextStyleCommandArg
                     textField.getStyleClass().removeAll("bolded");
                     label.getStyleClass().removeAll("bolded");
                 }
-                //update the editable label tracker
-                editableLabelTracker.getIsBoldProperty().set(value);
+
+                //update the editable label tracker if the command is being executed on the currently selected element
+                if (Objects.equals(editableLabelTracker.getIdLastEditedLabel(), args.elementId())) {
+                    editableLabelTracker.getIsBoldProperty().set(value);
+                }
+
                 break;
             }
             case SIZE -> {
@@ -102,8 +107,11 @@ public class ChangeTextStyleCommand implements Command<ChangeTextStyleCommandArg
                 }
                 textField.setStyle("-fx-font-family: \"" + fontFamily + "\"; -fx-font-size: " + valueToApply + ";");
                 label.setStyle("-fx-font-family: \"" + fontFamily + "\"; -fx-font-size: " + valueToApply + ";");
-                //update the editable label tracker
-                editableLabelTracker.getFontSizeProperty().set((Double) valueToApply);
+
+                //update the editable label tracker if the command is being executed on the currently selected element
+                if (Objects.equals(editableLabelTracker.getIdLastEditedLabel(), args.elementId())) {
+                    editableLabelTracker.getFontSizeProperty().set((Double) valueToApply);
+                }
                 break;
             }
             case ITALICS -> {
@@ -121,8 +129,11 @@ public class ChangeTextStyleCommand implements Command<ChangeTextStyleCommandArg
                     textField.getStyleClass().removeAll("italicized");
                     label.getStyleClass().removeAll("italicized");
                 }
-                //update the editable label tracker
-                editableLabelTracker.getIsItalicProperty().set(value);
+
+                //update the editable label tracker if the command is being executed on the currently selected element
+                if (Objects.equals(editableLabelTracker.getIdLastEditedLabel(), args.elementId())) {
+                    editableLabelTracker.getIsItalicProperty().set(value);
+                }
                 break;
             }
             case UNDERLINE -> {
@@ -140,8 +151,11 @@ public class ChangeTextStyleCommand implements Command<ChangeTextStyleCommandArg
                     textField.getStyleClass().removeAll("underlined");
                     label.getStyleClass().removeAll("underlined");
                 }
-                //update the editable label tracker
-                editableLabelTracker.getIsUnderlinedProperty().set(value);
+
+                //update the editable label tracker if the command is being executed on the currently selected element
+                if (Objects.equals(editableLabelTracker.getIdLastEditedLabel(), args.elementId())) {
+                    editableLabelTracker.getIsUnderlinedProperty().set(value);
+                }
                 break;
             }
             case FONT_FAMILY -> {
@@ -159,8 +173,11 @@ public class ChangeTextStyleCommand implements Command<ChangeTextStyleCommandArg
                 }
                 textField.setStyle("-fx-font-family: \"" + valueToApply + "\"; -fx-font-size: " + oldFontSize + ";");
                 label.setStyle("-fx-font-family: \"" + valueToApply + "\"; -fx-font-size: " + oldFontSize + ";");
-                //update the editable label tracker
-                editableLabelTracker.getFontFamilyProperty().set((String) valueToApply);
+
+                //update the editable label tracker if the command is being executed on the currently selected element
+                if (Objects.equals(editableLabelTracker.getIdLastEditedLabel(), args.elementId())) {
+                    editableLabelTracker.getFontFamilyProperty().set((String) valueToApply);
+                }
                 break;
             }
         }
