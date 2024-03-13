@@ -42,8 +42,7 @@ public class FormattingPanelController {
     private final EditableLabelTracker editableLabelTracker;
 
     private final ElementIdManager elementIdManager;
-
-    private Long selectedLabelId = null;
+    private boolean stopChangeListenersFlag = false;
 
     /**
      * Constructs a FormattingPanelController.
@@ -106,25 +105,32 @@ public class FormattingPanelController {
     }
 
     private void disableFormattingPanel() {
+        stopChangeListenersFlag = true;
         boldButton.setSelected(false);
         italicsButton.setSelected(false);
         underlineButton.setSelected(false);
         //fontName.valueProperty().setValue("");
-        selectedLabelId = null;
-
         fontSize.setDisable(true);
         fontName.setDisable(true);
         boldButton.setDisable(true);
         italicsButton.setDisable(true);
         underlineButton.setDisable(true);
+        stopChangeListenersFlag = false;
     }
 
     private void enableFormattingPanel() {
+        stopChangeListenersFlag = true;
         fontSize.setDisable(false);
         fontName.setDisable(false);
         boldButton.setDisable(false);
         italicsButton.setDisable(false);
         underlineButton.setDisable(false);
+        boldButton.setSelected(editableLabelTracker.getIsBoldProperty().get());
+        italicsButton.setSelected(editableLabelTracker.getIsItalicProperty().get());
+        underlineButton.setSelected(editableLabelTracker.getIsUnderlinedProperty().get());
+        fontName.valueProperty().setValue(editableLabelTracker.getFontFamilyProperty().get());
+        fontSize.getValueFactory().setValue(editableLabelTracker.getFontSizeProperty().get());
+        stopChangeListenersFlag = false;
     }
 
     /**
@@ -146,7 +152,6 @@ public class FormattingPanelController {
             disableFormattingPanel();
             return;
         }
-        selectedLabelId = (Long) idNum;
         //enable buttons
         enableFormattingPanel();
 
@@ -180,7 +185,7 @@ public class FormattingPanelController {
      * @param val the new font size.
      */
     private void onFontSizeChanged(Double val) {
-        if (editableLabelTracker.getIdLastEditedLabel() == null || !Objects.equals(editableLabelTracker.getIdLastEditedLabel(), selectedLabelId)) {
+        if (editableLabelTracker.getIdLastEditedLabel() == null || stopChangeListenersFlag) {
             return;
         }
         System.out.println("The font size has been changed! Val = " + val);
@@ -194,7 +199,7 @@ public class FormattingPanelController {
      * @param t1 true if the text should be underlined, false otherwise.
      */
     private void onUnderlineButtonToggled(Boolean t1) {
-        if (editableLabelTracker.getIdLastEditedLabel() == null || !Objects.equals(editableLabelTracker.getIdLastEditedLabel(), selectedLabelId)) {
+        if (editableLabelTracker.getIdLastEditedLabel() == null || stopChangeListenersFlag) {
             return;
         }
         System.out.println("The underline button has been toggled! Val = " + t1);
@@ -208,7 +213,7 @@ public class FormattingPanelController {
      * @param t1 true if the text should be italic, false otherwise.
      */
     private void onItalicsButtonToggled(Boolean t1) {
-        if (editableLabelTracker.getIdLastEditedLabel() == null || !Objects.equals(editableLabelTracker.getIdLastEditedLabel(), selectedLabelId)) {
+        if (editableLabelTracker.getIdLastEditedLabel() == null || stopChangeListenersFlag) {
             return;
         }
         System.out.println("The italics button has been toggled! Val = " + t1);
@@ -222,7 +227,7 @@ public class FormattingPanelController {
      * @param t1 true if the text should be bolded, false otherwise.
      */
     private void onBoldButtonToggled(Boolean t1) {
-        if (editableLabelTracker.getIdLastEditedLabel() == null || !Objects.equals(editableLabelTracker.getIdLastEditedLabel(), selectedLabelId)) {
+        if (editableLabelTracker.getIdLastEditedLabel() == null || stopChangeListenersFlag) {
             return;
         }
         System.out.println("The bold button has been toggled! Val = " + t1);
@@ -236,7 +241,7 @@ public class FormattingPanelController {
      * @param newFont the new font to apply.
      */
     private void onFontFamilyChanged(String newFont) {
-        if (editableLabelTracker.getIdLastEditedLabel() == null || !Objects.equals(editableLabelTracker.getIdLastEditedLabel(), selectedLabelId)) {
+        if (editableLabelTracker.getIdLastEditedLabel() == null || stopChangeListenersFlag) {
             return;
         }
         System.out.println("The font family has been changed! Val = " + newFont);
