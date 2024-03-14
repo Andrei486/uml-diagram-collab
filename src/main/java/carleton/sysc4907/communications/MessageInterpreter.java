@@ -165,14 +165,8 @@ public class MessageInterpreter {
                         if (result.isPresent() && result.get()) {
                             manager.validateClient(userId);
                             System.out.println((String) message.payload() + " is Valid");
-                            for (Command command: executedCommandList.getCommandList()) {
-                                System.out.println(command);
-                            }
-                            ArrayList temp = new ArrayList(executedCommandList.getCommandList());
-                            for (Object command: temp) {
-                                System.out.println(command);
-                            }
-                            messageConstructor.sendTo(new Message(MessageType.JOIN_RESPONSE, new JoinResponse(new ArrayList(executedCommandList.getCommandList()))), userId);
+                            Object[] args = executedCommandList.getCommandList().stream().map(Command::getArgs).toArray();
+                            messageConstructor.sendTo(new Message(MessageType.JOIN_RESPONSE, new JoinResponse(args)), userId);
                             System.out.println((String) message.payload() + " has been sent a Response");
                         }
                     }
@@ -190,8 +184,8 @@ public class MessageInterpreter {
         System.out.println("Join Response Received");
         if (!isHost) {
             manager.validateClient(userId);
-            Object[] commandlist = ((JoinResponse) message.payload()).commandList().toArray();
-            executedCommandRunner.runPreviousCommands(commandlist);
+            Object[] commandList = ((JoinResponse) message.payload()).commandList();
+            executedCommandRunner.runPreviousCommands(commandList);
         }
 
     }

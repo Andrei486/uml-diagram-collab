@@ -5,5 +5,5 @@ import carleton.sysc4907.command.Command;
 import java.io.Serializable;
 import java.util.ArrayList;
 
-public record JoinResponse(ArrayList commandList) implements Serializable {
+public record JoinResponse(Object[] commandList) implements Serializable {
 }
