@@ -4,9 +4,12 @@ import carleton.sysc4907.command.*;
 import carleton.sysc4907.command.args.*;
 import carleton.sysc4907.controller.JoinRequestDialogController;
 import carleton.sysc4907.model.ExecutedCommandList;
+import carleton.sysc4907.model.SessionModel;
 import carleton.sysc4907.processing.ExecutedCommandRunner;
 import carleton.sysc4907.communications.records.*;
 import javafx.application.Platform;
+import javafx.scene.control.ButtonType;
+import javafx.scene.control.Dialog;
 import javafx.stage.Window;
 
 import java.time.LocalTime;
@@ -24,6 +27,7 @@ public class MessageInterpreter {
 
     private final Map<Class<?>, CommandFactory> commandFactories;
     private Manager manager;
+    private SessionModel sessionModel;
     private boolean isHost;
     private MessageConstructor messageConstructor;
     private Window window;
@@ -46,6 +50,10 @@ public class MessageInterpreter {
     public void setManager(Manager manager) {
         this.manager = manager;
         this.isHost = manager.isHost();
+    }
+
+    public void setSessionModel(SessionModel sessionModel) {
+        this.sessionModel = sessionModel;
     }
 
     public void setWindow(Window window) {
@@ -123,6 +131,8 @@ public class MessageInterpreter {
             case UPDATE -> interpretUpdate(message, userId);
             case JOIN_REQUEST -> interpretJoinRequest(message, userId);
             case JOIN_RESPONSE -> interpretJoinResponse(message, userId);
+            case JOIN_DENIED -> interpretJoinDenied(message, userId);
+            case CLOSE -> interpretClose(message, userId);
             default -> System.out.println(message);
         }
     }
@@ -164,10 +174,13 @@ public class MessageInterpreter {
                         Optional<Boolean> result = controller.showAndWait();
                         if (result.isPresent() && result.get()) {
                             manager.validateClient(userId);
+                            manager.clientList.getClient(userId).setUsername((String) message.payload());
                             System.out.println((String) message.payload() + " is Valid");
                             Object[] args = executedCommandList.getCommandList().stream().map(Command::getArgs).toArray();
-                            messageConstructor.sendTo(new Message(MessageType.JOIN_RESPONSE, new JoinResponse(args)), userId);
+                            messageConstructor.sendTo(new Message(MessageType.JOIN_RESPONSE, new JoinResponse(sessionModel.getLocalUser().getUsername(), args)), userId);
                             System.out.println((String) message.payload() + " has been sent a Response");
+                        } else {
+                            messageConstructor.sendToInvalidAndClose(new Message(MessageType.JOIN_DENIED, null), userId);
                         }
                     }
 
@@ -184,9 +197,49 @@ public class MessageInterpreter {
         System.out.println("Join Response Received");
         if (!isHost) {
             manager.validateClient(userId);
+            manager.clientList.getClient(userId).setUsername(((JoinResponse) message.payload()).username());
             Object[] commandList = ((JoinResponse) message.payload()).commandList();
             executedCommandRunner.runPreviousCommands(commandList);
         }
 
+    }
+
+    /**
+     * Interpret the Join Denied received
+     * @param message the message
+     * @param userId the user id who sent the message
+     */
+    private void interpretJoinDenied(Message message, long userId){
+        manager.clientList.removeClient(userId);
+
+        Platform.runLater(
+                () -> {
+                    Dialog<String> dialog = new Dialog<>();
+                    dialog.setTitle("Denied");
+                    dialog.setContentText("Your Join Request Has Been Denied");
+                    dialog.getDialogPane().getButtonTypes().add(new ButtonType("OK"));
+                    dialog.show();
+                }
+        );
+    }
+
+    /**
+     * Interpret the Close received
+     * @param message the message
+     * @param userId the user id who sent the message
+     */
+    private void interpretClose(Message message, long userId){
+        String username = manager.clientList.getClient(userId).getUsername();
+        manager.clientList.removeClient(userId);
+
+        Platform.runLater(
+                () -> {
+                    Dialog<String> dialog = new Dialog<>();
+                    dialog.setTitle("Connection Lost");
+                    dialog.setContentText("Connection Lost To: " + username);
+                    dialog.getDialogPane().getButtonTypes().add(new ButtonType("OK"));
+                    dialog.show();
+                }
+        );
     }
 }

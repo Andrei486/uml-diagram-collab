@@ -34,6 +34,7 @@ public class HostManager extends Manager {
     {
         this.isHost = true;
         messageInterpreter.setManager(this);
+        messageInterpreter.setSessionModel(sessionModel);
         this.clientList = new ClientList(messageInterpreter);
         this.hostConnectionManager = new HostConnectionManager(port, this.clientList, this);
         this.sendingQueue = new LinkedBlockingQueue<TargetedMessage>();
