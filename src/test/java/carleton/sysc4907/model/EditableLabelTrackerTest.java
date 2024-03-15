@@ -1,8 +1,10 @@
 package carleton.sysc4907.model;
 
+import carleton.sysc4907.processing.ElementIdManager;
 import javafx.beans.property.ObjectProperty;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.mockito.Mock;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
@@ -10,9 +12,12 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 public class EditableLabelTrackerTest {
     public EditableLabelTracker editableLabelTracker;
 
+    @Mock
+    public ElementIdManager elementIdManager;
+
     @BeforeEach
     public void setup() {
-        editableLabelTracker = new EditableLabelTracker();
+        editableLabelTracker = new EditableLabelTracker(elementIdManager);
     }
 
     @Test

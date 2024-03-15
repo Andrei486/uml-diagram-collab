@@ -11,6 +11,7 @@ import javafx.scene.control.TextArea;
 import javafx.scene.input.KeyCode;
 import javafx.stage.Stage;
 import org.junit.jupiter.api.Test;
+import org.mockito.Mock;
 import org.testfx.api.FxRobot;
 import org.testfx.framework.junit5.Start;
 
@@ -23,6 +24,9 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 public class UmlClassTest extends ResizableElementTest {
 
     private UmlClassController controller;
+
+    @Mock
+    private EditableLabelTracker editableLabelTracker;
 
     @Start
     @Override
@@ -40,7 +44,13 @@ public class UmlClassTest extends ResizableElementTest {
                         resizePreviewCreator,
                         resizeCommandFactory));
         dependencyInjector.addInjectionMethod(EditableLabelController.class,
-                () -> new EditableLabelController(new EditTextCommandFactory(elementIdManager, mockManager, mockExecutedCommandList, mockMessageConstructor), new EditableLabelTracker()));
+                () -> new EditableLabelController(new EditTextCommandFactory(
+                        elementIdManager,
+                        mockManager,
+                        mockExecutedCommandList,
+                        mockMessageConstructor),
+                        editableLabelTracker
+                        ));
     }
 
     @Override
