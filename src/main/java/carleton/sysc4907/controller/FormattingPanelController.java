@@ -200,7 +200,7 @@ public class FormattingPanelController {
      * @param val the new font size.
      */
     private void onFontSizeChanged(Double val) {
-        if (editableLabelTracker.getIdLastEditedLabel() == null || stopChangeListenersFlag) {
+        if ((editableLabelTracker.getIdLastEditedLabel() == null) || (val == null) || stopChangeListenersFlag) {
             return;
         }
         System.out.println("The font size has been changed! Val = " + val);
