@@ -23,6 +23,7 @@ import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.shape.Path;
 
+import java.util.Collection;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -311,21 +312,6 @@ public class ConnectorElementController extends DiagramElementController {
         connectorMovePointPreviewCreator.deleteMovePreview(element, previewController);
         previewController = null;
 
-        var handleUnderCursor = snapHandleProvider.getSnapHandleAtPosition(event.getSceneX(), event.getSceneY(), snapHandles);
-        if (handleUnderCursor != null) {
-            System.out.println("Snapping to handle");
-            snapHandleProvider.setAllHandlesVisible(false);
-            var snapArgs = new ConnectorSnapCommandArgs(
-                    element.getElementId(),
-                    isStart,
-                    false,
-                    handleUnderCursor.getElementId());
-            var command = connectorSnapCommandFactory.createTracked(snapArgs);
-            command.execute();
-            event.consume();
-            return;
-        }
-
         System.out.println("Moving connector");
         double startX;
         double startY;
@@ -345,6 +331,20 @@ public class ConnectorElementController extends DiagramElementController {
                 element.getElementId());
         var command = connectorMovePointCommandFactory.createTracked(args);
         command.execute();
+
+        // Check if snapping can be done
+        var handleUnderCursor = snapHandleProvider.getSnapHandleAtPosition(event.getSceneX(), event.getSceneY(), snapHandles);
+        if (handleUnderCursor != null) {
+            System.out.println("Snapping to handle");
+            var snapArgs = new ConnectorSnapCommandArgs(
+                    element.getElementId(),
+                    isStart,
+                    false,
+                    handleUnderCursor.getElementId());
+            var snapCommand = connectorSnapCommandFactory.createTracked(snapArgs);
+            snapCommand.execute();
+        }
+        snapHandleProvider.setAllHandlesVisible(false);
         event.consume();
     }
 
@@ -367,19 +367,18 @@ public class ConnectorElementController extends DiagramElementController {
 
     public void unsnapFromHandle(boolean isStart) {
         var snapHandle = isStart ? startSnapHandle : endSnapHandle;
-        if (snapHandle == null) {
+        var isSnapped = isStart ? isStartSnapping : isEndSnapping;
+        if (snapHandle == null || !isSnapped) {
             return;
         }
         if (isStart) {
             isStartSnapping = false;
             startX.unbind();
             startY.unbind();
-            startSnapHandle = null;
         } else {
             isEndSnapping = false;
             endX.unbind();
             endY.unbind();
-            endSnapHandle = null;
         }
         snapHandle.getSnappedConnectorIds().remove(element.getElementId());
     }
@@ -459,6 +458,17 @@ public class ConnectorElementController extends DiagramElementController {
 
     public boolean getSnapEnd() {
         return this.isEndSnapping;
+    }
+
+    /**
+     * Returns the last handles that this connector was snapped to for each endpoint, between 0-2 handles.
+     * @return the last handles that this connector was snapped to, as a collection
+     */
+    public Collection<SnapHandle> getLastSnappedHandles() {
+        LinkedList<SnapHandle> handles = new LinkedList<>();
+        if (startSnapHandle != null) handles.add(startSnapHandle);
+        if (endSnapHandle != null) handles.add(endSnapHandle);
+        return handles;
     }
 
     protected double adjustX(double x) {

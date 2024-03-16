@@ -1,5 +1,6 @@
 package carleton.sysc4907.view;
 
+import carleton.sysc4907.controller.element.DiagramElementController;
 import javafx.beans.binding.DoubleBinding;
 import javafx.scene.shape.Circle;
 
@@ -20,6 +21,11 @@ public class SnapHandle extends Circle {
         getStyleClass().add("snap-handle");
         setHandleVisible(false);
         this.snappedConnectorIds = new HashSet<>();
+    }
+
+    public Long getParentElementId() {
+        var parent = (DiagramElement) getParent();
+        return parent.getElementId();
     }
 
     public Set<Long> getSnappedConnectorIds() {
