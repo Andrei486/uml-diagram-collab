@@ -11,14 +11,13 @@ import carleton.sysc4907.model.EditableLabelTracker;
 import carleton.sysc4907.model.TextFormattingModel;
 import carleton.sysc4907.processing.ElementIdManager;
 import carleton.sysc4907.view.DiagramElement;
+import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.scene.Scene;
-import javafx.scene.control.ComboBox;
-import javafx.scene.control.Label;
-import javafx.scene.control.Spinner;
-import javafx.scene.control.ToggleButton;
+import javafx.scene.control.*;
 import javafx.scene.input.KeyCode;
+import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
@@ -82,8 +81,8 @@ public class FormattingPanelTest {
 
         Mockito.when(elementIdManager.getElementById(anyLong())).thenReturn(label);
         Mockito.when(mockDiagramModel.getSelectedElements()).thenReturn(selectedElemsList);
-        Mockito.when(changeTextStyleCommandFactory.createTracked(any(ChangeTextStyleCommandArgs.class))).thenReturn(mockChangeTextStyleCommand);
-        Mockito.doNothing().when(mockChangeTextStyleCommand).execute();
+        Mockito.lenient().when(changeTextStyleCommandFactory.createTracked(any(ChangeTextStyleCommandArgs.class))).thenReturn(mockChangeTextStyleCommand);
+        Mockito.lenient().doNothing().when(mockChangeTextStyleCommand).execute();
         List<String> fonts = new LinkedList<>();
         fonts.add("Test Font 1");
         fonts.add("Test Font 2");
@@ -91,7 +90,9 @@ public class FormattingPanelTest {
         DependencyInjector injector = new DependencyInjector();
         injector.addInjectionMethod(FormattingPanelController.class,
                 () -> new FormattingPanelController(mockTextFormattingModel, changeTextStyleCommandFactory, mockDiagramModel, editableLabelTracker, elementIdManager));
-        Scene scene = new Scene(injector.load("view/FormattingPanel.fxml"));
+        var root = injector.load("view/FormattingPanel.fxml");
+        Scene deadScene = new Scene(label);
+        Scene scene = new Scene(root);
         stage.setScene(scene);
         stage.show();
 
@@ -138,14 +139,15 @@ public class FormattingPanelTest {
 
     @Test
     public void fontSizeChangeSendsCommand(FxRobot robot) throws InterruptedException {
-        TimeUnit.MILLISECONDS.sleep(500);
         Spinner spinner = robot.lookup("#fontSize").queryAs(Spinner.class);
         Label label = (Label) elementIdManager.getElementById(1234L);
+        label.applyCss();
         double defaultSize = 14;
         double newSize = 7;
 
         //select the label
-        editableLabelTracker.setIdLastEditedLabel(1234L);
+        Platform.runLater(() -> editableLabelTracker.setIdLastEditedLabel(1234L));
+        TimeUnit.MILLISECONDS.sleep(1000);
 
         assertEquals(defaultSize, label.getFont().getSize());
         assertEquals(defaultSize, spinner.getValue());
