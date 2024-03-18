@@ -19,6 +19,8 @@ public class ArrowConnectorElementController extends ConnectorElementController 
     private final double DASHED_OFFSET = 4;
     private final ArrowheadFactory arrowheadFactory;
 
+    private ConnectorType connectorType = null;
+
     private Arrowhead arrowhead;
 
     @FXML
@@ -70,11 +72,13 @@ public class ArrowConnectorElementController extends ConnectorElementController 
      * @param type the new ArrowheadType to use for this connector
      */
     public void setArrowheadType(ConnectorType type) {
+        connectorType = type;
         arrowhead = arrowheadFactory.createArrowhead(type);
         makeArrowheadPath();
     }
 
     public void setPathStyle(ConnectorType type) {
+        connectorType = type;
         if (type == ConnectorType.IMPLEMENTATION) {
             connectorPath.getStrokeDashArray().add(DASHED_OFFSET);
         } else {
@@ -104,9 +108,14 @@ public class ArrowConnectorElementController extends ConnectorElementController 
         }
     }
 
+    public ConnectorType getConnectorType() {
+        return connectorType;
+    }
+
     @Override
     public void initialize() {
         super.initialize();
         setArrowheadType(ConnectorType.ASSOCIATION); // default arrowhead
+        setPathStyle(ConnectorType.ASSOCIATION);
     }
 }
