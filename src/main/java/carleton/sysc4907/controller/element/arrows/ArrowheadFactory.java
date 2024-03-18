@@ -11,12 +11,12 @@ public class ArrowheadFactory {
      * @param type the type of arrowhead to create
      * @return the newly created Arrowhead
      */
-    public Arrowhead createArrowhead(ArrowheadType type) {
+    public Arrowhead createArrowhead(ConnectorType type) {
         switch (type) {
             case AGGREGATION -> {
                 return new AggregationArrowhead();
             }
-            case INHERITANCE -> {
+            case INHERITANCE, IMPLEMENTATION -> {
                 return new InheritanceArrowhead();
             }
             case COMPOSITION -> {

@@ -4,11 +4,10 @@ import carleton.sysc4907.command.ConnectorMovePointCommandFactory;
 import carleton.sysc4907.command.MoveCommandFactory;
 import carleton.sysc4907.controller.element.arrows.Arrowhead;
 import carleton.sysc4907.controller.element.arrows.ArrowheadFactory;
-import carleton.sysc4907.controller.element.arrows.ArrowheadType;
+import carleton.sysc4907.controller.element.arrows.ConnectorType;
 import carleton.sysc4907.controller.element.pathing.PathingStrategy;
 import carleton.sysc4907.model.DiagramModel;
 import javafx.beans.InvalidationListener;
-import javafx.beans.Observable;
 import javafx.fxml.FXML;
 import javafx.scene.shape.Path;
 
@@ -17,6 +16,7 @@ import javafx.scene.shape.Path;
  */
 public class ArrowConnectorElementController extends ConnectorElementController {
 
+    private final double DASHED_OFFSET = 4;
     private final ArrowheadFactory arrowheadFactory;
 
     private Arrowhead arrowhead;
@@ -69,9 +69,17 @@ public class ArrowConnectorElementController extends ConnectorElementController 
      * Sets the arrowhead type to use for this connector.
      * @param type the new ArrowheadType to use for this connector
      */
-    public void setArrowheadType(ArrowheadType type) {
+    public void setArrowheadType(ConnectorType type) {
         arrowhead = arrowheadFactory.createArrowhead(type);
         makeArrowheadPath();
+    }
+
+    public void setPathStyle(ConnectorType type) {
+        if (type == ConnectorType.IMPLEMENTATION) {
+            connectorPath.getStrokeDashArray().add(DASHED_OFFSET);
+        } else {
+            connectorPath.getStrokeDashArray().clear();
+        }
     }
 
     @Override
@@ -91,12 +99,14 @@ public class ArrowConnectorElementController extends ConnectorElementController 
                     adjustX(getEndX()), adjustY(getEndY()),
                     isEndHorizontal.get(), this.pathingStrategy.get().isDirectPath()
             );
+        } else {
+            arrowheadPath.getElements().clear();
         }
     }
 
     @Override
     public void initialize() {
         super.initialize();
-        setArrowheadType(ArrowheadType.ASSOCIATION); // default arrowhead
+        setArrowheadType(ConnectorType.ASSOCIATION); // default arrowhead
     }
 }

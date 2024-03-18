@@ -171,6 +171,8 @@ public class DiagramEditorLoader {
                 elementIdManager, manager, executedCommandList, constructor);
         ConnectorMovePointCommandFactory connectorMovePointCommandFactory = new ConnectorMovePointCommandFactory(
                 elementIdManager, manager, executedCommandList, constructor);
+        ChangeConnectorStyleCommandFactory changeConnectorStyleCommandFactory = new ChangeConnectorStyleCommandFactory(
+                elementIdManager, manager, executedCommandList, constructor);
         // Add factories to message interpreter: avoids circular dependencies
         interpreter.addFactories(
                 addCommandFactory,
@@ -178,7 +180,8 @@ public class DiagramEditorLoader {
                 moveCommandFactory,
                 resizeCommandFactory,
                 editTextCommandFactory,
-                connectorMovePointCommandFactory
+                connectorMovePointCommandFactory,
+                changeConnectorStyleCommandFactory
         );
         addFactories(
                 addCommandFactory,
@@ -186,7 +189,8 @@ public class DiagramEditorLoader {
                 moveCommandFactory,
                 resizeCommandFactory,
                 editTextCommandFactory,
-                connectorMovePointCommandFactory
+                connectorMovePointCommandFactory,
+                changeConnectorStyleCommandFactory
         );
 
         // Add instantiation methods for the element injector, used to create diagram element controllers
@@ -226,6 +230,8 @@ public class DiagramEditorLoader {
                 () -> new SessionInfoBarController(sessionModel));
         injector.addInjectionMethod(FormattingPanelController.class,
                 () -> new FormattingPanelController(textFormattingModel));
+        injector.addInjectionMethod(ConnectorFormattingPanelController.class,
+                () -> new ConnectorFormattingPanelController(diagramModel, elementIdManager, changeConnectorStyleCommandFactory));
         injector.addInjectionMethod(SessionUsersMenuController.class,
                 () -> new SessionUsersMenuController(sessionModel));
         injector.addInjectionMethod(DiagramMenuBarController.class,
@@ -247,13 +253,15 @@ public class DiagramEditorLoader {
             MoveCommandFactory moveCommandFactory,
             ResizeCommandFactory resizeCommandFactory,
             EditTextCommandFactory editTextCommandFactory,
-            ConnectorMovePointCommandFactory connectorMovePointCommandFactory) {
+            ConnectorMovePointCommandFactory connectorMovePointCommandFactory,
+            ChangeConnectorStyleCommandFactory changeConnectorStyleCommandFactory) {
         commandFactories.put(AddCommandArgs.class, addCommandFactory);
         commandFactories.put(RemoveCommandArgs.class, removeCommandFactory);
         commandFactories.put(MoveCommandArgs.class, moveCommandFactory);
         commandFactories.put(ResizeCommandArgs.class, resizeCommandFactory);
         commandFactories.put(EditTextCommandArgs.class, editTextCommandFactory);
         commandFactories.put(ConnectorMovePointCommandArgs.class, connectorMovePointCommandFactory);
+        commandFactories.put(ChangeConnectorStyleCommandArgs.class, changeConnectorStyleCommandFactory);
     }
 
     /**

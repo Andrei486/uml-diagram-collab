@@ -40,7 +40,7 @@ public class ConnectorElementController extends DiagramElementController {
     private boolean isEndSnapping = false;
 
     @FXML
-    private Path connectorPath;
+    protected Path connectorPath;
     protected ObjectProperty<PathingStrategy> pathingStrategy = new SimpleObjectProperty<>();
     @FXML
     private Path pathHitbox;
