@@ -18,28 +18,25 @@ import org.mockito.junit.jupiter.MockitoExtension;
 public class ConnectorElementControllerTest {
 
     @Mock
-    private MovePreviewCreator movePreviewCreator;
+    protected MovePreviewCreator movePreviewCreator;
     @Mock
-    private MoveCommandFactory moveCommandFactory;
+    protected MoveCommandFactory moveCommandFactory;
     @Mock
-    private DiagramModel diagramModel;
+    protected DiagramModel diagramModel;
     @Mock
-    private ConnectorHandleCreator connectorHandleCreator;
+    protected ConnectorHandleCreator connectorHandleCreator;
 
     @Mock
-    private ConnectorMovePointPreviewCreator connectorMovePointPreviewCreator;
+    protected ConnectorMovePointPreviewCreator connectorMovePointPreviewCreator;
     @Mock
-    private ConnectorMovePointCommandFactory connectorMovePointCommandFactory;
+    protected ConnectorMovePointCommandFactory connectorMovePointCommandFactory;
     @Mock
-    private PathingStrategy pathingStrategy;
+    protected PathingStrategy pathingStrategy;
     @Mock
-    private ObservableList<DiagramElement> mockSelectedElementsList;
+    protected ObservableList<DiagramElement> mockSelectedElementsList;
 
-    @Test
-    public void updateDirectionBothSnapped() {
-        Mockito.when(diagramModel.getSelectedElements()).thenReturn(mockSelectedElementsList);
-        Mockito.doNothing().when(mockSelectedElementsList).addListener(Mockito.any(ListChangeListener.class));
-        var controller = new ConnectorElementController(
+    protected ConnectorElementController createController() {
+        return new ConnectorElementController(
                 movePreviewCreator,
                 moveCommandFactory,
                 diagramModel,
@@ -48,6 +45,13 @@ public class ConnectorElementControllerTest {
                 connectorMovePointCommandFactory,
                 pathingStrategy
         );
+    }
+
+    @Test
+    public void updateDirectionBothSnapped() {
+        Mockito.when(diagramModel.getSelectedElements()).thenReturn(mockSelectedElementsList);
+        Mockito.doNothing().when(mockSelectedElementsList).addListener(Mockito.any(ListChangeListener.class));
+        var controller = createController();
         // Snap to vertical
         controller.setIsStartHorizontal(false);
         controller.setIsEndHorizontal(false);
@@ -69,15 +73,7 @@ public class ConnectorElementControllerTest {
     public void updateDirectionNoneSnappedStraight() {
         Mockito.when(diagramModel.getSelectedElements()).thenReturn(mockSelectedElementsList);
         Mockito.doNothing().when(mockSelectedElementsList).addListener(Mockito.any(ListChangeListener.class));
-        var controller = new ConnectorElementController(
-                movePreviewCreator,
-                moveCommandFactory,
-                diagramModel,
-                connectorHandleCreator,
-                connectorMovePointPreviewCreator,
-                connectorMovePointCommandFactory,
-                pathingStrategy
-        );
+        var controller = createController();
         // Don't snap
         controller.setSnapStart(false);
         controller.setSnapEnd(false);
@@ -97,15 +93,7 @@ public class ConnectorElementControllerTest {
     public void updateDirectionNoneSnappedDiagonal() {
         Mockito.when(diagramModel.getSelectedElements()).thenReturn(mockSelectedElementsList);
         Mockito.doNothing().when(mockSelectedElementsList).addListener(Mockito.any(ListChangeListener.class));
-        var controller = new ConnectorElementController(
-                movePreviewCreator,
-                moveCommandFactory,
-                diagramModel,
-                connectorHandleCreator,
-                connectorMovePointPreviewCreator,
-                connectorMovePointCommandFactory,
-                pathingStrategy
-        );
+        var controller = createController();
         // Don't snap
         controller.setSnapStart(false);
         controller.setSnapEnd(false);
@@ -124,15 +112,7 @@ public class ConnectorElementControllerTest {
     public void updateDirectionOneSnappedStraight() {
         Mockito.when(diagramModel.getSelectedElements()).thenReturn(mockSelectedElementsList);
         Mockito.doNothing().when(mockSelectedElementsList).addListener(Mockito.any(ListChangeListener.class));
-        var controller = new ConnectorElementController(
-                movePreviewCreator,
-                moveCommandFactory,
-                diagramModel,
-                connectorHandleCreator,
-                connectorMovePointPreviewCreator,
-                connectorMovePointCommandFactory,
-                pathingStrategy
-        );
+        var controller = createController();
         // Snap only start to vertical, shouldn't change
         controller.setIsStartHorizontal(false);
         controller.setIsEndHorizontal(false);
@@ -154,15 +134,7 @@ public class ConnectorElementControllerTest {
     public void updateDirectionOneSnappedDiagonal() {
         Mockito.when(diagramModel.getSelectedElements()).thenReturn(mockSelectedElementsList);
         Mockito.doNothing().when(mockSelectedElementsList).addListener(Mockito.any(ListChangeListener.class));
-        var controller = new ConnectorElementController(
-                movePreviewCreator,
-                moveCommandFactory,
-                diagramModel,
-                connectorHandleCreator,
-                connectorMovePointPreviewCreator,
-                connectorMovePointCommandFactory,
-                pathingStrategy
-        );
+        var controller = createController();
         // Snap only end to vertical, shouldn't change
         controller.setIsStartHorizontal(false);
         controller.setIsEndHorizontal(true);
