@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.layout.VBox?>
+<TitledPane xmlns="http://javafx.com/javafx"
+            xmlns:fx="http://javafx.com/fxml"
+            fx:controller="carleton.sysc4907.controller.ConnectorFormattingPanelController">
+    <text>Connector Formatting</text>
+    <VBox>
+        <ComboBox fx:id="connectorStyle">
+            <!--- Set connector styles dynamically -->
+        </ComboBox>
+        <VBox.margin>
+            <Insets top="10.0" bottom="10.0"/>
+        </VBox.margin>
+    </VBox>
+</TitledPane>
