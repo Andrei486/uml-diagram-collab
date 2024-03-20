@@ -39,7 +39,11 @@ public abstract class Manager {
     public void validateClient(long id) {
         clientList.getClient(id).setValid(true);
     }
-    
+
+    public ClientList getClientList() {
+        return clientList;
+    }
+
     public boolean isHost() {
         return isHost;
     }

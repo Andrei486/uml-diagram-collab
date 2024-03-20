@@ -174,7 +174,7 @@ public class MessageInterpreter {
                         Optional<Boolean> result = controller.showAndWait();
                         if (result.isPresent() && result.get()) {
                             manager.validateClient(userId);
-                            manager.clientList.getClient(userId).setUsername((String) message.payload());
+                            manager.getClientList().getClient(userId).setUsername((String) message.payload());
                             System.out.println((String) message.payload() + " is Valid");
                             Object[] args = executedCommandList.getCommandList().stream().map(Command::getArgs).toArray();
                             messageConstructor.sendTo(new Message(MessageType.JOIN_RESPONSE, new JoinResponse(sessionModel.getLocalUser().getUsername(), args)), userId);
@@ -197,7 +197,7 @@ public class MessageInterpreter {
         System.out.println("Join Response Received");
         if (!isHost) {
             manager.validateClient(userId);
-            manager.clientList.getClient(userId).setUsername(((JoinResponse) message.payload()).username());
+            manager.getClientList().getClient(userId).setUsername(((JoinResponse) message.payload()).username());
             Object[] commandList = ((JoinResponse) message.payload()).commandList();
             executedCommandRunner.runPreviousCommands(commandList);
         }
@@ -210,7 +210,7 @@ public class MessageInterpreter {
      * @param userId the user id who sent the message
      */
     private void interpretJoinDenied(Message message, long userId){
-        manager.clientList.removeClient(userId);
+        manager.getClientList().removeClient(userId);
 
         Platform.runLater(
                 () -> {
@@ -229,8 +229,8 @@ public class MessageInterpreter {
      * @param userId the user id who sent the message
      */
     private void interpretClose(Message message, long userId){
-        String username = manager.clientList.getClient(userId).getUsername();
-        manager.clientList.removeClient(userId);
+        String username = manager.getClientList().getClient(userId).getUsername();
+        manager.getClientList().removeClient(userId);
 
         Platform.runLater(
                 () -> {

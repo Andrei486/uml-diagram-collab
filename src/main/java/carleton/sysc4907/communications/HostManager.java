@@ -51,7 +51,7 @@ public class HostManager extends Manager {
         sendingQueue.clear();
         long[] ids = clientList.getClients().keySet().stream().mapToLong(x -> (long) x).toArray();
         send(new TargetedMessage(ids, true, true,
-                new Message(MessageType.CLOSE, "I have been Closed")));
+                new Message(MessageType.CLOSE, null)));
         try {
             hostConnectionManager.close();
         } catch (IOException e) {

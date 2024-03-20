@@ -3,11 +3,19 @@ package carleton.sysc4907.communications;
 import carleton.sysc4907.EditingAreaProvider;
 import carleton.sysc4907.command.*;
 import carleton.sysc4907.command.args.MoveCommandArgs;
+import carleton.sysc4907.communications.records.JoinResponse;
 import carleton.sysc4907.controller.JoinRequestDialogController;
 import carleton.sysc4907.model.ExecutedCommandList;
+import carleton.sysc4907.model.SessionModel;
+import carleton.sysc4907.model.User;
 import carleton.sysc4907.processing.ExecutedCommandRunner;
 import javafx.application.Platform;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
+import javafx.scene.control.ButtonType;
+import javafx.scene.control.DialogPane;
 import javafx.stage.Window;
+import javafx.scene.control.Dialog;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.*;
@@ -16,6 +24,7 @@ import org.testfx.framework.junit5.ApplicationExtension;
 
 import javax.swing.text.html.Option;
 
+import java.awt.*;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Optional;
@@ -55,9 +64,18 @@ public class MessageInterpreterTest {
     private ExecutedCommandRunner executedCommandRunner;
     @Mock
     private JoinRequestDialogController joinRequestDialogController;
-
+    @Mock
+    private ClientList clientList;
+    @Mock
+    private ClientData clientData;
+    @Mock
+    private SessionModel sessionModel;
+    @Mock
+    private User user;
     @Mock
     private Command<MoveCommandArgs> mockCommand;
+    @Mock
+    private DialogPane dialogPane;
 
     @Test
     public void interpretUpdateMoveCommandHost() {
@@ -146,29 +164,39 @@ public class MessageInterpreterTest {
     @Test
     public void interpretJoinRequestHost() {
 
-            //setup command list
-            List<Command<?>> commands = new LinkedList<>();
-            commands.add(mockCommand);
+        Long userId = 123L;
+        String clientName = "client";
+        String hostName = "host";
 
-            Message message = new Message(MessageType.JOIN_REQUEST, "test1");
+        //setup command list
+        List<Command<?>> commands = new LinkedList<>();
+        commands.add(mockCommand);
 
-            ArgumentCaptor<Message> messageArgumentCaptor = ArgumentCaptor.forClass(Message.class);
+        Message message = new Message(MessageType.JOIN_REQUEST, clientName);
 
-            Mockito.when(manager.isHost()).thenReturn(true);
-            Mockito.when(executedCommandList.getCommandList()).thenReturn(commands);
+        ArgumentCaptor<Message> messageArgumentCaptor = ArgumentCaptor.forClass(Message.class);
 
-            MessageInterpreter interpreter = new MessageInterpreter(
-                    addCommandFactory,
-                    removeCommandFactory,
-                    moveCommandFactory,
-                    resizeCommandFactory,
-                    editTextCommandFactory,
-                    connectorMovePointCommandFactory,
-                    messageConstructor
-            );
+        when(manager.isHost()).thenReturn(true);
+        when(executedCommandList.getCommandList()).thenReturn(commands);
+        when(mockCommand.getArgs()).thenReturn(new MoveCommandArgs(0, 0, 1, 1, 0L));
+        when(manager.getClientList()).thenReturn(clientList);
+        when(clientList.getClient(eq(userId))).thenReturn(clientData);
+        when(sessionModel.getLocalUser()).thenReturn(user);
+        when(user.getUsername()).thenReturn(hostName);
 
-            interpreter.setManager(manager);
-            interpreter.setExecutedCommandList(executedCommandList);
+        MessageInterpreter interpreter = new MessageInterpreter(
+                addCommandFactory,
+                removeCommandFactory,
+                moveCommandFactory,
+                resizeCommandFactory,
+                editTextCommandFactory,
+                connectorMovePointCommandFactory,
+                messageConstructor
+        );
+
+        interpreter.setManager(manager);
+        interpreter.setSessionModel(sessionModel);
+        interpreter.setExecutedCommandList(executedCommandList);
 
         try (MockedStatic<Platform> platformMockedStatic = Mockito.mockStatic(Platform.class)) {
             platformMockedStatic.when(() -> Platform.runLater(any(Runnable.class))).thenAnswer(invocationOnMock -> {
@@ -179,23 +207,199 @@ public class MessageInterpreterTest {
             try(MockedConstruction<JoinRequestDialogController> jRDCConstruction = Mockito.mockConstruction(JoinRequestDialogController.class,
                     (mock, context) -> when(mock.showAndWait()).thenReturn(Optional.of(true)));) {
 
-                interpreter.interpret(message, 123);
+                interpreter.interpret(message, userId);
 
-
-                TimeUnit.SECONDS.sleep(5);
-
-
-                verify(messageConstructor).sendTo(messageArgumentCaptor.capture(), eq(123));
+                verify(messageConstructor).sendTo(messageArgumentCaptor.capture(), eq(userId));
+                verify(clientData).setUsername(eq(clientName));
+                verify(manager).validateClient(userId);
 
                 Message sentMessage = messageArgumentCaptor.getValue();
                 assertEquals(MessageType.JOIN_RESPONSE, sentMessage.type());
-                assertEquals(new Object(), message.payload());
+
+                JoinResponse joinResponse = (JoinResponse) sentMessage.payload();
+
+                assertEquals(hostName, joinResponse.username());
+                assertEquals(mockCommand.getArgs(), joinResponse.commandList()[0]);
             }
-        } catch (InterruptedException e) {
-            throw new RuntimeException(e);
+        }
+    }
+
+    @Test
+    public void interpretJoinRequestHostDenied() {
+
+        Long userId = 123L;
+        String clientName = "client";
+
+        Message message = new Message(MessageType.JOIN_REQUEST, clientName);
+
+        ArgumentCaptor<Message> messageArgumentCaptor = ArgumentCaptor.forClass(Message.class);
+
+        when(manager.isHost()).thenReturn(true);
+
+        MessageInterpreter interpreter = new MessageInterpreter(
+                addCommandFactory,
+                removeCommandFactory,
+                moveCommandFactory,
+                resizeCommandFactory,
+                editTextCommandFactory,
+                connectorMovePointCommandFactory,
+                messageConstructor
+        );
+
+        interpreter.setManager(manager);
+
+        try (MockedStatic<Platform> platformMockedStatic = Mockito.mockStatic(Platform.class)) {
+            platformMockedStatic.when(() -> Platform.runLater(any(Runnable.class))).thenAnswer(invocationOnMock -> {
+                ((Runnable) invocationOnMock.getArgument(0)).run();
+                return null;
+            });
+
+            try(MockedConstruction<JoinRequestDialogController> jRDCConstruction = Mockito.mockConstruction(JoinRequestDialogController.class,
+                    (mock, context) -> when(mock.showAndWait()).thenReturn(Optional.of(false)));) {
+
+                interpreter.interpret(message, userId);
+
+                verify(messageConstructor).sendToInvalidAndClose(messageArgumentCaptor.capture(), eq(userId));
+
+                Message sentMessage = messageArgumentCaptor.getValue();
+                assertEquals(MessageType.JOIN_DENIED, sentMessage.type());
+                assertEquals(null, sentMessage.payload());
+            }
+        }
+    }
+
+    @Test
+    public void interpretJoinResponseClient() {
+
+        Long userId = 123L;
+        String hostName = "host";
+
+        MoveCommandArgs args = new MoveCommandArgs(0, 0, 1, 1, 0L);
+
+        ArgumentCaptor<Object[]> argumentCaptor = ArgumentCaptor.forClass(Object[].class);
+
+        Message message = new Message(MessageType.JOIN_RESPONSE, new JoinResponse(hostName, new Object[]{args}));
+
+        when(manager.isHost()).thenReturn(false);
+        when(manager.getClientList()).thenReturn(clientList);
+        when(clientList.getClient(eq(userId))).thenReturn(clientData);
+
+        MessageInterpreter interpreter = new MessageInterpreter(
+                addCommandFactory,
+                removeCommandFactory,
+                moveCommandFactory,
+                resizeCommandFactory,
+                editTextCommandFactory,
+                connectorMovePointCommandFactory,
+                messageConstructor
+        );
+
+        interpreter.setManager(manager);
+        interpreter.setExecutedCommandRunner(executedCommandRunner);
+
+        interpreter.interpret(message, userId);
+
+        verify(manager).validateClient(userId);
+        verify(clientData).setUsername(eq(hostName));
+        verify(executedCommandRunner).runPreviousCommands(argumentCaptor.capture());
+
+        assertEquals(args, argumentCaptor.getValue()[0]);
+    }
+
+    @Test
+    public void interpretJoinDeniedClient() {
+
+        Long userId = 123L;
+
+        Message message = new Message(MessageType.JOIN_DENIED, null);
+
+        when(manager.isHost()).thenReturn(false);
+        when(manager.getClientList()).thenReturn(clientList);
+
+
+        MessageInterpreter interpreter = new MessageInterpreter(
+                addCommandFactory,
+                removeCommandFactory,
+                moveCommandFactory,
+                resizeCommandFactory,
+                editTextCommandFactory,
+                connectorMovePointCommandFactory,
+                messageConstructor
+        );
+
+        interpreter.setManager(manager);
+
+        try (MockedStatic<Platform> platformMockedStatic = Mockito.mockStatic(Platform.class)) {
+            platformMockedStatic.when(() -> Platform.runLater(any(Runnable.class))).thenAnswer(invocationOnMock -> {
+                ((Runnable) invocationOnMock.getArgument(0)).run();
+                return null;
+            });
+
+            try(MockedConstruction<Dialog> dialogMockedConstruction = Mockito.mockConstruction(Dialog.class,
+                    (mock, context) -> {
+                        when(mock.getDialogPane()).thenReturn(dialogPane);
+                        when(dialogPane.getButtonTypes()).thenReturn(FXCollections.observableArrayList());
+                    })) {
+
+                interpreter.interpret(message, userId);
+
+                verify(clientList).removeClient(userId);
+
+                Dialog dialog = dialogMockedConstruction.constructed().get(0);
+
+                verify(dialog).setTitle("Denied");
+                verify(dialog).show();
+            }
         }
 
+    }
 
+    @Test
+    public void interpretClose() {
+
+        Long userId = 123L;
+        String closedUser = "Test";
+
+        Message message = new Message(MessageType.CLOSE, null);
+
+        when(manager.getClientList()).thenReturn(clientList);
+        when(clientList.getClient(userId)).thenReturn(clientData);
+        when(clientData.getUsername()).thenReturn(closedUser);
+
+        MessageInterpreter interpreter = new MessageInterpreter(
+                addCommandFactory,
+                removeCommandFactory,
+                moveCommandFactory,
+                resizeCommandFactory,
+                editTextCommandFactory,
+                connectorMovePointCommandFactory,
+                messageConstructor
+        );
+
+        interpreter.setManager(manager);
+
+        try (MockedStatic<Platform> platformMockedStatic = Mockito.mockStatic(Platform.class)) {
+            platformMockedStatic.when(() -> Platform.runLater(any(Runnable.class))).thenAnswer(invocationOnMock -> {
+                ((Runnable) invocationOnMock.getArgument(0)).run();
+                return null;
+            });
+
+            try(MockedConstruction<Dialog> dialogMockedConstruction = Mockito.mockConstruction(Dialog.class,
+                    (mock, context) -> {
+                        when(mock.getDialogPane()).thenReturn(dialogPane);
+                        when(dialogPane.getButtonTypes()).thenReturn(FXCollections.observableArrayList());
+                    })) {
+
+                interpreter.interpret(message, userId);
+
+                verify(clientList).removeClient(userId);
+
+                Dialog dialog = dialogMockedConstruction.constructed().get(0);
+
+                verify(dialog).setTitle("Connection Lost");
+                verify(dialog).show();
+            }
+        }
     }
 
 }
