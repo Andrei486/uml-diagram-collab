@@ -189,7 +189,9 @@ public class DiagramEditorLoader {
                 moveCommandFactory,
                 resizeCommandFactory,
                 editTextCommandFactory,
-                connectorMovePointCommandFactory
+                connectorMovePointCommandFactory,
+                connectorSnapCommandFactory,
+                changeConnectorStyleCommandFactory
         );
         addFactories(
                 addCommandFactory,
