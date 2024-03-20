@@ -1,8 +1,9 @@
-package carleton.sysc4907.communications;
+package carleton.sysc4907.ui;
 
 import carleton.sysc4907.EditingAreaProvider;
 import carleton.sysc4907.command.*;
 import carleton.sysc4907.command.args.MoveCommandArgs;
+import carleton.sysc4907.communications.*;
 import carleton.sysc4907.communications.records.JoinResponse;
 import carleton.sysc4907.controller.JoinRequestDialogController;
 import carleton.sysc4907.model.ExecutedCommandList;
@@ -201,6 +202,8 @@ public class MessageInterpreterTest {
                 resizeCommandFactory,
                 editTextCommandFactory,
                 connectorMovePointCommandFactory,
+                connectorSnapCommandFactory,
+                changeConnectorStyleCommandFactory,
                 messageConstructor
         );
 
@@ -253,6 +256,8 @@ public class MessageInterpreterTest {
                 resizeCommandFactory,
                 editTextCommandFactory,
                 connectorMovePointCommandFactory,
+                connectorSnapCommandFactory,
+                changeConnectorStyleCommandFactory,
                 messageConstructor
         );
 
@@ -301,6 +306,8 @@ public class MessageInterpreterTest {
                 resizeCommandFactory,
                 editTextCommandFactory,
                 connectorMovePointCommandFactory,
+                connectorSnapCommandFactory,
+                changeConnectorStyleCommandFactory,
                 messageConstructor
         );
 
@@ -334,6 +341,8 @@ public class MessageInterpreterTest {
                 resizeCommandFactory,
                 editTextCommandFactory,
                 connectorMovePointCommandFactory,
+                connectorSnapCommandFactory,
+                changeConnectorStyleCommandFactory,
                 messageConstructor
         );
 
@@ -383,6 +392,8 @@ public class MessageInterpreterTest {
                 resizeCommandFactory,
                 editTextCommandFactory,
                 connectorMovePointCommandFactory,
+                connectorSnapCommandFactory,
+                changeConnectorStyleCommandFactory,
                 messageConstructor
         );
 
