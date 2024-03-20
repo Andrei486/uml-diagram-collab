@@ -168,6 +168,10 @@ public class DiagramEditorLoader {
                 elementIdManager, manager, executedCommandList, constructor);
         ConnectorMovePointCommandFactory connectorMovePointCommandFactory = new ConnectorMovePointCommandFactory(
                 elementIdManager, manager, executedCommandList, constructor);
+        ConnectorSnapCommandFactory connectorSnapCommandFactory = new ConnectorSnapCommandFactory(
+                elementIdManager, manager, executedCommandList, constructor);
+        ChangeConnectorStyleCommandFactory changeConnectorStyleCommandFactory = new ChangeConnectorStyleCommandFactory(
+                elementIdManager, manager, executedCommandList, constructor);
         // Add factories to message interpreter: avoids circular dependencies
         interpreter.addFactories(
                 addCommandFactory,
@@ -175,7 +179,9 @@ public class DiagramEditorLoader {
                 moveCommandFactory,
                 resizeCommandFactory,
                 editTextCommandFactory,
-                connectorMovePointCommandFactory
+                connectorMovePointCommandFactory,
+                connectorSnapCommandFactory,
+                changeConnectorStyleCommandFactory
         );
         ExecutedCommandRunner executedCommandRunner = new ExecutedCommandRunner(
                 addCommandFactory,
@@ -191,7 +197,9 @@ public class DiagramEditorLoader {
                 moveCommandFactory,
                 resizeCommandFactory,
                 editTextCommandFactory,
-                connectorMovePointCommandFactory
+                connectorMovePointCommandFactory,
+                connectorSnapCommandFactory,
+                changeConnectorStyleCommandFactory
         );
         //give the interpreter the executedCommandList
         interpreter.setExecutedCommandList(executedCommandList);
@@ -217,6 +225,7 @@ public class DiagramEditorLoader {
                         connectorHandleCreator,
                         connectorMovePointPreviewCreator,
                         connectorMovePointCommandFactory,
+                        connectorSnapCommandFactory,
                         new CurvedPathStrategy()));
         elementControllerInjector.addInjectionMethod(ArrowConnectorElementController.class,
                 () -> new ArrowConnectorElementController(
@@ -226,6 +235,7 @@ public class DiagramEditorLoader {
                         connectorHandleCreator,
                         connectorMovePointPreviewCreator,
                         connectorMovePointCommandFactory,
+                        connectorSnapCommandFactory,
                         new CurvedPathStrategy(),
                         arrowheadFactory));
 
@@ -234,6 +244,8 @@ public class DiagramEditorLoader {
                 () -> new SessionInfoBarController(sessionModel));
         injector.addInjectionMethod(FormattingPanelController.class,
                 () -> new FormattingPanelController(textFormattingModel));
+        injector.addInjectionMethod(ConnectorFormattingPanelController.class,
+                () -> new ConnectorFormattingPanelController(diagramModel, elementIdManager, changeConnectorStyleCommandFactory));
         injector.addInjectionMethod(SessionUsersMenuController.class,
                 () -> new SessionUsersMenuController(sessionModel));
         injector.addInjectionMethod(DiagramMenuBarController.class,
@@ -253,13 +265,18 @@ public class DiagramEditorLoader {
             MoveCommandFactory moveCommandFactory,
             ResizeCommandFactory resizeCommandFactory,
             EditTextCommandFactory editTextCommandFactory,
-            ConnectorMovePointCommandFactory connectorMovePointCommandFactory) {
+            ConnectorMovePointCommandFactory connectorMovePointCommandFactory,
+            ConnectorSnapCommandFactory connectorSnapCommandFactory,
+            ChangeConnectorStyleCommandFactory changeConnectorStyleCommandFactory
+    ) {
         commandFactories.put(AddCommandArgs.class, addCommandFactory);
         commandFactories.put(RemoveCommandArgs.class, removeCommandFactory);
         commandFactories.put(MoveCommandArgs.class, moveCommandFactory);
         commandFactories.put(ResizeCommandArgs.class, resizeCommandFactory);
         commandFactories.put(EditTextCommandArgs.class, editTextCommandFactory);
         commandFactories.put(ConnectorMovePointCommandArgs.class, connectorMovePointCommandFactory);
+        commandFactories.put(ConnectorSnapCommandArgs.class, connectorSnapCommandFactory);
+        commandFactories.put(ChangeConnectorStyleCommandArgs.class, changeConnectorStyleCommandFactory);
     }
 
     /**

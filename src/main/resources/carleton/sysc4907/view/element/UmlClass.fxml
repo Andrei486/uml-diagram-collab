@@ -10,6 +10,7 @@
 <?import javafx.scene.shape.Rectangle?>
 <?import javafx.scene.chart.StackedAreaChart?>
 <?import javafx.scene.shape.Line?>
+<?import carleton.sysc4907.view.SnapHandle?>
 <DiagramElement xmlns="http://javafx.com/javafx" fx:id="element"
                 xmlns:fx="http://javafx.com/fxml"
                 fx:controller="carleton.sysc4907.controller.element.UmlClassController"
@@ -36,4 +37,8 @@
             </StackPane>
         </VBox>
     </StackPane>
+    <SnapHandle fx:id="westSnapHandle" userData="0"/>
+    <SnapHandle fx:id="northSnapHandle" userData="0"/>
+    <SnapHandle fx:id="eastSnapHandle" userData="0"/>
+    <SnapHandle fx:id="southSnapHandle" userData="0"/>
 </DiagramElement>

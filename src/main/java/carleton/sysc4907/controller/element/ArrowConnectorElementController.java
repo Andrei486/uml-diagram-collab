@@ -1,14 +1,14 @@
 package carleton.sysc4907.controller.element;
 
 import carleton.sysc4907.command.ConnectorMovePointCommandFactory;
+import carleton.sysc4907.command.ConnectorSnapCommandFactory;
 import carleton.sysc4907.command.MoveCommandFactory;
 import carleton.sysc4907.controller.element.arrows.Arrowhead;
 import carleton.sysc4907.controller.element.arrows.ArrowheadFactory;
-import carleton.sysc4907.controller.element.arrows.ArrowheadType;
+import carleton.sysc4907.controller.element.arrows.ConnectorType;
 import carleton.sysc4907.controller.element.pathing.PathingStrategy;
 import carleton.sysc4907.model.DiagramModel;
 import javafx.beans.InvalidationListener;
-import javafx.beans.Observable;
 import javafx.fxml.FXML;
 import javafx.scene.shape.Path;
 
@@ -17,7 +17,10 @@ import javafx.scene.shape.Path;
  */
 public class ArrowConnectorElementController extends ConnectorElementController {
 
+    private final double DASHED_OFFSET = 4;
     private final ArrowheadFactory arrowheadFactory;
+
+    private ConnectorType connectorType = null;
 
     private Arrowhead arrowhead;
 
@@ -42,6 +45,7 @@ public class ArrowConnectorElementController extends ConnectorElementController 
             ConnectorHandleCreator connectorHandleCreator,
             ConnectorMovePointPreviewCreator connectorMovePointPreviewCreator,
             ConnectorMovePointCommandFactory connectorMovePointCommandFactory,
+            ConnectorSnapCommandFactory connectorSnapCommandFactory,
             PathingStrategy pathingStrategy,
             ArrowheadFactory arrowheadFactory) {
         super(
@@ -51,6 +55,7 @@ public class ArrowConnectorElementController extends ConnectorElementController 
                 connectorHandleCreator,
                 connectorMovePointPreviewCreator,
                 connectorMovePointCommandFactory,
+                connectorSnapCommandFactory,
                 pathingStrategy
         );
         this.arrowheadFactory = arrowheadFactory;
@@ -69,9 +74,19 @@ public class ArrowConnectorElementController extends ConnectorElementController 
      * Sets the arrowhead type to use for this connector.
      * @param type the new ArrowheadType to use for this connector
      */
-    public void setArrowheadType(ArrowheadType type) {
+    public void setArrowheadType(ConnectorType type) {
+        connectorType = type;
         arrowhead = arrowheadFactory.createArrowhead(type);
         makeArrowheadPath();
+    }
+
+    public void setPathStyle(ConnectorType type) {
+        connectorType = type;
+        if (type == ConnectorType.IMPLEMENTATION) {
+            connectorPath.getStrokeDashArray().add(DASHED_OFFSET);
+        } else {
+            connectorPath.getStrokeDashArray().clear();
+        }
     }
 
     @Override
@@ -91,12 +106,19 @@ public class ArrowConnectorElementController extends ConnectorElementController 
                     adjustX(getEndX()), adjustY(getEndY()),
                     isEndHorizontal.get(), this.pathingStrategy.get().isDirectPath()
             );
+        } else {
+            arrowheadPath.getElements().clear();
         }
+    }
+
+    public ConnectorType getConnectorType() {
+        return connectorType;
     }
 
     @Override
     public void initialize() {
         super.initialize();
-        setArrowheadType(ArrowheadType.ASSOCIATION); // default arrowhead
+        setArrowheadType(ConnectorType.ASSOCIATION); // default arrowhead
+        setPathStyle(ConnectorType.ASSOCIATION);
     }
 }

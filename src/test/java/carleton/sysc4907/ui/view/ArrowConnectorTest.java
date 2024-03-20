@@ -30,6 +30,7 @@ public class ArrowConnectorTest extends ConnectorTest {
                         connectorHandleCreator,
                         mockConnectorMovePointPreviewCreator,
                         connectorMovePointCommandFactory,
+                        connectorSnapCommandFactory,
                         new OrthogonalPathStrategy(),
                         new ArrowheadFactory()));
     }
