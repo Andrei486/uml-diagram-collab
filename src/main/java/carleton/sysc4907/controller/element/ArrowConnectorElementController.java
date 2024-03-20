@@ -1,6 +1,7 @@
 package carleton.sysc4907.controller.element;
 
 import carleton.sysc4907.command.ConnectorMovePointCommandFactory;
+import carleton.sysc4907.command.ConnectorSnapCommandFactory;
 import carleton.sysc4907.command.MoveCommandFactory;
 import carleton.sysc4907.controller.element.arrows.Arrowhead;
 import carleton.sysc4907.controller.element.arrows.ArrowheadFactory;
@@ -44,6 +45,7 @@ public class ArrowConnectorElementController extends ConnectorElementController 
             ConnectorHandleCreator connectorHandleCreator,
             ConnectorMovePointPreviewCreator connectorMovePointPreviewCreator,
             ConnectorMovePointCommandFactory connectorMovePointCommandFactory,
+            ConnectorSnapCommandFactory connectorSnapCommandFactory,
             PathingStrategy pathingStrategy,
             ArrowheadFactory arrowheadFactory) {
         super(
@@ -53,6 +55,7 @@ public class ArrowConnectorElementController extends ConnectorElementController 
                 connectorHandleCreator,
                 connectorMovePointPreviewCreator,
                 connectorMovePointCommandFactory,
+                connectorSnapCommandFactory,
                 pathingStrategy
         );
         this.arrowheadFactory = arrowheadFactory;

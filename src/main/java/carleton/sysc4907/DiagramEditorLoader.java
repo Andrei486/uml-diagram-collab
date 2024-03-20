@@ -171,6 +171,8 @@ public class DiagramEditorLoader {
                 elementIdManager, manager, executedCommandList, constructor);
         ConnectorMovePointCommandFactory connectorMovePointCommandFactory = new ConnectorMovePointCommandFactory(
                 elementIdManager, manager, executedCommandList, constructor);
+        ConnectorSnapCommandFactory connectorSnapCommandFactory = new ConnectorSnapCommandFactory(
+                elementIdManager, manager, executedCommandList, constructor);
         ChangeConnectorStyleCommandFactory changeConnectorStyleCommandFactory = new ChangeConnectorStyleCommandFactory(
                 elementIdManager, manager, executedCommandList, constructor);
         // Add factories to message interpreter: avoids circular dependencies
@@ -181,6 +183,7 @@ public class DiagramEditorLoader {
                 resizeCommandFactory,
                 editTextCommandFactory,
                 connectorMovePointCommandFactory,
+                connectorSnapCommandFactory,
                 changeConnectorStyleCommandFactory
         );
         addFactories(
@@ -190,6 +193,7 @@ public class DiagramEditorLoader {
                 resizeCommandFactory,
                 editTextCommandFactory,
                 connectorMovePointCommandFactory,
+                connectorSnapCommandFactory,
                 changeConnectorStyleCommandFactory
         );
 
@@ -213,6 +217,7 @@ public class DiagramEditorLoader {
                         connectorHandleCreator,
                         connectorMovePointPreviewCreator,
                         connectorMovePointCommandFactory,
+                        connectorSnapCommandFactory,
                         new CurvedPathStrategy()));
         elementControllerInjector.addInjectionMethod(ArrowConnectorElementController.class,
                 () -> new ArrowConnectorElementController(
@@ -222,6 +227,7 @@ public class DiagramEditorLoader {
                         connectorHandleCreator,
                         connectorMovePointPreviewCreator,
                         connectorMovePointCommandFactory,
+                        connectorSnapCommandFactory,
                         new CurvedPathStrategy(),
                         arrowheadFactory));
 
@@ -254,13 +260,16 @@ public class DiagramEditorLoader {
             ResizeCommandFactory resizeCommandFactory,
             EditTextCommandFactory editTextCommandFactory,
             ConnectorMovePointCommandFactory connectorMovePointCommandFactory,
-            ChangeConnectorStyleCommandFactory changeConnectorStyleCommandFactory) {
+            ConnectorSnapCommandFactory connectorSnapCommandFactory,
+            ChangeConnectorStyleCommandFactory changeConnectorStyleCommandFactory
+    ) {
         commandFactories.put(AddCommandArgs.class, addCommandFactory);
         commandFactories.put(RemoveCommandArgs.class, removeCommandFactory);
         commandFactories.put(MoveCommandArgs.class, moveCommandFactory);
         commandFactories.put(ResizeCommandArgs.class, resizeCommandFactory);
         commandFactories.put(EditTextCommandArgs.class, editTextCommandFactory);
         commandFactories.put(ConnectorMovePointCommandArgs.class, connectorMovePointCommandFactory);
+        commandFactories.put(ConnectorSnapCommandArgs.class, connectorSnapCommandFactory);
         commandFactories.put(ChangeConnectorStyleCommandArgs.class, changeConnectorStyleCommandFactory);
     }
 

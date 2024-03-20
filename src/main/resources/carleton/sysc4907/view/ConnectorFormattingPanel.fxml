@@ -9,7 +9,7 @@
             fx:controller="carleton.sysc4907.controller.ConnectorFormattingPanelController">
     <text>Connector Formatting</text>
     <VBox>
-        <ComboBox fx:id="connectorStyle">
+        <ComboBox fx:id="connectorStyle" disable="true">
             <!--- Set connector styles dynamically -->
         </ComboBox>
         <VBox.margin>

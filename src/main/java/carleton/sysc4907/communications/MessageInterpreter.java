@@ -61,6 +61,7 @@ public class MessageInterpreter {
         ResizeCommandFactory resizeCommandFactory,
         EditTextCommandFactory editTextCommandFactory,
         ConnectorMovePointCommandFactory connectorMovePointCommandFactory,
+        ConnectorSnapCommandFactory connectorSnapCommandFactory,
         ChangeConnectorStyleCommandFactory changeConnectorStyleCommandFactory,
         MessageConstructor messageConstructor
     ) {
@@ -72,6 +73,7 @@ public class MessageInterpreter {
                 resizeCommandFactory,
                 editTextCommandFactory,
                 connectorMovePointCommandFactory,
+                connectorSnapCommandFactory,
                 changeConnectorStyleCommandFactory);
     }
 
@@ -90,13 +92,16 @@ public class MessageInterpreter {
             ResizeCommandFactory resizeCommandFactory,
             EditTextCommandFactory editTextCommandFactory,
             ConnectorMovePointCommandFactory connectorMovePointCommandFactory,
-            ChangeConnectorStyleCommandFactory changeConnectorStyleCommandFactory) {
+            ConnectorSnapCommandFactory connectorSnapCommandFactory,
+            ChangeConnectorStyleCommandFactory changeConnectorStyleCommandFactory
+    ) {
         commandFactories.put(AddCommandArgs.class, addCommandFactory);
         commandFactories.put(RemoveCommandArgs.class, removeCommandFactory);
         commandFactories.put(MoveCommandArgs.class, moveCommandFactory);
         commandFactories.put(ResizeCommandArgs.class, resizeCommandFactory);
         commandFactories.put(EditTextCommandArgs.class, editTextCommandFactory);
         commandFactories.put(ConnectorMovePointCommandArgs.class, connectorMovePointCommandFactory);
+        commandFactories.put(ConnectorSnapCommandArgs.class, connectorSnapCommandFactory);
         commandFactories.put(ChangeConnectorStyleCommandArgs.class, changeConnectorStyleCommandFactory);
     }
 

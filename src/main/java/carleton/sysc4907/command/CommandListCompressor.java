@@ -1,8 +1,10 @@
 package carleton.sysc4907.command;
 
 import carleton.sysc4907.command.args.*;
+import carleton.sysc4907.controller.element.ConnectorElementController;
 import carleton.sysc4907.model.DiagramModel;
 import carleton.sysc4907.processing.ElementIdManager;
+import carleton.sysc4907.view.SnapHandle;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -16,7 +18,6 @@ public class CommandListCompressor {
     private final Class[] commandArgsClasses = new Class[] {
             AddCommandArgs.class,
             RemoveCommandArgs.class,
-            ConnectorMovePointCommandArgs.class,
             EditTextCommandArgs.class,
             MoveCommandArgs.class,
             RemoveCommandArgs.class,
@@ -29,11 +30,26 @@ public class CommandListCompressor {
         this.elementIdManager = elementIdManager;
     }
 
+    public Collection<Long> getIdsToSave() {
+        var currentUsedIds = elementIdManager.getUsedIds();
+        Set<Long> allIds = new HashSet<>(currentUsedIds);
+        // Get the ID of the parent element for all connector handles
+        for (Long id : currentUsedIds) {
+            var controller = elementIdManager.getElementControllerById(id);
+            if (controller == null) continue;
+            if (controller instanceof ConnectorElementController connectorElementController) {
+                allIds.addAll(connectorElementController.getLastSnappedHandles().stream().map(
+                        SnapHandle::getParentElementId).toList());
+            }
+        }
+        return allIds;
+    }
+
     public List<Command<?>> compressCommandList(List<Command<?>> commandList) {
         var cmdList = new LinkedList<>(commandList); // avoid race conditions: ignore any further commands added
         var indices = new HashSet<Integer>();
-        var usedIds = elementIdManager.getUsedIds();
-        for (Long id : usedIds) {
+        var idsToSave = getIdsToSave();
+        for (Long id : idsToSave) {
             var idCompressedList = compressCommandListForId(filterById(cmdList, id));
             indices.addAll(idCompressedList.stream().map(cmdList::indexOf).toList());
         }
@@ -61,16 +77,36 @@ public class CommandListCompressor {
     }
 
     private List<Command<?>> findLastConnectorMoves(List<Command<?>> commandList) {
-        var movePointCommands = commandList.stream().filter(cmd ->  cmd.getArgs() instanceof ConnectorMovePointCommandArgs).toList();
-        var startMoves = movePointCommands.stream().filter(cmd -> ((ConnectorMovePointCommandArgs) (cmd.getArgs())).isStart()).toList();
-        var endMoves = movePointCommands.stream().filter(cmd -> !((ConnectorMovePointCommandArgs) (cmd.getArgs())).isStart()).toList();
+        var movePointCommands = commandList.stream().filter(cmd ->
+                cmd.getArgs() instanceof ConnectorMovePointCommandArgs
+                        || cmd.getArgs() instanceof ConnectorSnapCommandArgs).toList();
+        List<Command<?>> startMoves = new LinkedList<>();
+        List<Command<?>> endMoves = new LinkedList<>();
+        List<Command<?>> startSnaps = new LinkedList<>();
+        List<Command<?>> endSnaps = new LinkedList<>();
+        for (var command : movePointCommands) {
+            var args = command.getArgs();
+            if (args instanceof ConnectorMovePointCommandArgs connectorMovePointCommandArgs) {
+                if (connectorMovePointCommandArgs.isStart()) {
+                    startMoves.add(command);
+                } else {
+                    endMoves.add(command);
+                }
+            } else if (args instanceof ConnectorSnapCommandArgs connectorSnapCommandArgs) {
+                if (connectorSnapCommandArgs.isStart()) {
+                    startSnaps.add(command);
+                } else {
+                    endSnaps.add(command);
+                }
+            }
+        }
+        // Keep the last move and last snap: a snap to a deleted element will not move correctly if done last
+        // but a snap before a move will effectively have no effect
         List<Command<?>> lastCommands = new LinkedList<>();
-        if (!startMoves.isEmpty()) {
-            lastCommands.add(startMoves.get(startMoves.size() - 1));
-        }
-        if (!endMoves.isEmpty()) {
-            lastCommands.add(endMoves.get(endMoves.size() - 1));
-        }
+        if (!startMoves.isEmpty()) lastCommands.add(startMoves.get(startMoves.size() - 1));
+        if (!endMoves.isEmpty()) lastCommands.add(endMoves.get(endMoves.size() - 1));
+        if (!startSnaps.isEmpty()) lastCommands.add(startSnaps.get(startSnaps.size() - 1));
+        if (!endSnaps.isEmpty()) lastCommands.add(endSnaps.get(endSnaps.size() - 1));
         return lastCommands;
     }
 

@@ -51,6 +51,7 @@ public class ArrowConnectorElementControllerTest extends ConnectorElementControl
                 connectorHandleCreator,
                 connectorMovePointPreviewCreator,
                 connectorMovePointCommandFactory,
+                connectorSnapCommandFactory,
                 pathingStrategy,
                 arrowheadFactory
         );

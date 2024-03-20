@@ -1,18 +1,33 @@
 package carleton.sysc4907.controller.element;
 
 import carleton.sysc4907.command.ConnectorMovePointCommandFactory;
+import carleton.sysc4907.command.ConnectorSnapCommandFactory;
 import carleton.sysc4907.command.MoveCommandFactory;
 import carleton.sysc4907.controller.element.pathing.PathingStrategy;
 import carleton.sysc4907.model.DiagramModel;
 import carleton.sysc4907.view.DiagramElement;
+import carleton.sysc4907.view.SnapHandle;
+import javafx.beans.binding.DoubleBinding;
+import javafx.beans.property.SimpleDoubleProperty;
 import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.ValueSource;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
+
+import java.lang.reflect.Field;
+import java.util.Set;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyLong;
+import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 public class ConnectorElementControllerTest {
@@ -31,9 +46,17 @@ public class ConnectorElementControllerTest {
     @Mock
     protected ConnectorMovePointCommandFactory connectorMovePointCommandFactory;
     @Mock
+    protected ConnectorSnapCommandFactory connectorSnapCommandFactory;
+    @Mock
     protected PathingStrategy pathingStrategy;
     @Mock
     protected ObservableList<DiagramElement> mockSelectedElementsList;
+    @Mock
+    private SnapHandle snapHandle;
+    @Mock
+    private Set<Long> snapHandleIds;
+    @Mock
+    private DiagramElement element;
 
     protected ConnectorElementController createController() {
         return new ConnectorElementController(
@@ -43,6 +66,7 @@ public class ConnectorElementControllerTest {
                 connectorHandleCreator,
                 connectorMovePointPreviewCreator,
                 connectorMovePointCommandFactory,
+                connectorSnapCommandFactory,
                 pathingStrategy
         );
     }
@@ -71,7 +95,7 @@ public class ConnectorElementControllerTest {
 
     @Test
     public void updateDirectionNoneSnappedStraight() {
-        Mockito.when(diagramModel.getSelectedElements()).thenReturn(mockSelectedElementsList);
+        when(diagramModel.getSelectedElements()).thenReturn(mockSelectedElementsList);
         Mockito.doNothing().when(mockSelectedElementsList).addListener(Mockito.any(ListChangeListener.class));
         var controller = createController();
         // Don't snap
@@ -91,7 +115,7 @@ public class ConnectorElementControllerTest {
 
     @Test
     public void updateDirectionNoneSnappedDiagonal() {
-        Mockito.when(diagramModel.getSelectedElements()).thenReturn(mockSelectedElementsList);
+        when(diagramModel.getSelectedElements()).thenReturn(mockSelectedElementsList);
         Mockito.doNothing().when(mockSelectedElementsList).addListener(Mockito.any(ListChangeListener.class));
         var controller = createController();
         // Don't snap
@@ -110,7 +134,7 @@ public class ConnectorElementControllerTest {
 
     @Test
     public void updateDirectionOneSnappedStraight() {
-        Mockito.when(diagramModel.getSelectedElements()).thenReturn(mockSelectedElementsList);
+        when(diagramModel.getSelectedElements()).thenReturn(mockSelectedElementsList);
         Mockito.doNothing().when(mockSelectedElementsList).addListener(Mockito.any(ListChangeListener.class));
         var controller = createController();
         // Snap only start to vertical, shouldn't change
@@ -132,7 +156,7 @@ public class ConnectorElementControllerTest {
 
     @Test
     public void updateDirectionOneSnappedDiagonal() {
-        Mockito.when(diagramModel.getSelectedElements()).thenReturn(mockSelectedElementsList);
+        when(diagramModel.getSelectedElements()).thenReturn(mockSelectedElementsList);
         Mockito.doNothing().when(mockSelectedElementsList).addListener(Mockito.any(ListChangeListener.class));
         var controller = createController();
         // Snap only end to vertical, shouldn't change
@@ -150,5 +174,101 @@ public class ConnectorElementControllerTest {
 
         Assertions.assertTrue(controller.getIsStartHorizontal());
         Assertions.assertTrue(controller.getIsEndHorizontal());
+    }
+
+    @ParameterizedTest
+    @ValueSource(ints = {0, 1})
+    public void snapToHandle(int isStartInt) throws NoSuchFieldException, IllegalAccessException {
+        when(diagramModel.getSelectedElements()).thenReturn(mockSelectedElementsList);
+        Mockito.doNothing().when(mockSelectedElementsList).addListener(Mockito.any(ListChangeListener.class));
+        boolean isStart = isStartInt == 1;
+        long testId = 12L;
+
+        var xProperty = new SimpleDoubleProperty();
+        xProperty.set(100);
+        var yProperty = new SimpleDoubleProperty();
+        yProperty.set(200);
+        when(snapHandle.getCenterXBinding()).thenReturn(xProperty.negate());
+        when(snapHandle.getCenterYBinding()).thenReturn(yProperty.negate());
+        when(snapHandle.isHorizontal()).thenReturn(false);
+        when(snapHandle.getSnappedConnectorIds()).thenReturn(snapHandleIds);
+        when(snapHandleIds.add(anyLong())).thenReturn(true);
+        when(element.getElementId()).thenReturn(testId);
+        var controller = new ConnectorElementController(
+                movePreviewCreator,
+                moveCommandFactory,
+                diagramModel,
+                connectorHandleCreator,
+                connectorMovePointPreviewCreator,
+                connectorMovePointCommandFactory,
+                connectorSnapCommandFactory,
+                pathingStrategy
+        );
+        Field field = DiagramElementController.class.getDeclaredField("element");
+        field.setAccessible(true);
+        field.set(controller, element);
+        controller.setIsStartHorizontal(true);
+        controller.setIsEndHorizontal(true);
+
+        controller.snapToHandle(snapHandle, isStart);
+
+        if (isStart) {
+            assertEquals(-100, controller.getStartX());
+            assertEquals(-200, controller.getStartY());
+            assertFalse(controller.getIsStartHorizontal());
+        } else {
+            assertEquals(-100, controller.getEndX());
+            assertEquals(-200, controller.getEndY());
+            assertFalse(controller.getIsEndHorizontal());
+        }
+        verify(snapHandleIds).add(testId);
+    }
+
+    @ParameterizedTest
+    @ValueSource(ints = {0, 1})
+    public void unsnapFromHandle(int isStartInt) throws NoSuchFieldException, IllegalAccessException {
+        when(diagramModel.getSelectedElements()).thenReturn(mockSelectedElementsList);
+        Mockito.doNothing().when(mockSelectedElementsList).addListener(Mockito.any(ListChangeListener.class));
+        boolean isStart = isStartInt == 1;
+        long testId = 12L;
+
+        var xProperty = new SimpleDoubleProperty();
+        xProperty.set(100);
+        var yProperty = new SimpleDoubleProperty();
+        yProperty.set(200);
+        when(snapHandle.getCenterXBinding()).thenReturn(xProperty.negate());
+        when(snapHandle.getCenterYBinding()).thenReturn(yProperty.negate());
+        when(snapHandle.isHorizontal()).thenReturn(false);
+        when(snapHandle.getSnappedConnectorIds()).thenReturn(snapHandleIds);
+        when(snapHandleIds.add(anyLong())).thenReturn(true);
+        when(element.getElementId()).thenReturn(testId);
+        var controller = new ConnectorElementController(
+                movePreviewCreator,
+                moveCommandFactory,
+                diagramModel,
+                connectorHandleCreator,
+                connectorMovePointPreviewCreator,
+                connectorMovePointCommandFactory,
+                connectorSnapCommandFactory,
+                pathingStrategy
+        );
+        Field field = DiagramElementController.class.getDeclaredField("element");
+        field.setAccessible(true);
+        field.set(controller, element);
+        controller.setIsStartHorizontal(true);
+        controller.setIsEndHorizontal(true);
+
+        controller.snapToHandle(snapHandle, isStart);
+        controller.unsnapFromHandle(isStart);
+
+        if (isStart) {
+            controller.setStartX(2); // will throw if not unbound
+            controller.setStartY(2); // will throw if not unbound
+        } else {
+            controller.setEndX(2); // will throw if not unbound
+            controller.setEndY(2); // will throw if not unbound
+        }
+
+        verify(snapHandleIds).remove(testId);
     }
 }

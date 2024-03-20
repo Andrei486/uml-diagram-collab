@@ -2,29 +2,46 @@ package carleton.sysc4907.controller.element;
 
 import carleton.sysc4907.command.MoveCommandFactory;
 import carleton.sysc4907.command.args.MoveCommandArgs;
+import carleton.sysc4907.model.SnapHandleProvider;
 import carleton.sysc4907.view.DiagramElement;
 import carleton.sysc4907.model.DiagramModel;
+import carleton.sysc4907.view.EditingAreaLayer;
+import carleton.sysc4907.view.SnapHandle;
 import javafx.collections.ListChangeListener;
 import javafx.event.EventType;
 import javafx.fxml.FXML;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
-import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
+
+import java.util.*;
 
 import javafx.event.EventHandler;
+import javafx.scene.shape.Rectangle;
 
 /**
  * The base controller for a movable diagram element.
  */
 public abstract class DiagramElementController {
 
+    enum SnapHandlePosition {
+        WEST, NORTH, EAST, SOUTH
+    }
+
     protected final String SELECTED_STYLE_CLASS = "selected-element";
 
     @FXML
     protected DiagramElement element;
+
+    protected final ArrayList<SnapHandle> snapHandles;
+
+    @FXML
+    private SnapHandle westSnapHandle;
+    @FXML
+    private SnapHandle eastSnapHandle;
+    @FXML
+    private SnapHandle southSnapHandle;
+    @FXML
+    private SnapHandle northSnapHandle;
 
     private ImageView preview;
     private double dragStartX = 0;
@@ -39,6 +56,8 @@ public abstract class DiagramElementController {
     private final MoveCommandFactory moveCommandFactory;
 
     protected final DiagramModel diagramModel;
+
+    protected final SnapHandleProvider snapHandleProvider;
 
     protected EventHandler<MouseEvent> mouseEventHandler;
 
@@ -62,6 +81,8 @@ public abstract class DiagramElementController {
         addMouseHandler(MouseEvent.MOUSE_RELEASED, this::handleMouseReleasedDeletePreview);
         addMouseHandler(MouseEvent.MOUSE_PRESSED, this::handleSelect);
         addMouseHandler(MouseEvent.MOUSE_PRESSED, (evt) -> element.requestFocus());
+        snapHandles = new ArrayList<>();
+        snapHandleProvider = SnapHandleProvider.getSingleton();
     }
 
     /**
@@ -87,6 +108,38 @@ public abstract class DiagramElementController {
                 }
             }
         });
+        bindSnapHandle(westSnapHandle, SnapHandlePosition.WEST);
+        bindSnapHandle(northSnapHandle, SnapHandlePosition.NORTH);
+        bindSnapHandle(eastSnapHandle, SnapHandlePosition.EAST);
+        bindSnapHandle(southSnapHandle, SnapHandlePosition.SOUTH);
+        snapHandleProvider.getSnapHandleList().addAll(snapHandles);
+        element.setViewOrder(EditingAreaLayer.ELEMENT.getViewOrder());
+    }
+
+    private void bindSnapHandle(SnapHandle handle, SnapHandlePosition position) {
+        if (handle == null) {
+            return;
+        }
+        // Bind vertical position within element
+        if (position == SnapHandlePosition.NORTH) {
+            handle.layoutYProperty().set(0);
+        } else if (position == SnapHandlePosition.SOUTH) {
+            handle.layoutYProperty().bind(element.maxHeightProperty());
+        } else {
+            handle.layoutYProperty().bind(element.maxHeightProperty().divide(2));
+        }
+        // Bind horizontal position within element
+        if (position == SnapHandlePosition.WEST) {
+            handle.layoutXProperty().set(0);
+        } else if (position == SnapHandlePosition.EAST) {
+            handle.layoutXProperty().bind(element.maxWidthProperty());
+        } else {
+            handle.layoutXProperty().bind(element.maxWidthProperty().divide(2));
+        }
+        // Set horizontal/vertical snap
+        handle.setHorizontal(position != SnapHandlePosition.NORTH && position != SnapHandlePosition.SOUTH);
+        // Add bound handle to list
+        snapHandles.add(handle);
     }
 
     /**
@@ -104,9 +157,12 @@ public abstract class DiagramElementController {
      * @return the preview element as an ImageView
      */
     protected ImageView takeMovePreviewImage() {
+        boolean wereSnapHandlesVisible = snapHandles.isEmpty() || snapHandles.get(0).isHandleVisible(); // assume handles are all visible or not
         element.getStyleClass().removeAll(SELECTED_STYLE_CLASS);
+        snapHandles.forEach(snapHandle -> snapHandle.setHandleVisible(false));
         var preview = previewCreator.createMovePreview(element, dragStartX, dragStartY);
         element.getStyleClass().add(SELECTED_STYLE_CLASS);
+        snapHandles.forEach(snapHandle -> snapHandle.setHandleVisible(wereSnapHandlesVisible));
         return preview;
     }
 
