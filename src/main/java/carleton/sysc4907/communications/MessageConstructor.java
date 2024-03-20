@@ -84,6 +84,26 @@ public class MessageConstructor {
 
     /**
      * Wrap a message in a TargetedMessage and place it into the managers sending queue,
+     * that will send to a client
+     * @param message the message to be wrapped
+     * @param ids the ids of the clients
+     */
+    public void sendToInvalidAndClose(Message message, long[] ids) {
+        manager.send(new TargetedMessage(ids, true, true, message));
+    }
+
+    /**
+     * Wrap a message in a TargetedMessage and place it into the managers sending queue,
+     * that will send to a client
+     * @param message the message to be wrapped
+     * @param id the id of the client
+     */
+    public void sendToInvalidAndClose(Message message, long id) {
+        sendToInvalidAndClose(message, new long[]{id});
+    }
+
+    /**
+     * Wrap a message in a TargetedMessage and place it into the managers sending queue,
      * that will send to all user but the user provided.
      * NOTE: Will not send if no users are left after removing the user
      * @param message the message to be wrapped

@@ -34,6 +34,7 @@ public class ClientManager extends Manager{
             throws IOException {
         this.isHost = false;
         messageInterpreter.setManager(this);
+        messageInterpreter.setSessionModel(sessionModel);
         this.clientList = new ClientList(messageInterpreter);
         messageConstructor.setManager(this, clientList);
         this.sendingQueue = new LinkedBlockingQueue<TargetedMessage>();

@@ -16,6 +16,7 @@ public class ClientData {
     private ObjectOutputStream outputStream;
     private TCPReceiver receiver;
     private Boolean isValid;
+    private String username;
 
     /**
      * creates a clientData object and sets up the TCPReceiver for that client
@@ -30,6 +31,7 @@ public class ClientData {
         this.socket = socket;
         this.outputStream = new ObjectOutputStream(socket.getOutputStream());
         this.receiver = new TCPReceiver(socket, messageInterpreter, id);
+        this.username = "";
 
         new Thread(this.receiver).start();
     }
@@ -48,6 +50,14 @@ public class ClientData {
 
     public void setValid(Boolean valid) {
         isValid = valid;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
+    }
+
+    public String getUsername() {
+        return username;
     }
 
     /**
