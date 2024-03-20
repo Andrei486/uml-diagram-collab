@@ -21,7 +21,8 @@ public class CommandListCompressor {
             EditTextCommandArgs.class,
             MoveCommandArgs.class,
             RemoveCommandArgs.class,
-            ResizeCommandArgs.class
+            ResizeCommandArgs.class,
+            ChangeConnectorStyleCommandArgs.class
     };
 
     public CommandListCompressor(DiagramModel diagramModel, ElementIdManager elementIdManager) {

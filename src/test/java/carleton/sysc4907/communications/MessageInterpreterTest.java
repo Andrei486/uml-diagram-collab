@@ -32,6 +32,8 @@ public class MessageInterpreterTest {
     @Mock
     private ConnectorSnapCommandFactory connectorSnapCommandFactory;
     @Mock
+    private ChangeConnectorStyleCommandFactory changeConnectorStyleCommandFactory;
+    @Mock
     private MessageConstructor messageConstructor;
     @Mock
     private Manager manager;
@@ -54,6 +56,7 @@ public class MessageInterpreterTest {
                 editTextCommandFactory,
                 connectorMovePointCommandFactory,
                 connectorSnapCommandFactory,
+                changeConnectorStyleCommandFactory,
                 messageConstructor
         );
         interpreter.setManager(manager);
@@ -84,6 +87,7 @@ public class MessageInterpreterTest {
                 editTextCommandFactory,
                 connectorMovePointCommandFactory,
                 connectorSnapCommandFactory,
+                changeConnectorStyleCommandFactory,
                 messageConstructor
         );
         interpreter.setManager(manager);
@@ -111,6 +115,7 @@ public class MessageInterpreterTest {
                 editTextCommandFactory,
                 connectorMovePointCommandFactory,
                 connectorSnapCommandFactory,
+                changeConnectorStyleCommandFactory,
                 messageConstructor
         );
         var payload = "Not an args object";

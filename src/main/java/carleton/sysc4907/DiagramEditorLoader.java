@@ -173,6 +173,8 @@ public class DiagramEditorLoader {
                 elementIdManager, manager, executedCommandList, constructor);
         ConnectorSnapCommandFactory connectorSnapCommandFactory = new ConnectorSnapCommandFactory(
                 elementIdManager, manager, executedCommandList, constructor);
+        ChangeConnectorStyleCommandFactory changeConnectorStyleCommandFactory = new ChangeConnectorStyleCommandFactory(
+                elementIdManager, manager, executedCommandList, constructor);
         // Add factories to message interpreter: avoids circular dependencies
         interpreter.addFactories(
                 addCommandFactory,
@@ -181,7 +183,8 @@ public class DiagramEditorLoader {
                 resizeCommandFactory,
                 editTextCommandFactory,
                 connectorMovePointCommandFactory,
-                connectorSnapCommandFactory
+                connectorSnapCommandFactory,
+                changeConnectorStyleCommandFactory
         );
         addFactories(
                 addCommandFactory,
@@ -190,7 +193,8 @@ public class DiagramEditorLoader {
                 resizeCommandFactory,
                 editTextCommandFactory,
                 connectorMovePointCommandFactory,
-                connectorSnapCommandFactory
+                connectorSnapCommandFactory,
+                changeConnectorStyleCommandFactory
         );
 
         // Add instantiation methods for the element injector, used to create diagram element controllers
@@ -232,6 +236,8 @@ public class DiagramEditorLoader {
                 () -> new SessionInfoBarController(sessionModel));
         injector.addInjectionMethod(FormattingPanelController.class,
                 () -> new FormattingPanelController(textFormattingModel));
+        injector.addInjectionMethod(ConnectorFormattingPanelController.class,
+                () -> new ConnectorFormattingPanelController(diagramModel, elementIdManager, changeConnectorStyleCommandFactory));
         injector.addInjectionMethod(SessionUsersMenuController.class,
                 () -> new SessionUsersMenuController(sessionModel));
         injector.addInjectionMethod(DiagramMenuBarController.class,
@@ -254,7 +260,8 @@ public class DiagramEditorLoader {
             ResizeCommandFactory resizeCommandFactory,
             EditTextCommandFactory editTextCommandFactory,
             ConnectorMovePointCommandFactory connectorMovePointCommandFactory,
-            ConnectorSnapCommandFactory connectorSnapCommandFactory
+            ConnectorSnapCommandFactory connectorSnapCommandFactory,
+            ChangeConnectorStyleCommandFactory changeConnectorStyleCommandFactory
     ) {
         commandFactories.put(AddCommandArgs.class, addCommandFactory);
         commandFactories.put(RemoveCommandArgs.class, removeCommandFactory);
@@ -263,6 +270,7 @@ public class DiagramEditorLoader {
         commandFactories.put(EditTextCommandArgs.class, editTextCommandFactory);
         commandFactories.put(ConnectorMovePointCommandArgs.class, connectorMovePointCommandFactory);
         commandFactories.put(ConnectorSnapCommandArgs.class, connectorSnapCommandFactory);
+        commandFactories.put(ChangeConnectorStyleCommandArgs.class, changeConnectorStyleCommandFactory);
     }
 
     /**
