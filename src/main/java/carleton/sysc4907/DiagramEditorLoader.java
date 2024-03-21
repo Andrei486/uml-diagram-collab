@@ -128,13 +128,6 @@ public class DiagramEditorLoader {
         injector = new DependencyInjector();
         //Create the models and supporting classes
         FontOptionsFinder fontOptionsFinder = new FontOptionsFinder();
-        List<User> guestUsers = new LinkedList<>();
-        //create example guest users
-        for (int i = 0; i < 4; i++) {
-            guestUsers.add(userFactory.createGuestUser("Guest" + i));
-        }
-
-        guestUsers.forEach(sessionModel::addUser);
         ElementIdManager elementIdManager = new ElementIdManager(sessionModel);
         TextFormattingModel textFormattingModel = new TextFormattingModel(fontOptionsFinder);
         diagramModel = new DiagramModel();
@@ -238,7 +231,7 @@ public class DiagramEditorLoader {
                         connectorMovePointPreviewCreator,
                         connectorMovePointCommandFactory,
                         connectorSnapCommandFactory,
-                        new CurvedPathStrategy()));
+                        new DirectPathStrategy()));
         elementControllerInjector.addInjectionMethod(ArrowConnectorElementController.class,
                 () -> new ArrowConnectorElementController(
                         movePreviewCreator,
@@ -248,7 +241,7 @@ public class DiagramEditorLoader {
                         connectorMovePointPreviewCreator,
                         connectorMovePointCommandFactory,
                         connectorSnapCommandFactory,
-                        new CurvedPathStrategy(),
+                        new OrthogonalPathStrategy(),
                         arrowheadFactory));
 
         // Add instantiation methods to the main dependency injector, used to create UI elements
