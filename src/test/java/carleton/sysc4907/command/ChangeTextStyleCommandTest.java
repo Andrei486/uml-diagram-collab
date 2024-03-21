@@ -76,23 +76,10 @@ public class ChangeTextStyleCommandTest {
 
         //mandatory for all
         Mockito.when(elementIdManager.getElementById(anyLong())).thenReturn(mockLabel);
-        //Mockito.when(mockLabel.getParent().getProperties().get("controller")).thenReturn(EditableLabelController.class);
         Mockito.when(mockLabel.getParent()).thenReturn(mockNode);
         Mockito.when(mockNode.getProperties()).thenReturn(mockProperties);
         Mockito.when(mockProperties.get("controller")).thenReturn(mockEditableLabelController);
         Mockito.when(mockEditableLabelController.getEditableText()).thenReturn(mockTextArea);
-
-
-        /*
-        Mockito.when(mockLabel.getStyleClass().add(anyString())).thenReturn(true);
-        Mockito.when(mockLabel.getStyleClass().removeAll(anyString())).thenReturn(true);
-        Mockito.doNothing().when(mockLabel).setStyle(anyString());
-
-        Mockito.when(mockLabel.getFont().getFamily()).thenReturn("Segoe UI");
-
-        Mockito.doNothing().when(mockEditableLabelTracker).getIsItalicProperty().set(anyBoolean());
-
-         */
 
     }
 
