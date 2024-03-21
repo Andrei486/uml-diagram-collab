@@ -292,6 +292,7 @@ public class DiagramEditorLoader {
         //Set up and show the scene
         Scene scene = new Scene(injector.load("view/DiagramEditorScreen.fxml"), 1280, 720);
         scene.getStylesheets().add("stylesheet/DiagramEditorScreenStyle.css");
+        scene.getStylesheets().add("stylesheet/DialogBoxStyle.css");
         stage.setScene(scene);
         stage.setMaximized(true);
         stage.setTitle("Diagram Editor");
