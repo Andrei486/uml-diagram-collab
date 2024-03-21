@@ -1,5 +1,7 @@
-package carleton.sysc4907.command;
+package carleton.sysc4907.ui.command;
 
+import carleton.sysc4907.command.ChangeTextStyleCommand;
+import carleton.sysc4907.command.TextStyleProperty;
 import carleton.sysc4907.command.args.ChangeTextStyleCommandArgs;
 import carleton.sysc4907.controller.element.EditableLabelController;
 import carleton.sysc4907.model.EditableLabelTracker;
@@ -9,7 +11,6 @@ import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.StringProperty;
 import javafx.collections.ObservableList;
 import javafx.collections.ObservableMap;
-import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextArea;
@@ -18,7 +19,6 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.params.ParameterizedTest;
-import org.junit.jupiter.params.provider.ArgumentsSource;
 import org.junit.jupiter.params.provider.ValueSource;
 import org.mockito.Mock;
 import org.mockito.Mockito;
@@ -99,7 +99,7 @@ public class ChangeTextStyleCommandTest {
         Mockito.when(mockTextArea.getStyleClass()).thenReturn(mockStyleClass);
 
         Mockito.when(mockEditableLabelTracker.getIdLastEditedLabel()).thenReturn(id);
-        Mockito.when(mockEditableLabelTracker.getIsBoldProperty()).thenReturn(mockBooleanProperty);
+        Mockito.when(mockEditableLabelTracker.getIsBoldedProperty()).thenReturn(mockBooleanProperty);
         Mockito.doNothing().when(mockBooleanProperty).set(makeBold);
 
         // EXECUTE
@@ -167,7 +167,7 @@ public class ChangeTextStyleCommandTest {
         Mockito.when(mockTextArea.getStyleClass()).thenReturn(mockStyleClass);
 
         Mockito.when(mockEditableLabelTracker.getIdLastEditedLabel()).thenReturn(id);
-        Mockito.when(mockEditableLabelTracker.getIsItalicProperty()).thenReturn(mockBooleanProperty);
+        Mockito.when(mockEditableLabelTracker.getIsItalicizedProperty()).thenReturn(mockBooleanProperty);
         Mockito.doNothing().when(mockBooleanProperty).set(makeItalic);
 
         // EXECUTE

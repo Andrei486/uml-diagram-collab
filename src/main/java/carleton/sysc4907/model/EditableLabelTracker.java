@@ -47,11 +47,11 @@ public class EditableLabelTracker {
 
     public ReadOnlyObjectProperty<Long> idLastEditedLabelProperty() {return idLastEditedLabel;}
 
-    public BooleanProperty getIsBoldProperty() {return isBoldProperty;}
+    public BooleanProperty getIsBoldedProperty() {return isBoldProperty;}
 
     public BooleanProperty getIsUnderlinedProperty() {return isUnderlinedProperty;}
 
-    public BooleanProperty getIsItalicProperty() {return isItalicProperty;}
+    public BooleanProperty getIsItalicizedProperty() {return isItalicProperty;}
 
     public DoubleProperty getFontSizeProperty() {return fontSizeProperty;}
 

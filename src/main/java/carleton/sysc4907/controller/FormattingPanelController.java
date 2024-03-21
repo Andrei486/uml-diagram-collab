@@ -13,8 +13,6 @@ import javafx.collections.ListChangeListener;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 
-import java.util.Objects;
-
 /**
  * Controller for the formatting panel, the panel on the diagram editor page that provides text formatting options.
  */
@@ -77,28 +75,28 @@ public class FormattingPanelController {
 
         //Listens for changes to the currently selected label's style properties
         editableLabelTracker.idLastEditedLabelProperty().addListener((observableValue, number, t1) -> onSelectedLabelChanged(t1));
-        editableLabelTracker.getIsBoldProperty().addListener((observableValue, number, t1) -> onBoldPropertyChanged(t1));
-        editableLabelTracker.getIsItalicProperty().addListener((observableValue, number, t1) -> onItalicPropertyChanged(t1));
-        editableLabelTracker.getIsUnderlinedProperty().addListener((observableValue, number, t1) -> onUnderlinePropertyChanged(t1));
+        editableLabelTracker.getIsBoldedProperty().addListener((observableValue, number, t1) -> onBoldedPropertyChanged(t1));
+        editableLabelTracker.getIsItalicizedProperty().addListener((observableValue, number, t1) -> onItalicizedPropertyChanged(t1));
+        editableLabelTracker.getIsUnderlinedProperty().addListener((observableValue, number, t1) -> onUnderlinedPropertyChanged(t1));
         editableLabelTracker.getFontFamilyProperty().addListener((observableValue, number, t1) -> onFontFamilyPropertyChanged(t1));
         editableLabelTracker.getFontSizeProperty().addListener((observableValue, number, t1) -> onFontSizePropertyChanged((Double) t1));
     }
 
-    private void onBoldPropertyChanged(Boolean t1) {
+    private void onBoldedPropertyChanged(Boolean t1) {
         var previousFlag = stopChangeListenersFlag;
         stopChangeListenersFlag = true;
         boldButton.setSelected(t1);
         stopChangeListenersFlag = previousFlag;
     }
 
-    private void onItalicPropertyChanged(Boolean t1) {
+    private void onItalicizedPropertyChanged(Boolean t1) {
         var previousFlag = stopChangeListenersFlag;
         stopChangeListenersFlag = true;
         italicsButton.setSelected(t1);
         stopChangeListenersFlag = previousFlag;
     }
 
-    private void onUnderlinePropertyChanged(Boolean t1) {
+    private void onUnderlinedPropertyChanged(Boolean t1) {
         var previousFlag = stopChangeListenersFlag;
         stopChangeListenersFlag = true;
         underlineButton.setSelected(t1);
@@ -140,8 +138,8 @@ public class FormattingPanelController {
         boldButton.setDisable(false);
         italicsButton.setDisable(false);
         underlineButton.setDisable(false);
-        boldButton.setSelected(editableLabelTracker.getIsBoldProperty().get());
-        italicsButton.setSelected(editableLabelTracker.getIsItalicProperty().get());
+        boldButton.setSelected(editableLabelTracker.getIsBoldedProperty().get());
+        italicsButton.setSelected(editableLabelTracker.getIsItalicizedProperty().get());
         underlineButton.setSelected(editableLabelTracker.getIsUnderlinedProperty().get());
         fontName.valueProperty().setValue(editableLabelTracker.getFontFamilyProperty().get());
         fontSize.getValueFactory().setValue(editableLabelTracker.getFontSizeProperty().get());

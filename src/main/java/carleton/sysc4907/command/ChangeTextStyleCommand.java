@@ -1,21 +1,14 @@
 package carleton.sysc4907.command;
 
 import carleton.sysc4907.command.args.ChangeTextStyleCommandArgs;
-import carleton.sysc4907.command.args.EditTextCommandArgs;
 import carleton.sysc4907.controller.element.EditableLabelController;
 import carleton.sysc4907.model.EditableLabelTracker;
 import carleton.sysc4907.processing.ElementIdManager;
-import javafx.beans.property.Property;
 import javafx.scene.Node;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextArea;
-import javafx.scene.text.Font;
-import org.w3c.dom.Text;
 
-import java.util.EnumMap;
-import java.util.HashMap;
 import java.util.Objects;
-import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 /**
@@ -91,7 +84,7 @@ public class ChangeTextStyleCommand implements Command<ChangeTextStyleCommandArg
 
                 //update the editable label tracker if the command is being executed on the currently selected element
                 if (Objects.equals(editableLabelTracker.getIdLastEditedLabel(), args.elementId())) {
-                    editableLabelTracker.getIsBoldProperty().set(value);
+                    editableLabelTracker.getIsBoldedProperty().set(value);
                 }
 
                 break;
@@ -132,7 +125,7 @@ public class ChangeTextStyleCommand implements Command<ChangeTextStyleCommandArg
 
                 //update the editable label tracker if the command is being executed on the currently selected element
                 if (Objects.equals(editableLabelTracker.getIdLastEditedLabel(), args.elementId())) {
-                    editableLabelTracker.getIsItalicProperty().set(value);
+                    editableLabelTracker.getIsItalicizedProperty().set(value);
                 }
                 break;
             }

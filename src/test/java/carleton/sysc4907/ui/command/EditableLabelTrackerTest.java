@@ -1,5 +1,6 @@
-package carleton.sysc4907.model;
+package carleton.sysc4907.ui.command;
 
+import carleton.sysc4907.model.EditableLabelTracker;
 import carleton.sysc4907.processing.ElementIdManager;
 import javafx.collections.ObservableList;
 import javafx.scene.control.Label;
@@ -63,10 +64,10 @@ public class EditableLabelTrackerTest {
 
         //ASSERT
         assertEquals(expectedId, actualId);
-        assertEquals(isBolded, editableLabelTracker.getIsBoldProperty().get());
-        assertEquals(isItalicized, editableLabelTracker.getIsItalicProperty().get());
+        assertEquals(isBolded, editableLabelTracker.getIsBoldedProperty().get());
+        assertEquals(isItalicized, editableLabelTracker.getIsItalicizedProperty().get());
         assertEquals(isUnderlined, editableLabelTracker.getIsUnderlinedProperty().get());
-        assertEquals(isBolded, editableLabelTracker.getIsBoldProperty().get());
+        assertEquals(isBolded, editableLabelTracker.getIsBoldedProperty().get());
         assertEquals(fontFamily, editableLabelTracker.getFontFamilyProperty().get());
         assertEquals(fontSize, editableLabelTracker.getFontSizeProperty().get());
     }
