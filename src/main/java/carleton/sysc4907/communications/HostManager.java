@@ -34,6 +34,7 @@ public class HostManager extends Manager {
     {
         this.isHost = true;
         messageInterpreter.setManager(this);
+        messageInterpreter.setSessionModel(sessionModel);
         this.clientList = new ClientList(messageInterpreter);
         this.hostConnectionManager = new HostConnectionManager(port, this.clientList, this);
         this.sendingQueue = new LinkedBlockingQueue<TargetedMessage>();
@@ -50,7 +51,7 @@ public class HostManager extends Manager {
         sendingQueue.clear();
         long[] ids = clientList.getClients().keySet().stream().mapToLong(x -> (long) x).toArray();
         send(new TargetedMessage(ids, true, true,
-                new Message(MessageType.CLOSE, "I have been Closed")));
+                new Message(MessageType.CLOSE, null)));
         try {
             hostConnectionManager.close();
         } catch (IOException e) {

@@ -11,10 +11,14 @@ import carleton.sysc4907.controller.SessionInfoBarController;
 import carleton.sysc4907.controller.SessionUsersMenuController;
 import carleton.sysc4907.controller.*;
 import carleton.sysc4907.controller.element.*;
+import carleton.sysc4907.controller.element.arrows.ArrowheadFactory;
 import carleton.sysc4907.controller.element.pathing.CurvedPathStrategy;
 import carleton.sysc4907.controller.element.pathing.DirectPathStrategy;
 import carleton.sysc4907.controller.element.pathing.OrthogonalPathStrategy;
+import carleton.sysc4907.controller.element.pathing.PathingStrategyFactory;
 import carleton.sysc4907.model.*;
+import carleton.sysc4907.processing.*;
+import javafx.event.EventHandler;
 import carleton.sysc4907.processing.ElementCreator;
 import carleton.sysc4907.processing.ElementIdManager;
 import carleton.sysc4907.processing.FileSaver;
@@ -141,6 +145,8 @@ public class DiagramEditorLoader {
         ResizeHandleCreator resizeHandleCreator = new ResizeHandleCreator();
         ResizePreviewCreator resizePreviewCreator = new ResizePreviewCreator(elementIdManager);
         ConnectorHandleCreator connectorHandleCreator = new ConnectorHandleCreator();
+        ArrowheadFactory arrowheadFactory = new ArrowheadFactory();
+        PathingStrategyFactory pathingStrategyFactory = new PathingStrategyFactory();
         DependencyInjector elementControllerInjector = new DependencyInjector();
         FileSaver fileSaver = new FileSaver(diagramModel, executedCommandList, commandListCompressor);
         ElementCreator elementCreator;
@@ -167,6 +173,10 @@ public class DiagramEditorLoader {
                 elementIdManager, manager, executedCommandList, constructor);
         ConnectorMovePointCommandFactory connectorMovePointCommandFactory = new ConnectorMovePointCommandFactory(
                 elementIdManager, manager, executedCommandList, constructor);
+        ConnectorSnapCommandFactory connectorSnapCommandFactory = new ConnectorSnapCommandFactory(
+                elementIdManager, manager, executedCommandList, constructor);
+        ChangeConnectorStyleCommandFactory changeConnectorStyleCommandFactory = new ChangeConnectorStyleCommandFactory(
+                elementIdManager, manager, executedCommandList, constructor);
         ChangeTextStyleCommandFactory changeTextStyleCommandFactory = new ChangeTextStyleCommandFactory(
                 elementIdManager, manager, executedCommandList, constructor, editableLabelTracker);
         // Add factories to message interpreter: avoids circular dependencies
@@ -177,6 +187,19 @@ public class DiagramEditorLoader {
                 resizeCommandFactory,
                 editTextCommandFactory,
                 connectorMovePointCommandFactory,
+                connectorSnapCommandFactory,
+                changeConnectorStyleCommandFactory,
+                changeTextStyleCommandFactory
+        );
+        ExecutedCommandRunner executedCommandRunner = new ExecutedCommandRunner(
+                addCommandFactory,
+                removeCommandFactory,
+                moveCommandFactory,
+                resizeCommandFactory,
+                editTextCommandFactory,
+                connectorMovePointCommandFactory,
+                connectorSnapCommandFactory,
+                changeConnectorStyleCommandFactory,
                 changeTextStyleCommandFactory
         );
         addFactories(
@@ -186,8 +209,13 @@ public class DiagramEditorLoader {
                 resizeCommandFactory,
                 editTextCommandFactory,
                 connectorMovePointCommandFactory,
+                connectorSnapCommandFactory,
+                changeConnectorStyleCommandFactory,
                 changeTextStyleCommandFactory
         );
+        //give the interpreter the executedCommandList
+        interpreter.setExecutedCommandList(executedCommandList);
+        interpreter.setExecutedCommandRunner(executedCommandRunner);
 
         // Add instantiation methods for the element injector, used to create diagram element controllers
         elementControllerInjector.addInjectionMethod(RectangleController.class,
@@ -209,13 +237,27 @@ public class DiagramEditorLoader {
                         connectorHandleCreator,
                         connectorMovePointPreviewCreator,
                         connectorMovePointCommandFactory,
+                        connectorSnapCommandFactory,
                         new CurvedPathStrategy()));
+        elementControllerInjector.addInjectionMethod(ArrowConnectorElementController.class,
+                () -> new ArrowConnectorElementController(
+                        movePreviewCreator,
+                        moveCommandFactory,
+                        diagramModel,
+                        connectorHandleCreator,
+                        connectorMovePointPreviewCreator,
+                        connectorMovePointCommandFactory,
+                        connectorSnapCommandFactory,
+                        new CurvedPathStrategy(),
+                        arrowheadFactory));
 
         // Add instantiation methods to the main dependency injector, used to create UI elements
         injector.addInjectionMethod(SessionInfoBarController.class,
                 () -> new SessionInfoBarController(sessionModel));
         injector.addInjectionMethod(FormattingPanelController.class,
                 () -> new FormattingPanelController(textFormattingModel, changeTextStyleCommandFactory, diagramModel, editableLabelTracker, elementIdManager));
+        injector.addInjectionMethod(ConnectorFormattingPanelController.class,
+                () -> new ConnectorFormattingPanelController(diagramModel, elementIdManager, changeConnectorStyleCommandFactory));
         injector.addInjectionMethod(SessionUsersMenuController.class,
                 () -> new SessionUsersMenuController(sessionModel));
         injector.addInjectionMethod(DiagramMenuBarController.class,
@@ -226,9 +268,7 @@ public class DiagramEditorLoader {
                 () -> new ElementLibraryPanelController(diagramModel, addCommandFactory, elementCreator, elementIdManager));
 
         // Run the previous commands
-        runPreviousCommands(commandArgsList);
-
-
+        executedCommandRunner.runPreviousCommands(commandArgsList);
     }
 
     public void addFactories(
@@ -238,6 +278,8 @@ public class DiagramEditorLoader {
             ResizeCommandFactory resizeCommandFactory,
             EditTextCommandFactory editTextCommandFactory,
             ConnectorMovePointCommandFactory connectorMovePointCommandFactory,
+            ConnectorSnapCommandFactory connectorSnapCommandFactory,
+            ChangeConnectorStyleCommandFactory changeConnectorStyleCommandFactory,
             ChangeTextStyleCommandFactory changeTextStyleCommandFactory) {
         commandFactories.put(AddCommandArgs.class, addCommandFactory);
         commandFactories.put(RemoveCommandArgs.class, removeCommandFactory);
@@ -245,24 +287,9 @@ public class DiagramEditorLoader {
         commandFactories.put(ResizeCommandArgs.class, resizeCommandFactory);
         commandFactories.put(EditTextCommandArgs.class, editTextCommandFactory);
         commandFactories.put(ConnectorMovePointCommandArgs.class, connectorMovePointCommandFactory);
+        commandFactories.put(ConnectorSnapCommandArgs.class, connectorSnapCommandFactory);
+        commandFactories.put(ChangeConnectorStyleCommandArgs.class, changeConnectorStyleCommandFactory);
         commandFactories.put(ChangeTextStyleCommandArgs.class, changeTextStyleCommandFactory);
-    }
-
-    /**
-     * Runs a list of commands to bring back the diagram to the state it was previously in.
-     * @param commandArgsList the list of args objects for the previous commands run
-     */
-    public void runPreviousCommands(Object[] commandArgsList) {
-        for (Object args : commandArgsList) {
-            Class<?> argType = args.getClass();
-            var factory = commandFactories.get(argType);
-            if (factory == null) {
-                throw new IllegalArgumentException("The given message did not correspond to a known type of command arguments.");
-            }
-            // Use remote commands to add them to the command list without transmitting them elsewhere
-            Command<?> command = factory.createRemote((CommandArgs) argType.cast(args));
-            Platform.runLater(command::execute);
-        }
     }
 
     /**

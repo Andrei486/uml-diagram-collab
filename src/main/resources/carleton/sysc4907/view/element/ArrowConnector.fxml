@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import java.util.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<?import carleton.sysc4907.view.DiagramElement?>
+<?import javafx.scene.shape.Path?>
+<DiagramElement xmlns="http://javafx.com/javafx" fx:id="element"
+                xmlns:fx="http://javafx.com/fxml"
+                fx:controller="carleton.sysc4907.controller.element.ArrowConnectorElementController">
+    <properties>
+        <!-- Set controller as property so commands can find it-->
+        <controller><fx:reference source="controller"/></controller>
+    </properties>
+    <Path fx:id="connectorPath">
+    </Path>
+    <Path fx:id="arrowheadPath">
+    </Path>
+    <Path fx:id="pathHitbox" styleClass="connector-path-hitbox">
+    </Path>
+</DiagramElement>

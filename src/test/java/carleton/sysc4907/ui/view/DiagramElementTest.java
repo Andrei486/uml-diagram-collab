@@ -36,7 +36,7 @@ import java.util.concurrent.TimeUnit;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.doNothing;
+import static org.mockito.Mockito.*;
 
 /**
  * Base class for UI tests on diagram elements within an editing area.
@@ -89,6 +89,8 @@ public abstract class DiagramElementTest {
         element.setUserData(12L);
         editingArea.getChildren().add(element);
         diagramModel.getElements().add(element);
+        // Make sure commands are run as host, running them as client does nothing
+        lenient().when(mockManager.isHost()).thenReturn(true);
         // Show the scene
         Scene scene = new Scene(root);
         stage.setScene(scene);

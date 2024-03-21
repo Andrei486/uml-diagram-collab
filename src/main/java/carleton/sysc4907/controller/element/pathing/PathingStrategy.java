@@ -22,4 +22,11 @@ public interface PathingStrategy {
         double startX, double startY, boolean isStartHorizontal,
         double endX, double endY, boolean isEndHorizontal
     );
+
+    /**
+     * Returns true if the path is a direct path (straight line from point A to B), false if the path is orthogonal
+     * (follows horizontal/vertical directions instead of straight line).
+     * @return true if path is direct, false if path is orthogonal
+     */
+    boolean isDirectPath();
 }

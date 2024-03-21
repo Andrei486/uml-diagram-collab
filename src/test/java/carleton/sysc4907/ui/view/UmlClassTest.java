@@ -6,12 +6,14 @@ import carleton.sysc4907.controller.element.UmlClassController;
 import carleton.sysc4907.model.EditableLabelTracker;
 import carleton.sysc4907.view.DiagramElement;
 import javafx.scene.Node;
+import javafx.scene.Parent;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextArea;
 import javafx.scene.input.KeyCode;
 import javafx.stage.Stage;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
+import org.mockito.Mockito;
 import org.testfx.api.FxRobot;
 import org.testfx.framework.junit5.Start;
 
@@ -27,6 +29,12 @@ public class UmlClassTest extends ResizableElementTest {
 
     @Mock
     private EditableLabelTracker editableLabelTracker;
+
+    private final long testTitleLabelId = 14L;
+
+    private final long testFieldsLabelId = 15L;
+
+    private final long testMethodsLabelId = 16L;
 
     @Start
     @Override
@@ -72,7 +80,10 @@ public class UmlClassTest extends ResizableElementTest {
     @Test
     protected void testTitleDoubleClickEditable(FxRobot robot) {
         // Find parts of the editable label
-        var label = robot.lookup("#titleLabel").queryAs(Node.class);
+        var label = robot.lookup("#titleLabel").queryAs(Parent.class);
+        var titleLabel = label.getChildrenUnmodifiable().stream().filter(node -> node instanceof Label).findFirst().get();
+        titleLabel.setUserData(testTitleLabelId);
+        Mockito.when(elementIdManager.getElementById(testTitleLabelId)).thenReturn(titleLabel);
         // Check that the editable label shows as a label
         assertTrue(label.isVisible());
         // Double click element
@@ -84,7 +95,10 @@ public class UmlClassTest extends ResizableElementTest {
     @Test
     protected void testFieldsDoubleClickEditable(FxRobot robot) {
         // Find parts of the editable label
-        var label = robot.lookup("#fieldsLabel").queryAs(Node.class);
+        var label = robot.lookup("#fieldsLabel").queryAs(Parent.class);
+        var fieldsLabel = label.getChildrenUnmodifiable().stream().filter(node -> node instanceof Label).findFirst().get();
+        fieldsLabel.setUserData(testFieldsLabelId);
+        Mockito.when(elementIdManager.getElementById(testFieldsLabelId)).thenReturn(fieldsLabel);
         // Check that the editable label shows as a label
         assertTrue(label.isVisible());
         // Double click element
@@ -96,7 +110,10 @@ public class UmlClassTest extends ResizableElementTest {
     @Test
     protected void testMethodsDoubleClickEditable(FxRobot robot) {
         // Find parts of the editable label
-        var label = robot.lookup("#methodsLabel").queryAs(Node.class);
+        var label = robot.lookup("#methodsLabel").queryAs(Parent.class);
+        var methodsLabel = label.getChildrenUnmodifiable().stream().filter(node -> node instanceof Label).findFirst().get();
+        methodsLabel.setUserData(testMethodsLabelId);
+        Mockito.when(elementIdManager.getElementById(testMethodsLabelId)).thenReturn(methodsLabel);
         // Check that the editable label shows as a label
         assertTrue(label.isVisible());
         // Double click element
@@ -107,7 +124,10 @@ public class UmlClassTest extends ResizableElementTest {
 
     @Test
     protected void testEditTextTitle(FxRobot robot) {
-        var label = robot.lookup("#titleLabel").queryAs(Node.class);
+        var label = robot.lookup("#titleLabel").queryAs(Parent.class);
+        var titleLabel = label.getChildrenUnmodifiable().stream().filter(node -> node instanceof Label).findFirst().get();
+        titleLabel.setUserData(testTitleLabelId);
+        Mockito.when(elementIdManager.getElementById(testTitleLabelId)).thenReturn(titleLabel);
         robot.doubleClickOn(label);
         robot.type(KeyCode.T, KeyCode.E, KeyCode.S, KeyCode.T);
 
@@ -129,7 +149,10 @@ public class UmlClassTest extends ResizableElementTest {
 
     @Test
     protected void testEditTextFields(FxRobot robot) {
-        var label = robot.lookup("#fieldsLabel").queryAs(Node.class);
+        var label = robot.lookup("#fieldsLabel").queryAs(Parent.class);
+        var fieldsLabel = label.getChildrenUnmodifiable().stream().filter(node -> node instanceof Label).findFirst().get();
+        fieldsLabel.setUserData(testFieldsLabelId);
+        Mockito.when(elementIdManager.getElementById(testFieldsLabelId)).thenReturn(fieldsLabel);
         robot.doubleClickOn(label);
         robot.type(KeyCode.T, KeyCode.E, KeyCode.S, KeyCode.T);
 
@@ -151,7 +174,10 @@ public class UmlClassTest extends ResizableElementTest {
 
     @Test
     protected void testEditTextMethods(FxRobot robot) {
-        var label = robot.lookup("#methodsLabel").queryAs(Node.class);
+        var label = robot.lookup("#methodsLabel").queryAs(Parent.class);
+        var methodsLabel = label.getChildrenUnmodifiable().stream().filter(node -> node instanceof Label).findFirst().get();
+        methodsLabel.setUserData(testMethodsLabelId);
+        Mockito.when(elementIdManager.getElementById(testMethodsLabelId)).thenReturn(methodsLabel);
         robot.doubleClickOn(label);
         robot.type(KeyCode.T, KeyCode.E, KeyCode.S, KeyCode.T);
 

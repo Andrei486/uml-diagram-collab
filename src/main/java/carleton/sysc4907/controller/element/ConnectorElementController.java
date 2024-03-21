@@ -1,27 +1,29 @@
 package carleton.sysc4907.controller.element;
 
 import carleton.sysc4907.command.ConnectorMovePointCommandFactory;
+import carleton.sysc4907.command.ConnectorSnapCommandFactory;
 import carleton.sysc4907.command.MoveCommandFactory;
 import carleton.sysc4907.command.args.ConnectorMovePointCommandArgs;
-import carleton.sysc4907.command.args.MoveCommandArgs;
+import carleton.sysc4907.command.args.ConnectorSnapCommandArgs;
 import carleton.sysc4907.controller.element.pathing.PathingStrategy;
 import carleton.sysc4907.model.DiagramModel;
 import carleton.sysc4907.view.DiagramElement;
+import carleton.sysc4907.view.EditingAreaLayer;
+import carleton.sysc4907.view.SnapHandle;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleDoubleProperty;
+import javafx.beans.property.*;
 import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
 import javafx.collections.ListChangeListener;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
-import javafx.scene.shape.LineTo;
-import javafx.scene.shape.MoveTo;
 import javafx.scene.shape.Path;
 
+import java.util.Collection;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -31,28 +33,30 @@ public class ConnectorElementController extends DiagramElementController {
     private final ConnectorHandleCreator connectorHandleCreator;
     private final ConnectorMovePointPreviewCreator connectorMovePointPreviewCreator;
     private final ConnectorMovePointCommandFactory connectorMovePointCommandFactory;
+    private final ConnectorSnapCommandFactory connectorSnapCommandFactory;
     private final List<Node> handles;
 
     // All coordinates relative to the parent element (editing area)!
-    private final DoubleProperty startX = new SimpleDoubleProperty();
-    private final DoubleProperty startY = new SimpleDoubleProperty();
-    private final DoubleProperty endX = new SimpleDoubleProperty();
-    private final DoubleProperty endY = new SimpleDoubleProperty();
+    protected final DoubleProperty startX = new SimpleDoubleProperty();
+    protected final DoubleProperty startY = new SimpleDoubleProperty();
+    protected final DoubleProperty endX = new SimpleDoubleProperty();
+    protected final DoubleProperty endY = new SimpleDoubleProperty();
 
-    private final BooleanProperty isStartHorizontal = new SimpleBooleanProperty();
+    protected final BooleanProperty isStartHorizontal = new SimpleBooleanProperty();
 
     private boolean isStartSnapping = false;
-    private final BooleanProperty isEndHorizontal = new SimpleBooleanProperty();
+
+    private SnapHandle startSnapHandle;
+    protected final BooleanProperty isEndHorizontal = new SimpleBooleanProperty();
 
     private boolean isEndSnapping = false;
+    private SnapHandle endSnapHandle;
 
     @FXML
-    private Path connectorPath;
-
+    protected Path connectorPath;
+    protected ObjectProperty<PathingStrategy> pathingStrategy = new SimpleObjectProperty<>();
     @FXML
     private Path pathHitbox;
-
-    private PathingStrategy pathingStrategy;
 
     private boolean movePointDragging = false;
     private double dragStartX;
@@ -76,15 +80,17 @@ public class ConnectorElementController extends DiagramElementController {
             ConnectorHandleCreator connectorHandleCreator,
             ConnectorMovePointPreviewCreator connectorMovePointPreviewCreator,
             ConnectorMovePointCommandFactory connectorMovePointCommandFactory,
+            ConnectorSnapCommandFactory connectorSnapCommandFactory,
             PathingStrategy pathingStrategy) {
         super(previewCreator, moveCommandFactory, diagramModel);
         this.connectorHandleCreator = connectorHandleCreator;
         this.connectorMovePointPreviewCreator = connectorMovePointPreviewCreator;
         this.connectorMovePointCommandFactory = connectorMovePointCommandFactory;
-        this.pathingStrategy = pathingStrategy;
+        this.connectorSnapCommandFactory = connectorSnapCommandFactory;
+        this.pathingStrategy.set(pathingStrategy);
         this.handles = new LinkedList<>();
         isStartHorizontal.set(true);
-        isEndHorizontal.set(false);
+        isEndHorizontal.set(true);
         diagramModel.getSelectedElements().addListener((ListChangeListener<DiagramElement>) change -> {
             while (change.next()) {
                 if (change.wasAdded() && change.getAddedSubList().contains(element)) {
@@ -120,6 +126,8 @@ public class ConnectorElementController extends DiagramElementController {
                 return;
             }
             double deltaX = t1.doubleValue() - number.doubleValue();
+            unsnapFromHandle(true);
+            unsnapFromHandle(false);
             setStartX(deltaX + getStartX());
             setEndX(deltaX + getEndX());
         });
@@ -128,11 +136,14 @@ public class ConnectorElementController extends DiagramElementController {
                 return;
             }
             double deltaY = t1.doubleValue() - number.doubleValue();
+            unsnapFromHandle(true);
+            unsnapFromHandle(false);
             setStartY(deltaY + getStartY());
             setEndY(deltaY + getEndY());
         });
         setEndX(100);
         setEndY(20);
+        element.setViewOrder(EditingAreaLayer.CONNECTOR.getViewOrder());
     }
 
     @Override
@@ -183,13 +194,13 @@ public class ConnectorElementController extends DiagramElementController {
     /**
      * Uses this connector's pathing strategy to re-make the connector's path. Overwrites the previous path.
      */
-    private void recalculatePath() {
-        pathingStrategy.makePath(
+    protected void recalculatePath() {
+        pathingStrategy.get().makePath(
                 connectorPath,
                 adjustX(getStartX()), adjustY(getStartY()), isStartHorizontal.get(),
                 adjustX(getEndX()), adjustY(getEndY()), isEndHorizontal.get()
         );
-        pathingStrategy.makePath(
+        pathingStrategy.get().makePath(
                 pathHitbox,
                 adjustX(getStartX()), adjustY(getStartY()), isStartHorizontal.get(),
                 adjustX(getEndX()), adjustY(getEndY()), isEndHorizontal.get()
@@ -257,6 +268,7 @@ public class ConnectorElementController extends DiagramElementController {
         previewController = connectorMovePointPreviewCreator.createMovePointPreview(this);
         dragStartX = event.getSceneX();
         dragStartY = event.getSceneY();
+        snapHandleProvider.setAllHandlesVisible(true);
         event.consume();
     }
 
@@ -299,6 +311,8 @@ public class ConnectorElementController extends DiagramElementController {
         movePointDragging = false;
         connectorMovePointPreviewCreator.deleteMovePreview(element, previewController);
         previewController = null;
+
+        System.out.println("Moving connector");
         double startX;
         double startY;
         if (isStart) {
@@ -317,7 +331,56 @@ public class ConnectorElementController extends DiagramElementController {
                 element.getElementId());
         var command = connectorMovePointCommandFactory.createTracked(args);
         command.execute();
+
+        // Check if snapping can be done
+        var handleUnderCursor = snapHandleProvider.getSnapHandleAtPosition(event.getSceneX(), event.getSceneY(), snapHandles);
+        if (handleUnderCursor != null) {
+            System.out.println("Snapping to handle");
+            var snapArgs = new ConnectorSnapCommandArgs(
+                    element.getElementId(),
+                    isStart,
+                    false,
+                    handleUnderCursor.getElementId());
+            var snapCommand = connectorSnapCommandFactory.createTracked(snapArgs);
+            snapCommand.execute();
+        }
+        snapHandleProvider.setAllHandlesVisible(false);
         event.consume();
+    }
+
+    public void snapToHandle(SnapHandle snapHandle, boolean isStart) {
+        if (isStart) {
+            isStartSnapping = true;
+            startX.bind(snapHandle.getCenterXBinding());
+            startY.bind(snapHandle.getCenterYBinding());
+            isStartHorizontal.set(snapHandle.isHorizontal());
+            startSnapHandle = snapHandle;
+        } else {
+            isEndSnapping = true;
+            endX.bind(snapHandle.getCenterXBinding());
+            endY.bind(snapHandle.getCenterYBinding());
+            isEndHorizontal.set(snapHandle.isHorizontal());
+            endSnapHandle = snapHandle;
+        }
+        snapHandle.getSnappedConnectorIds().add(element.getElementId());
+    }
+
+    public void unsnapFromHandle(boolean isStart) {
+        var snapHandle = isStart ? startSnapHandle : endSnapHandle;
+        var isSnapped = isStart ? isStartSnapping : isEndSnapping;
+        if (snapHandle == null || !isSnapped) {
+            return;
+        }
+        if (isStart) {
+            isStartSnapping = false;
+            startX.unbind();
+            startY.unbind();
+        } else {
+            isEndSnapping = false;
+            endX.unbind();
+            endY.unbind();
+        }
+        snapHandle.getSnappedConnectorIds().remove(element.getElementId());
     }
 
     /**
@@ -325,12 +388,12 @@ public class ConnectorElementController extends DiagramElementController {
      * @param strategy the new PathingStrategy to use when calculating paths
      */
     public void setPathingStrategy(PathingStrategy strategy) {
-        this.pathingStrategy = strategy;
+        this.pathingStrategy.set(strategy);
         recalculatePath();
     }
 
     public PathingStrategy getPathingStrategy() {
-        return this.pathingStrategy;
+        return this.pathingStrategy.get();
     }
 
     public double getStartX() {
@@ -397,11 +460,22 @@ public class ConnectorElementController extends DiagramElementController {
         return this.isEndSnapping;
     }
 
-    private double adjustX(double x) {
+    /**
+     * Returns the last handles that this connector was snapped to for each endpoint, between 0-2 handles.
+     * @return the last handles that this connector was snapped to, as a collection
+     */
+    public Collection<SnapHandle> getLastSnappedHandles() {
+        LinkedList<SnapHandle> handles = new LinkedList<>();
+        if (startSnapHandle != null) handles.add(startSnapHandle);
+        if (endSnapHandle != null) handles.add(endSnapHandle);
+        return handles;
+    }
+
+    protected double adjustX(double x) {
         return x - element.getLayoutX();
     }
 
-    private double adjustY(double y) {
+    protected double adjustY(double y) {
         return y - element.getLayoutY();
     }
 }

@@ -38,6 +38,7 @@ public class TCPSender implements Runnable{
             outputStream.writeObject(message);
             System.out.println("Message sent at time " + LocalTime.now());
         } catch (IOException e) {
+            System.out.println("Message Failed to Send to: " + id);
             clients.removeClient(id);
         }
     }
@@ -91,6 +92,7 @@ public class TCPSender implements Runnable{
     public void run() {
         boolean flag = true;
         while (flag) {
+
             TargetedMessage targetedMessage;
             if(Thread.currentThread().isInterrupted()) {
                 return;

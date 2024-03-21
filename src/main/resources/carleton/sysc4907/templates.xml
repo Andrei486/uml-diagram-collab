@@ -6,4 +6,5 @@
     <template type="UML Comment" fxml="/carleton/sysc4907/view/element/UmlComment.fxml"/>
     <template type="UML Class" fxml="/carleton/sysc4907/view/element/UmlClass.fxml"/>
     <template type="Line" fxml="/carleton/sysc4907/view/element/Connector.fxml"/>
+    <template type="Arrow Connector" fxml="/carleton/sysc4907/view/element/ArrowConnector.fxml"/>
 </templates>

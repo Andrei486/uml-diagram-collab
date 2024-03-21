@@ -25,7 +25,11 @@ public abstract class Manager {
      * @param targetedMessage the message to be sent
      */
     public void send(TargetedMessage targetedMessage) {
-        sendingQueue.add(targetedMessage);
+        if (clientList.getClients().size() > 0) {
+            sendingQueue.add(targetedMessage);
+        } else {
+            System.out.println("No Clients to Send too");
+        }
     }
 
     /**
@@ -35,7 +39,11 @@ public abstract class Manager {
     public void validateClient(long id) {
         clientList.getClient(id).setValid(true);
     }
-    
+
+    public ClientList getClientList() {
+        return clientList;
+    }
+
     public boolean isHost() {
         return isHost;
     }

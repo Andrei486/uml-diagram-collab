@@ -67,6 +67,11 @@
     -fx-stroke: #000000;
 }
 
+.snap-handle {
+    -fx-fill: #EDEDED;
+    -fx-stroke: #000000;
+}
+
 .resize-preview {
     -fx-fill: #00000000;
     -fx-stroke: red;

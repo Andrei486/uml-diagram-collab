@@ -37,6 +37,7 @@ public class ClientList {
      * @throws IOException the connection failed
      */
     public void addClient(Socket socket) throws IOException {
+        System.out.println("Adding Client: " + socket.getPort());
         clients.put((long) socket.getPort(), new ClientData(socket.getPort(), socket, this.messageInterpreter));
     }
 
