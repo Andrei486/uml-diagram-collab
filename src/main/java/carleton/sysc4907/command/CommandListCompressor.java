@@ -56,7 +56,10 @@ public class CommandListCompressor {
             System.out.print(i);
         }
         System.out.println();
-        return indices.stream().map(cmdList::get).collect(Collectors.toList());
+
+        var indexList = new LinkedList<>(indices);
+        Collections.sort(indexList);
+        return indexList.stream().map(cmdList::get).collect(Collectors.toList());
     }
 
     private List<Command<?>> filterById(List<Command<?>> commandList, Long id) {
