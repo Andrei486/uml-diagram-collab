@@ -1,4 +1,4 @@
-package carleton.sysc4907.ui;
+package carleton.sysc4907.ui.communications;
 
 import carleton.sysc4907.EditingAreaProvider;
 import carleton.sysc4907.command.*;
@@ -58,6 +58,8 @@ public class MessageInterpreterTest {
     @Mock
     private ChangeConnectorStyleCommandFactory changeConnectorStyleCommandFactory;
     @Mock
+    private ChangeTextStyleCommandFactory changeTextStyleCommandFactory;
+    @Mock
     private MessageConstructor messageConstructor;
     @Mock
     private Manager manager;
@@ -82,14 +84,8 @@ public class MessageInterpreterTest {
     @Mock
     private DialogPane dialogPane;
 
-    @Test
-    public void interpretUpdateMoveCommandHost() {
-        // setup
-        var args = new MoveCommandArgs(0, 0, 1, 1, 0L);
-        Mockito.when(moveCommandFactory.createRemote(any(MoveCommandArgs.class))).thenReturn(mockCommand);
-        Mockito.doNothing().when(messageConstructor).send(any(Message.class));
-        Mockito.when(manager.isHost()).thenReturn(true);
-        MessageInterpreter interpreter = new MessageInterpreter(
+    private MessageInterpreter constructMessageInterpreter() {
+        return new MessageInterpreter(
                 addCommandFactory,
                 removeCommandFactory,
                 moveCommandFactory,
@@ -98,8 +94,19 @@ public class MessageInterpreterTest {
                 connectorMovePointCommandFactory,
                 connectorSnapCommandFactory,
                 changeConnectorStyleCommandFactory,
-                messageConstructor
+                messageConstructor,
+                changeTextStyleCommandFactory
         );
+    }
+
+    @Test
+    public void interpretUpdateMoveCommandHost() {
+        // setup
+        var args = new MoveCommandArgs(0, 0, 1, 1, 0L);
+        Mockito.when(moveCommandFactory.createRemote(any(MoveCommandArgs.class))).thenReturn(mockCommand);
+        Mockito.doNothing().when(messageConstructor).send(any(Message.class));
+        Mockito.when(manager.isHost()).thenReturn(true);
+        MessageInterpreter interpreter = constructMessageInterpreter();
         interpreter.setManager(manager);
 
         try (MockedStatic<Platform> platformMockedStatic = Mockito.mockStatic(Platform.class)) {
@@ -120,17 +127,7 @@ public class MessageInterpreterTest {
         var args = new MoveCommandArgs(0, 0, 1, 1, 0L);
         Mockito.when(moveCommandFactory.createRemote(any(MoveCommandArgs.class))).thenReturn(mockCommand);
         Mockito.when(manager.isHost()).thenReturn(false);
-        MessageInterpreter interpreter = new MessageInterpreter(
-                addCommandFactory,
-                removeCommandFactory,
-                moveCommandFactory,
-                resizeCommandFactory,
-                editTextCommandFactory,
-                connectorMovePointCommandFactory,
-                connectorSnapCommandFactory,
-                changeConnectorStyleCommandFactory,
-                messageConstructor
-        );
+        MessageInterpreter interpreter = constructMessageInterpreter();
         interpreter.setManager(manager);
 
         try (MockedStatic<Platform> platformMockedStatic = Mockito.mockStatic(Platform.class)) {
@@ -148,17 +145,7 @@ public class MessageInterpreterTest {
     @Test
     public void interpretUpdateIncorrectPayload() {
         // setup
-        MessageInterpreter interpreter = new MessageInterpreter(
-                addCommandFactory,
-                removeCommandFactory,
-                moveCommandFactory,
-                resizeCommandFactory,
-                editTextCommandFactory,
-                connectorMovePointCommandFactory,
-                connectorSnapCommandFactory,
-                changeConnectorStyleCommandFactory,
-                messageConstructor
-        );
+        MessageInterpreter interpreter = constructMessageInterpreter();
         var payload = "Not an args object";
         try (MockedStatic<Platform> platformMockedStatic = Mockito.mockStatic(Platform.class)) {
             // runLater will do nothing by default
@@ -195,17 +182,7 @@ public class MessageInterpreterTest {
         when(sessionModel.getLocalUser()).thenReturn(user);
         when(user.getUsername()).thenReturn(hostName);
 
-        MessageInterpreter interpreter = new MessageInterpreter(
-                addCommandFactory,
-                removeCommandFactory,
-                moveCommandFactory,
-                resizeCommandFactory,
-                editTextCommandFactory,
-                connectorMovePointCommandFactory,
-                connectorSnapCommandFactory,
-                changeConnectorStyleCommandFactory,
-                messageConstructor
-        );
+        MessageInterpreter interpreter = constructMessageInterpreter();
 
         interpreter.setManager(manager);
         interpreter.setSessionModel(sessionModel);
@@ -249,17 +226,7 @@ public class MessageInterpreterTest {
 
         when(manager.isHost()).thenReturn(true);
 
-        MessageInterpreter interpreter = new MessageInterpreter(
-                addCommandFactory,
-                removeCommandFactory,
-                moveCommandFactory,
-                resizeCommandFactory,
-                editTextCommandFactory,
-                connectorMovePointCommandFactory,
-                connectorSnapCommandFactory,
-                changeConnectorStyleCommandFactory,
-                messageConstructor
-        );
+        MessageInterpreter interpreter = constructMessageInterpreter();
 
         interpreter.setManager(manager);
 
@@ -299,17 +266,7 @@ public class MessageInterpreterTest {
         when(manager.getClientList()).thenReturn(clientList);
         when(clientList.getClient(eq(userId))).thenReturn(clientData);
 
-        MessageInterpreter interpreter = new MessageInterpreter(
-                addCommandFactory,
-                removeCommandFactory,
-                moveCommandFactory,
-                resizeCommandFactory,
-                editTextCommandFactory,
-                connectorMovePointCommandFactory,
-                connectorSnapCommandFactory,
-                changeConnectorStyleCommandFactory,
-                messageConstructor
-        );
+        MessageInterpreter interpreter = constructMessageInterpreter();
 
         interpreter.setManager(manager);
         interpreter.setExecutedCommandRunner(executedCommandRunner);
@@ -334,17 +291,7 @@ public class MessageInterpreterTest {
         when(manager.getClientList()).thenReturn(clientList);
 
 
-        MessageInterpreter interpreter = new MessageInterpreter(
-                addCommandFactory,
-                removeCommandFactory,
-                moveCommandFactory,
-                resizeCommandFactory,
-                editTextCommandFactory,
-                connectorMovePointCommandFactory,
-                connectorSnapCommandFactory,
-                changeConnectorStyleCommandFactory,
-                messageConstructor
-        );
+        MessageInterpreter interpreter = constructMessageInterpreter();
 
         interpreter.setManager(manager);
 
@@ -385,17 +332,7 @@ public class MessageInterpreterTest {
         when(clientList.getClient(userId)).thenReturn(clientData);
         when(clientData.getUsername()).thenReturn(closedUser);
 
-        MessageInterpreter interpreter = new MessageInterpreter(
-                addCommandFactory,
-                removeCommandFactory,
-                moveCommandFactory,
-                resizeCommandFactory,
-                editTextCommandFactory,
-                connectorMovePointCommandFactory,
-                connectorSnapCommandFactory,
-                changeConnectorStyleCommandFactory,
-                messageConstructor
-        );
+        MessageInterpreter interpreter = constructMessageInterpreter();
 
         interpreter.setManager(manager);
 

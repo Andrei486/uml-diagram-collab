@@ -15,32 +15,32 @@
     <text>Formatting Options</text>
     <VBox>
         <HBox>
-            <ComboBox fx:id="fontName">
+            <ComboBox fx:id="fontName" disable="true">
                 <!--- Set possible font names dynamically -->
             </ComboBox>
-            <Spinner fx:id="fontSize" prefWidth="60">
+            <Spinner fx:id="fontSize" prefWidth="60" editable="true" disable="true">
                 <valueFactory>
-                    <SpinnerValueFactory.IntegerSpinnerValueFactory min="6" max="60"/>
+                    <SpinnerValueFactory.DoubleSpinnerValueFactory min="6" max="60"/>
                 </valueFactory>
             </Spinner>
         </HBox>
         <HBox>
             <!--- Icons from https://uxwing.com/tag/editor-icons/, apparently does not require attribution -->
-            <ToggleButton fx:id="boldButton">
+            <ToggleButton fx:id="boldButton" disable="true">
                 <graphic>
                     <ImageView fitHeight="25.0" fitWidth="25.0" pickOnBounds="true" preserveRatio="true">
                         <Image url="/icons/bold_text_icon.png"/>
                     </ImageView>
                 </graphic>
             </ToggleButton>
-            <ToggleButton fx:id="italicsButton">
+            <ToggleButton fx:id="italicsButton" disable="true">
                 <graphic>
                     <ImageView fitHeight="25.0" fitWidth="25.0" pickOnBounds="true" preserveRatio="true">
                         <Image url="/icons/italic_text_icon.png"/>
                     </ImageView>
                 </graphic>
             </ToggleButton>
-            <ToggleButton fx:id="underlineButton">
+            <ToggleButton fx:id="underlineButton" disable="true">
                 <graphic>
                     <ImageView fitHeight="25.0" fitWidth="25.0" pickOnBounds="true" preserveRatio="true">
                         <Image url="/icons/underline_text_icon.png"/>

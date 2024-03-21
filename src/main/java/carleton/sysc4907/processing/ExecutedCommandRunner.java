@@ -18,7 +18,9 @@ public class ExecutedCommandRunner {
             EditTextCommandFactory editTextCommandFactory,
             ConnectorMovePointCommandFactory connectorMovePointCommandFactory,
             ConnectorSnapCommandFactory connectorSnapCommandFactory,
-            ChangeConnectorStyleCommandFactory changeConnectorStyleCommandFactory) {
+            ChangeConnectorStyleCommandFactory changeConnectorStyleCommandFactory,
+            ChangeTextStyleCommandFactory changeTextStyleCommandFactory
+            ) {
 
         this.commandFactories = new HashMap<>();
         commandFactories.put(AddCommandArgs.class, addCommandFactory);
@@ -29,6 +31,7 @@ public class ExecutedCommandRunner {
         commandFactories.put(ConnectorMovePointCommandArgs.class, connectorMovePointCommandFactory);
         commandFactories.put(ConnectorSnapCommandArgs.class, connectorSnapCommandFactory);
         commandFactories.put(ChangeConnectorStyleCommandArgs.class, changeConnectorStyleCommandFactory);
+        commandFactories.put(ChangeTextStyleCommandArgs.class, changeTextStyleCommandFactory);
     }
 
 

@@ -2,6 +2,8 @@ package carleton.sysc4907.controller.element;
 
 import carleton.sysc4907.command.EditTextCommandFactory;
 import carleton.sysc4907.command.args.EditTextCommandArgs;
+import carleton.sysc4907.controller.FormattingPanelController;
+import carleton.sysc4907.model.EditableLabelTracker;
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.SimpleDoubleProperty;
 import javafx.beans.property.SimpleStringProperty;
@@ -30,11 +32,14 @@ public class EditableLabelController {
 
     private final EditTextCommandFactory editTextCommandFactory;
 
+    private final EditableLabelTracker editableLabelTracker;
+
     /**
      * Constructs a new EditableLabelController.
      */
-    public EditableLabelController(EditTextCommandFactory editTextCommandFactory) {
+    public EditableLabelController(EditTextCommandFactory editTextCommandFactory, EditableLabelTracker editableLabelTracker) {
         this.editTextCommandFactory = editTextCommandFactory;
+        this.editableLabelTracker = editableLabelTracker;
     }
 
     /**
@@ -42,6 +47,9 @@ public class EditableLabelController {
      */
     @FXML
     public void initialize() {
+        String DEFAULT_FONT_FAMILY = "Segoe UI";
+        int DEFAULT_FONT_SIZE = 14;
+
         textProperty.bind(label.textProperty());
         label.setWrapText(true);
         editableText.setFocusTraversable(false);
@@ -53,6 +61,8 @@ public class EditableLabelController {
         label.minWidthProperty().bind(widthProperty.multiply(0.8));
         label.setAlignment(Pos.CENTER);
         label.setTextAlignment(TextAlignment.CENTER);
+        label.setStyle("-fx-font-family: \"" + DEFAULT_FONT_FAMILY + "\"; -fx-font-size: " + DEFAULT_FONT_SIZE + ";");
+        editableText.setStyle("-fx-font-family: \"" + DEFAULT_FONT_FAMILY + "\"; -fx-font-size: " + DEFAULT_FONT_SIZE + ";");
         editableText.setWrapText(true);
         toggleEditable(false);
         editableText.focusedProperty().addListener(((observableValue, oldValue, newValue) -> toggleEditable(newValue)));
@@ -69,6 +79,7 @@ public class EditableLabelController {
     public void startEditing() {
         toggleEditable(true);
         editableText.requestFocus();
+        editableLabelTracker.setIdLastEditedLabel((long) label.getUserData());
     }
 
     /**
@@ -148,5 +159,13 @@ public class EditableLabelController {
      */
     public Label getLabel() {
         return label;
+    }
+
+    /**
+     * Exposes the TextArea element for advanced formatting.
+     * @return the editable text.
+     */
+    public TextArea getEditableText() {
+        return editableText;
     }
 }

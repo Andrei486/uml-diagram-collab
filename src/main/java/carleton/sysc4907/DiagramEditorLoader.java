@@ -19,9 +19,13 @@ import carleton.sysc4907.controller.element.pathing.PathingStrategyFactory;
 import carleton.sysc4907.model.*;
 import carleton.sysc4907.processing.*;
 import javafx.event.EventHandler;
+import carleton.sysc4907.processing.ElementCreator;
+import carleton.sysc4907.processing.ElementIdManager;
+import carleton.sysc4907.processing.FileSaver;
+import carleton.sysc4907.processing.FontOptionsFinder;
+import javafx.application.Platform;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
-import javafx.stage.Window;
 import javafx.stage.WindowEvent;
 import org.xml.sax.SAXException;
 
@@ -134,6 +138,7 @@ public class DiagramEditorLoader {
         ElementIdManager elementIdManager = new ElementIdManager(sessionModel);
         TextFormattingModel textFormattingModel = new TextFormattingModel(fontOptionsFinder);
         diagramModel = new DiagramModel();
+        EditableLabelTracker editableLabelTracker = new EditableLabelTracker(elementIdManager);
         ExecutedCommandList executedCommandList = new ExecutedCommandList();
         CommandListCompressor commandListCompressor = new CommandListCompressor(diagramModel, elementIdManager);
         MovePreviewCreator movePreviewCreator = new MovePreviewCreator(elementIdManager);
@@ -172,6 +177,8 @@ public class DiagramEditorLoader {
                 elementIdManager, manager, executedCommandList, constructor);
         ChangeConnectorStyleCommandFactory changeConnectorStyleCommandFactory = new ChangeConnectorStyleCommandFactory(
                 elementIdManager, manager, executedCommandList, constructor);
+        ChangeTextStyleCommandFactory changeTextStyleCommandFactory = new ChangeTextStyleCommandFactory(
+                elementIdManager, manager, executedCommandList, constructor, editableLabelTracker);
         // Add factories to message interpreter: avoids circular dependencies
         interpreter.addFactories(
                 addCommandFactory,
@@ -181,7 +188,8 @@ public class DiagramEditorLoader {
                 editTextCommandFactory,
                 connectorMovePointCommandFactory,
                 connectorSnapCommandFactory,
-                changeConnectorStyleCommandFactory
+                changeConnectorStyleCommandFactory,
+                changeTextStyleCommandFactory
         );
         ExecutedCommandRunner executedCommandRunner = new ExecutedCommandRunner(
                 addCommandFactory,
@@ -191,7 +199,8 @@ public class DiagramEditorLoader {
                 editTextCommandFactory,
                 connectorMovePointCommandFactory,
                 connectorSnapCommandFactory,
-                changeConnectorStyleCommandFactory
+                changeConnectorStyleCommandFactory,
+                changeTextStyleCommandFactory
         );
         addFactories(
                 addCommandFactory,
@@ -201,7 +210,8 @@ public class DiagramEditorLoader {
                 editTextCommandFactory,
                 connectorMovePointCommandFactory,
                 connectorSnapCommandFactory,
-                changeConnectorStyleCommandFactory
+                changeConnectorStyleCommandFactory,
+                changeTextStyleCommandFactory
         );
         //give the interpreter the executedCommandList
         interpreter.setExecutedCommandList(executedCommandList);
@@ -218,7 +228,7 @@ public class DiagramEditorLoader {
                 () -> new UmlClassController(movePreviewCreator, moveCommandFactory, diagramModel,
                         resizeHandleCreator, resizePreviewCreator, resizeCommandFactory));
         elementControllerInjector.addInjectionMethod(EditableLabelController.class,
-                () -> new EditableLabelController(editTextCommandFactory));
+                () -> new EditableLabelController(editTextCommandFactory, editableLabelTracker));
         elementControllerInjector.addInjectionMethod(ConnectorElementController.class,
                 () -> new ConnectorElementController(
                         movePreviewCreator,
@@ -245,7 +255,7 @@ public class DiagramEditorLoader {
         injector.addInjectionMethod(SessionInfoBarController.class,
                 () -> new SessionInfoBarController(sessionModel));
         injector.addInjectionMethod(FormattingPanelController.class,
-                () -> new FormattingPanelController(textFormattingModel));
+                () -> new FormattingPanelController(textFormattingModel, changeTextStyleCommandFactory, diagramModel, editableLabelTracker, elementIdManager));
         injector.addInjectionMethod(ConnectorFormattingPanelController.class,
                 () -> new ConnectorFormattingPanelController(diagramModel, elementIdManager, changeConnectorStyleCommandFactory));
         injector.addInjectionMethod(SessionUsersMenuController.class,
@@ -269,8 +279,8 @@ public class DiagramEditorLoader {
             EditTextCommandFactory editTextCommandFactory,
             ConnectorMovePointCommandFactory connectorMovePointCommandFactory,
             ConnectorSnapCommandFactory connectorSnapCommandFactory,
-            ChangeConnectorStyleCommandFactory changeConnectorStyleCommandFactory
-    ) {
+            ChangeConnectorStyleCommandFactory changeConnectorStyleCommandFactory,
+            ChangeTextStyleCommandFactory changeTextStyleCommandFactory) {
         commandFactories.put(AddCommandArgs.class, addCommandFactory);
         commandFactories.put(RemoveCommandArgs.class, removeCommandFactory);
         commandFactories.put(MoveCommandArgs.class, moveCommandFactory);
@@ -279,6 +289,7 @@ public class DiagramEditorLoader {
         commandFactories.put(ConnectorMovePointCommandArgs.class, connectorMovePointCommandFactory);
         commandFactories.put(ConnectorSnapCommandArgs.class, connectorSnapCommandFactory);
         commandFactories.put(ChangeConnectorStyleCommandArgs.class, changeConnectorStyleCommandFactory);
+        commandFactories.put(ChangeTextStyleCommandArgs.class, changeTextStyleCommandFactory);
     }
 
     /**

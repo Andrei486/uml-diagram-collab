@@ -77,6 +77,7 @@ public class MessageInterpreter {
      * @param resizeCommandFactory the systems ResizeCommandFactory
      * @param editTextCommandFactory the systems EditTextCommandFactory
      * @param messageConstructor the MessageConstructor of the system
+     * @param changeTextStyleCommandFactory the systems ChangeTextStyleCommandFactory
      */
     public MessageInterpreter(
         AddCommandFactory addCommandFactory,
@@ -87,7 +88,8 @@ public class MessageInterpreter {
         ConnectorMovePointCommandFactory connectorMovePointCommandFactory,
         ConnectorSnapCommandFactory connectorSnapCommandFactory,
         ChangeConnectorStyleCommandFactory changeConnectorStyleCommandFactory,
-        MessageConstructor messageConstructor
+        MessageConstructor messageConstructor,
+        ChangeTextStyleCommandFactory changeTextStyleCommandFactory
     ) {
         this(messageConstructor);
         addFactories(
@@ -98,16 +100,19 @@ public class MessageInterpreter {
                 editTextCommandFactory,
                 connectorMovePointCommandFactory,
                 connectorSnapCommandFactory,
-                changeConnectorStyleCommandFactory);
+                changeConnectorStyleCommandFactory,
+                changeTextStyleCommandFactory);
     }
 
     /**
      * Adds the factories to the MessageInterpreter
-     * @param addCommandFactory the systems AddCommandFactory
-     * @param removeCommandFactory the systems RemoveCommandFactory
-     * @param moveCommandFactory the systems MoveCommandFactory
-     * @param resizeCommandFactory the systems ResizeCommandFactory
-     * @param editTextCommandFactory the systems EditTextCommandFactory
+     *
+     * @param addCommandFactory             the systems AddCommandFactory
+     * @param removeCommandFactory          the systems RemoveCommandFactory
+     * @param moveCommandFactory            the systems MoveCommandFactory
+     * @param resizeCommandFactory          the systems ResizeCommandFactory
+     * @param editTextCommandFactory        the systems EditTextCommandFactory
+     * @param changeTextStyleCommandFactory the systems ChangeTextStyleCommandFactory
      */
     public void addFactories(
             AddCommandFactory addCommandFactory,
@@ -117,8 +122,8 @@ public class MessageInterpreter {
             EditTextCommandFactory editTextCommandFactory,
             ConnectorMovePointCommandFactory connectorMovePointCommandFactory,
             ConnectorSnapCommandFactory connectorSnapCommandFactory,
-            ChangeConnectorStyleCommandFactory changeConnectorStyleCommandFactory
-    ) {
+            ChangeConnectorStyleCommandFactory changeConnectorStyleCommandFactory,
+            ChangeTextStyleCommandFactory changeTextStyleCommandFactory) {
         commandFactories.put(AddCommandArgs.class, addCommandFactory);
         commandFactories.put(RemoveCommandArgs.class, removeCommandFactory);
         commandFactories.put(MoveCommandArgs.class, moveCommandFactory);
@@ -127,6 +132,7 @@ public class MessageInterpreter {
         commandFactories.put(ConnectorMovePointCommandArgs.class, connectorMovePointCommandFactory);
         commandFactories.put(ConnectorSnapCommandArgs.class, connectorSnapCommandFactory);
         commandFactories.put(ChangeConnectorStyleCommandArgs.class, changeConnectorStyleCommandFactory);
+        commandFactories.put(ChangeTextStyleCommandArgs.class, changeTextStyleCommandFactory);
     }
 
     /**

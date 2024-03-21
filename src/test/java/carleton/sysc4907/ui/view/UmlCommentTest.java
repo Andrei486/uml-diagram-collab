@@ -3,12 +3,15 @@ package carleton.sysc4907.ui.view;
 import carleton.sysc4907.command.EditTextCommandFactory;
 import carleton.sysc4907.controller.element.EditableLabelController;
 import carleton.sysc4907.controller.element.UmlCommentController;
+import carleton.sysc4907.model.EditableLabelTracker;
 import carleton.sysc4907.view.DiagramElement;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextArea;
 import javafx.scene.input.KeyCode;
 import javafx.stage.Stage;
 import org.junit.jupiter.api.Test;
+import org.mockito.Mock;
+import org.mockito.Mockito;
 import org.testfx.api.FxRobot;
 import org.testfx.framework.junit5.Start;
 
@@ -21,6 +24,11 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 public class UmlCommentTest extends ResizableElementTest {
 
     private UmlCommentController controller;
+
+    @Mock
+    private EditableLabelTracker editableLabelTracker;
+
+    private final long testLabelId = 14L;
 
     @Start
     @Override
@@ -38,7 +46,13 @@ public class UmlCommentTest extends ResizableElementTest {
                         resizePreviewCreator,
                         resizeCommandFactory));
         dependencyInjector.addInjectionMethod(EditableLabelController.class,
-                () -> new EditableLabelController(new EditTextCommandFactory(elementIdManager, mockManager, mockExecutedCommandList, mockMessageConstructor)));
+                () -> new EditableLabelController(
+                        new EditTextCommandFactory(
+                                elementIdManager,
+                                mockManager,
+                                mockExecutedCommandList,
+                                mockMessageConstructor),
+                        editableLabelTracker));
     }
 
     @Override
@@ -62,6 +76,8 @@ public class UmlCommentTest extends ResizableElementTest {
         // Find parts of the editable label
         var editableText = robot.lookup("#editableText").queryAs(TextArea.class);
         var label = robot.lookup("#label").queryAs(Label.class);
+        label.setUserData(testLabelId);
+        Mockito.when(elementIdManager.getElementById(testLabelId)).thenReturn(label);
         // Check that the editable label shows as a label
         assertFalse(editableText.isVisible());
         assertTrue(label.isVisible());
@@ -79,9 +95,11 @@ public class UmlCommentTest extends ResizableElementTest {
     @Test
     protected void testOnUnfocusedNotEditable(FxRobot robot) {
         // Double click
+        var label = robot.lookup("#label").queryAs(Label.class);
+        label.setUserData(testLabelId);
+        Mockito.when(elementIdManager.getElementById(testLabelId)).thenReturn(label);
         robot.doubleClickOn(element);
         var editableText = robot.lookup("#editableText").queryAs(TextArea.class);
-        var label = robot.lookup("#label").queryAs(Label.class);
         robot.moveBy(100, 100);
         robot.clickOn();
         assertFalse(editableText.isVisible());
@@ -97,6 +115,8 @@ public class UmlCommentTest extends ResizableElementTest {
         // Double click
         var editableText = robot.lookup("#editableText").queryAs(TextArea.class);
         var label = robot.lookup("#label").queryAs(Label.class);
+        label.setUserData(testLabelId);
+        Mockito.when(elementIdManager.getElementById(testLabelId)).thenReturn(label);
         AtomicInteger labelChangeEventCounter = new AtomicInteger();
         AtomicInteger controllerChangeEventCounter = new AtomicInteger();
         label.textProperty().addListener((observableValue, s, t1) -> labelChangeEventCounter.getAndIncrement());
@@ -127,6 +147,9 @@ public class UmlCommentTest extends ResizableElementTest {
     @Test
     protected void testGetText(FxRobot robot) {
         // Test while not editing
+        var label = robot.lookup("#label").queryAs(Label.class);
+        label.setUserData(testLabelId);
+        Mockito.when(elementIdManager.getElementById(testLabelId)).thenReturn(label);
         assertEquals("UML Comment", controller.getText());
         robot.doubleClickOn(element);
         // Test while editing before edits
@@ -152,6 +175,8 @@ public class UmlCommentTest extends ResizableElementTest {
     protected void testSetText(FxRobot robot) {
         var editableText = robot.lookup("#editableText").queryAs(TextArea.class);
         var label = robot.lookup("#label").queryAs(Label.class);
+        label.setUserData(testLabelId);
+        Mockito.when(elementIdManager.getElementById(testLabelId)).thenReturn(label);
         // Test while not editing
         robot.interact(() -> controller.setText("Test"));
         assertEquals("Test", editableText.getText());
