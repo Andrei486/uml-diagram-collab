@@ -190,6 +190,7 @@ public class StartScreenController {
         try {
             loader.createAndLoad(stage, preferences.getUsername(), roomCode);
         } catch (IOException e) {
+            e.printStackTrace();
             Alert alert = new Alert(Alert.AlertType.ERROR);
             alert.setTitle("Error");
             alert.setHeaderText("Application error");

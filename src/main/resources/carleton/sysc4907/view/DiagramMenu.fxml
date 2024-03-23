@@ -10,19 +10,19 @@
       xmlns:fx="http://javafx.com/fxml"
       fx:controller="carleton.sysc4907.controller.DiagramMenuBarController"
       fx:id="menuBar">
-    <Menu text="File">
-        <MenuItem text="New" disable="true"/>
-        <MenuItem text="Open" disable="true"/>
-        <MenuItem text="Save" onAction="#saveDiagram"/>
-        <MenuItem text="Save As" onAction="#saveDiagramAs"/>
+    <Menu text="_File">
+        <MenuItem text="_New" disable="true"/>
+        <MenuItem text="_Open" disable="true"/>
+        <MenuItem text="_Save" onAction="#saveDiagram"/>
+        <MenuItem text="Save _As" onAction="#saveDiagramAs"/>
         <SeparatorMenuItem/>
-        <MenuItem text="Export To Image" disable="true"/>
-        <MenuItem text="Export To PDF" disable="true"/>
+        <MenuItem text="Export To _Image" disable="true"/>
+        <MenuItem text="Export To _PDF" disable="true"/>
         <SeparatorMenuItem/>
-        <MenuItem text="Exit" onAction="#closeApplication"/>
+        <MenuItem text="E_xit" onAction="#closeApplication"/>
     </Menu>
-    <Menu text="Edit">
-        <MenuItem text="Delete Selected" onAction="#deleteSelectedElements" fx:id="deleteElement"/>
+    <Menu text="_Edit">
+        <MenuItem text="_Delete Selected" onAction="#deleteSelectedElements" fx:id="deleteElement"/>
     </Menu>
     <Menu text="View">
 
