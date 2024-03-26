@@ -87,7 +87,8 @@ public class ElementCreator {
      */
     private void populateTypeTemplateMap() throws ParserConfigurationException, IOException, SAXException, URISyntaxException {
         DocumentBuilder builder = DocumentBuilderFactory.newInstance().newDocumentBuilder();
-        Document doc = builder.parse(new File(ElementCreator.class.getResource(this.templateFilePath).toURI()));
+        var stream = ElementCreator.class.getClassLoader().getResourceAsStream(templateFilePath);
+        Document doc = builder.parse(stream);
         doc.getDocumentElement().normalize();
         NodeList nodeList = doc.getElementsByTagName("template");
         for (int i = 0; i < nodeList.getLength(); i++) {

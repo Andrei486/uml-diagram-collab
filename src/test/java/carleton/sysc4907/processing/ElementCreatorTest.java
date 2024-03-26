@@ -18,7 +18,7 @@ import static org.junit.jupiter.api.Assertions.*;
 @ExtendWith(MockitoExtension.class)
 public class ElementCreatorTest {
 
-    private final String TEST_FILE_PATH = "/carleton/sysc4907/model/templates.xml";
+    private final String TEST_FILE_PATH = "carleton/sysc4907/processing/test_templates.xml";
     @Mock
     private DependencyInjector mockElementInjector;
 

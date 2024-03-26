@@ -12,18 +12,15 @@ import carleton.sysc4907.controller.SessionUsersMenuController;
 import carleton.sysc4907.controller.*;
 import carleton.sysc4907.controller.element.*;
 import carleton.sysc4907.controller.element.arrows.ArrowheadFactory;
-import carleton.sysc4907.controller.element.pathing.CurvedPathStrategy;
 import carleton.sysc4907.controller.element.pathing.DirectPathStrategy;
 import carleton.sysc4907.controller.element.pathing.OrthogonalPathStrategy;
 import carleton.sysc4907.controller.element.pathing.PathingStrategyFactory;
 import carleton.sysc4907.model.*;
 import carleton.sysc4907.processing.*;
-import javafx.event.EventHandler;
 import carleton.sysc4907.processing.ElementCreator;
 import carleton.sysc4907.processing.ElementIdManager;
 import carleton.sysc4907.processing.FileSaver;
 import carleton.sysc4907.processing.FontOptionsFinder;
-import javafx.application.Platform;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
@@ -33,13 +30,11 @@ import javax.xml.parsers.ParserConfigurationException;
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.List;
 import java.util.Map;
 
 public class DiagramEditorLoader {
 
-    private final String TEMPLATE_FILE_PATH = "/carleton/sysc4907/templates.xml";
+    private final String TEMPLATE_FILE_PATH = "carleton/sysc4907/processing/templates.xml";
 
     private Map<Class<?>, CommandFactory> commandFactories;
 
