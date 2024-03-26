@@ -26,6 +26,7 @@ public class RoomCodeManagerTest {
 
     @Test
     public void getNewRoomCodeTest() {
+
         assertTrue(roomCodeManager.validateRoomCode(roomCodeManager.getNewRoomCode()));
     }
 }

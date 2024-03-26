@@ -16,16 +16,7 @@ public class RoomCodeManager {
      * @return true if the room code is valid
      */
     public boolean validateRoomCode(String roomCode) {
-        if (roomCode == null) {
-            return false;
-        }
-        if(isValidString(roomCode)) {
-            //TODO
-            //if code is valid, check the server for the code
-            //check if the code is in the server, if it is, return true
-            return true;
-        }
-        return false;
+        return roomCode != null;
     }
 
 
