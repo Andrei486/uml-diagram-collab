@@ -1,5 +1,9 @@
 package carleton.sysc4907.processing;
 
+import java.net.Inet4Address;
+import java.net.InetAddress;
+import java.net.UnknownHostException;
+
 public class RoomCodeManager {
 
     public RoomCodeManager() {
@@ -53,8 +57,10 @@ public class RoomCodeManager {
      * @return
      */
     public String getNewRoomCode() {
-        //TODO
-        //temporarily returning a set room code
-        return "ROOMCODE1234";
+        try {
+            return InetAddress.getLocalHost().getHostAddress().trim();
+        } catch (UnknownHostException e) {
+            throw new RuntimeException(e);
+        }
     }
 }
