@@ -1,19 +1,18 @@
 package carleton.sysc4907.controller;
 
-import carleton.sysc4907.command.Command;
-import carleton.sysc4907.command.MoveCommandFactory;
 import carleton.sysc4907.command.RemoveCommandFactory;
 import carleton.sysc4907.command.args.RemoveCommandArgs;
-import carleton.sysc4907.model.ExecutedCommandList;
 import carleton.sysc4907.processing.FileSaver;
 import carleton.sysc4907.view.DiagramElement;
 import carleton.sysc4907.model.DiagramModel;
 import javafx.fxml.FXML;
-import javafx.scene.Node;
 import javafx.scene.control.Alert;
 import javafx.scene.control.MenuBar;
 import javafx.scene.control.MenuItem;
-import javafx.scene.layout.Pane;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyCodeCombination;
+import javafx.scene.input.KeyCombination;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.Region;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
@@ -68,6 +67,7 @@ public class DiagramMenuBarController {
     /**
      * Deletes all selected elements from the diagram.
      */
+    @FXML
     public void deleteSelectedElements() {
         List<Long> toDelete = diagramModel.getSelectedElements().stream().map(DiagramElement::getElementId).toList();
         if (!toDelete.isEmpty()) {
@@ -82,12 +82,12 @@ public class DiagramMenuBarController {
      * otherwise prompts the user to choose a file instead.
      */
     @FXML
-    public void saveDiagram(ActionEvent event) {
+    public void saveDiagram() {
         if (diagramModel.getLoadedFilePath() != null) {
             fileSaver.save();
         } else {
             // Prompt the user for a file if this is a new diagram
-            saveDiagramAs(event);
+            saveDiagramAs();
         }
     }
 
@@ -95,7 +95,7 @@ public class DiagramMenuBarController {
      * Saves the diagram to a file chosen via file chooser.
      */
     @FXML
-    public void saveDiagramAs(ActionEvent event) {
+    public void saveDiagramAs() {
         FileChooser fileChooser = new FileChooser();
         fileChooser.setTitle("Choose Save Location");
         Stage stage = (Stage) menuBar.getScene().getWindow();
@@ -123,5 +123,27 @@ public class DiagramMenuBarController {
     @FXML
     public void initialize() {
         deleteElement.disableProperty().bind(diagramModel.getIsElementSelectedProperty().not());
+        menuBar.sceneProperty().addListener((observableValue, scene, newScene) -> {
+            if (newScene == null) return;
+            var root = newScene.getRoot();
+            System.out.println(root);
+            root.addEventHandler(KeyEvent.KEY_PRESSED, keyEvent -> {
+                if (keyEvent.getCode() == KeyCode.DELETE && diagramModel.getIsElementSelectedProperty().get()) {
+                    System.out.println("DELETE key pressed");
+                    deleteSelectedElements();
+                }
+            });
+            var saveKeyCombination = new KeyCodeCombination(KeyCode.S, KeyCombination.CONTROL_DOWN);
+            var saveAsKeyCombination = new KeyCodeCombination(KeyCode.S, KeyCombination.CONTROL_DOWN, KeyCombination.SHIFT_DOWN);
+            root.addEventHandler(KeyEvent.KEY_PRESSED, keyEvent -> {
+                if (saveAsKeyCombination.match(keyEvent)) {
+                    System.out.println("Ctrl+Shift+S pressed");
+                    saveDiagramAs();
+                } else if (saveKeyCombination.match(keyEvent)) {
+                    System.out.println("Ctrl+S pressed");
+                    saveDiagram();
+                }
+            });
+        });
     }
 }
