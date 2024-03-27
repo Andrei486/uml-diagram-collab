@@ -16,7 +16,7 @@
         <MenuItem text="_Save" onAction="#saveDiagram"/>
         <MenuItem text="Save _As" onAction="#saveDiagramAs"/>
         <SeparatorMenuItem/>
-        <MenuItem text="Export To _Image" disable="true"/>
+        <MenuItem text="Export To _Image" onAction="#exportToImage"/>
         <MenuItem text="Export To _PDF" disable="true"/>
         <SeparatorMenuItem/>
         <MenuItem text="E_xit" onAction="#closeApplication"/>
