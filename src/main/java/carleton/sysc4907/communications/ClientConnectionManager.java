@@ -45,6 +45,10 @@ public class ClientConnectionManager {
         }
     }
 
+    public int getPort() {
+        return clientSocket.getPort();
+    }
+
     /**
      * closes this objects socket (maybe has no purpose)
      * @throws IOException socket fails to close

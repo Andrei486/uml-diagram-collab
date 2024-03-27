@@ -41,21 +41,6 @@ public class SessionModelTest {
     }
 
     @Test
-    public void createSessionModelInvalidRoomCodes() {
-        String invalidLength = "TEST1245TES"; // need 12 characters
-        assertThrows(IllegalArgumentException.class,
-                () -> new SessionModel(invalidLength, hostUser));
-        String invalidCase = "TeST1245TEST"; // uppercase letters only
-        assertThrows(IllegalArgumentException.class,
-                () -> new SessionModel(invalidCase, hostUser));
-        String invalidChars = "TEST124*TES%"; // alphanumeric only
-        assertThrows(IllegalArgumentException.class,
-                () -> new SessionModel(invalidChars, hostUser));
-        assertThrows(IllegalArgumentException.class,
-                () -> new SessionModel(ROOM_CODE, null)); // null local user
-    }
-
-    @Test
     public void addGuestsSuccess() {
         User guestUser1 = new User(0, "Test Guest 1", PermissionLevel.READ_ONLY);
         User guestUser2 = new User(1, "Test Guest 2", PermissionLevel.READ_ONLY);

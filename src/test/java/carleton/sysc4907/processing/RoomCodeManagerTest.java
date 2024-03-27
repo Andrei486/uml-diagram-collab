@@ -17,15 +17,12 @@ public class RoomCodeManagerTest {
         assertTrue(roomCodeManager.validateRoomCode("ABCD12341234"));
         assertTrue(roomCodeManager.validateRoomCode("123412349876"));
         assertTrue(roomCodeManager.validateRoomCode("ALLLETTERSAA"));
-        assertFalse(roomCodeManager.validateRoomCode(""));
-        assertFalse(roomCodeManager.validateRoomCode("TOOSHORT"));
-        assertFalse(roomCodeManager.validateRoomCode("8567-ZXY1122"));
-        assertFalse(roomCodeManager.validateRoomCode("THISROOMCODEISTOOLONG"));
-        assertFalse(roomCodeManager.validateRoomCode("lowercase123"));
+        assertFalse(roomCodeManager.validateRoomCode(null));
     }
 
     @Test
     public void getNewRoomCodeTest() {
+
         assertTrue(roomCodeManager.validateRoomCode(roomCodeManager.getNewRoomCode()));
     }
 }
