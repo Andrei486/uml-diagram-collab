@@ -163,6 +163,17 @@ public abstract class DiagramElementTest {
         assertTrue(deltaY < 10);
     }
 
+    @Test
+    protected void testDragMoveCancel(FxRobot robot) {
+        var x = element.getLayoutX();
+        var y = element.getLayoutY();
+        robot.drag(element, MouseButton.PRIMARY).moveBy(100, 150).clickOn(MouseButton.SECONDARY).drop();
+        // Check that dragged position is correct
+        assertEquals(x, element.getLayoutX());
+        assertEquals(y, element.getLayoutY());
+        verify(elementIdManager, never()).getElementById(testId);
+    }
+
     /**
      * Tests that the element correctly becomes deselected when CTRL-clicked.
      * @param robot TestFX robot, injected automatically

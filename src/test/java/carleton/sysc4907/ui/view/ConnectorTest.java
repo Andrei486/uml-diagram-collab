@@ -13,6 +13,7 @@ import carleton.sysc4907.view.EditingAreaLayer;
 import carleton.sysc4907.view.SnapHandle;
 import javafx.application.Platform;
 import javafx.scene.Node;
+import javafx.scene.input.MouseButton;
 import javafx.scene.shape.Rectangle;
 import javafx.stage.Stage;
 import org.junit.jupiter.api.Test;
@@ -23,10 +24,13 @@ import org.testfx.api.FxRobot;
 import org.testfx.framework.junit5.Start;
 
 import java.io.IOException;
+import java.util.Comparator;
 import java.util.concurrent.TimeUnit;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.verify;
 
 public class ConnectorTest extends DiagramElementTest {
 
@@ -135,6 +139,32 @@ public class ConnectorTest extends DiagramElementTest {
         // Check that new position is correct
         assertTrue(almostEqual(endX - 50, newEndX));
         assertTrue(almostEqual(endY + 200, newEndY));
+    }
+
+    @Test
+    protected void testDragResizeCancel(FxRobot robot) {
+        var selectedElements = diagramModel.getSelectedElements();
+        assertEquals(0, selectedElements.size());
+        assertFalse(element.getStyleClass().contains(SELECTED_STYLE_CLASS));
+        robot.clickOn(element);
+        var handles = robot.lookup(".resize-handle").queryAllAs(Rectangle.class);
+        // get end handle
+        Rectangle endHandle = null;
+        var endX = controller.getEndX();
+        var endY = controller.getEndY();
+        for (var handle : handles) {
+            if (almostEqual(handle.getLayoutX(), endX) && almostEqual(handle.getLayoutY(), endY)) {
+                endHandle = handle;
+            }
+        }
+        assertNotNull(endHandle);
+        robot.drag(endHandle, MouseButton.PRIMARY).moveBy(-50, 200).clickOn(MouseButton.SECONDARY).drop();
+        var newEndX = controller.getEndX();
+        var newEndY = controller.getEndY();
+        // Check that new position is correct
+        assertEquals(endX, newEndX);
+        assertEquals(endY, newEndY);
+        verify(elementIdManager, never()).getElementById(testId);
     }
 
     private SnapHandle constructDummySnapHandle(long snapHandleId) {

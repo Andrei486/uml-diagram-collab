@@ -4,6 +4,7 @@ import carleton.sysc4907.command.ResizeCommandFactory;
 import carleton.sysc4907.communications.Manager;
 import carleton.sysc4907.controller.element.ResizeHandleCreator;
 import carleton.sysc4907.controller.element.ResizePreviewCreator;
+import javafx.scene.input.MouseButton;
 import javafx.scene.shape.Rectangle;
 import javafx.stage.Stage;
 import org.junit.jupiter.api.Test;
@@ -16,7 +17,7 @@ import java.io.IOException;
 import java.util.Comparator;
 
 import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 public abstract class ResizableElementTest extends DiagramElementTest {
 
@@ -111,5 +112,37 @@ public abstract class ResizableElementTest extends DiagramElementTest {
         deltaY = Math.abs(element.getLayoutY() - y - (height - 20));
         assertTrue(deltaX < 1);
         assertTrue(deltaY < 1);
+    }
+
+    @Test
+    protected void testDragResizeCancel(FxRobot robot) {
+        var selectedElements = diagramModel.getSelectedElements();
+        assertEquals(0, selectedElements.size());
+        assertFalse(element.getStyleClass().contains(SELECTED_STYLE_CLASS));
+        robot.clickOn(element);
+        var x = element.getLayoutX();
+        var y = element.getLayoutY();
+        var width = element.getWidth();
+        var height = element.getHeight();
+        var handles = robot.lookup(".resize-handle").queryAllAs(Rectangle.class);
+        // get top left handle
+        Rectangle tlHandle = null;
+        double lowestX = handles.stream().min(Comparator.comparingInt(o -> (int) o.getLayoutX())).get().getLayoutX();
+        for (var handle : handles) {
+            if (tlHandle == null) {
+                tlHandle = handle;
+            } else if (handle.getLayoutX() == lowestX && handle.getLayoutY() <= tlHandle.getLayoutY()) {
+                tlHandle = handle;
+            }
+        }
+        assertNotNull(tlHandle);
+        robot.drag(tlHandle, MouseButton.PRIMARY).moveBy(250, 300).clickOn(MouseButton.SECONDARY).drop();
+        // Check that size has not changed
+        assertEquals(width, element.getWidth());
+        assertEquals(height, element.getHeight());
+        // Check that position has not changed
+        assertEquals(x, element.getLayoutX());
+        assertEquals(y, element.getLayoutY());
+        verify(elementIdManager, never()).getElementById(testId);
     }
 }
