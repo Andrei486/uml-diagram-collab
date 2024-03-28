@@ -46,6 +46,9 @@ public class UmlClassController extends ResizableElementController{
      * @param previewCreator     a MovePreviewCreator, used to create the move preview
      * @param moveCommandFactory a MoveCommandFactory, used to create move commands
      * @param diagramModel       the DiagramModel for the current diagram
+     * @param resizeHandleCreator  creates resize handles
+     * @param resizePreviewCreator creates resize previews
+     * @param resizeCommandFactory creates resize commands
      */
     public UmlClassController(
             MovePreviewCreator previewCreator,
