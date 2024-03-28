@@ -96,6 +96,7 @@ public abstract class ResizableElementController extends DiagramElementControlle
             handle.setOnDragDetected(this::handleDragDetectedStartResize);
             handle.setOnMouseDragged(event -> handleMouseDraggedResizePreview(event, isTop, isRight));
             handle.setOnMouseReleased(event -> handleMouseReleasedResize(event, isTop, isRight));
+            handle.setOnMousePressed(this::handleCancelDragOperations);
             handle.setOnMouseClicked(Event::consume);
             resizeHandles.add(handle);
         }
@@ -110,6 +111,16 @@ public abstract class ResizableElementController extends DiagramElementControlle
             }
             resizeHandles.clear();
         }
+    }
+
+    @Override
+    protected void handleCancelDragOperations(MouseEvent event) {
+        super.handleCancelDragOperations(event);
+        if (event.isSecondaryButtonDown()) {
+            resizeDragging = false;
+            resizePreviewCreator.deleteResizePreview(element, preview);
+        }
+
     }
 
     private void handleDragDetectedStartResize(MouseEvent event) {
