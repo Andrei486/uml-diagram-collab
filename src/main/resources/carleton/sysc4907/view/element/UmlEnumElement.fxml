@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import java.util.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<?import carleton.sysc4907.view.DiagramElement?>
+<?import javafx.scene.shape.Rectangle?>
+<?import javafx.scene.chart.StackedAreaChart?>
+<?import javafx.scene.shape.Line?>
+<?import carleton.sysc4907.view.SnapHandle?>
+
+<?import carleton.sysc4907.view.DiagramElement?>
+<DiagramElement xmlns="http://javafx.com/javafx" fx:id="element"
+                xmlns:fx="http://javafx.com/fxml"
+                fx:controller="carleton.sysc4907.controller.element.UmlEnumElementController"
+                maxHeight="100" maxWidth="150.0">
+    <properties>
+        <!-- Set controller as property so commands can find it-->
+        <controller><fx:reference source="controller"/></controller>
+    </properties>
+    <StackPane fx:id="bgStackPane">
+        <Rectangle styleClass="diagram-UML-enum-element" fx:id="background"/>
+        <VBox>
+            <StackPane>
+                <Rectangle styleClass="diagram-UML-enum-element" fx:id="titleRectangle" width="${element.maxWidth}"/>
+                <fx:include source="EditableLabel.fxml" fx:id="titleLabel"/>
+            </StackPane>
+            <Rectangle />
+            <StackPane alignment="TOP_LEFT">
+                <Rectangle styleClass="diagram-UML-class-invisible-element" fx:id="enumeratorsRectangle" width="${element.maxWidth}"/>
+                <fx:include source="EditableLabel.fxml" fx:id="enumeratorsLabel"/>
+            </StackPane>
+        </VBox>
+    </StackPane>
+    <SnapHandle fx:id="westSnapHandle" userData="0"/>
+    <SnapHandle fx:id="northSnapHandle" userData="0"/>
+    <SnapHandle fx:id="eastSnapHandle" userData="0"/>
+    <SnapHandle fx:id="southSnapHandle" userData="0"/>
+
+</DiagramElement>
