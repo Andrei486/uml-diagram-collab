@@ -15,8 +15,7 @@
 <?import carleton.sysc4907.view.DiagramElement?>
 <DiagramElement xmlns="http://javafx.com/javafx" fx:id="element"
                 xmlns:fx="http://javafx.com/fxml"
-                maxHeight="100" maxWidth="150.0"
-                fx:controller="carleton.sysc4907.controller.element.UmlEnumElementController">
+                maxHeight="100" maxWidth="150.0">
     <properties>
         <!-- Set controller as property so commands can find it-->
         <controller><fx:reference source="controller"/></controller>
