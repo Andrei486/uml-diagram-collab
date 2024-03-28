@@ -126,6 +126,7 @@ public class DiagramMenuBarController {
     public void exportToImage() {
         FileChooser fileChooser = new FileChooser();
         fileChooser.setTitle("Choose Export Location");
+        fileChooser.setInitialFileName("export.png");
         fileChooser.getExtensionFilters().addAll(
             new FileChooser.ExtensionFilter("Image Files", "*.png", "*.jpg", "*.gif"),
             new FileChooser.ExtensionFilter("All Files", "*.*")
