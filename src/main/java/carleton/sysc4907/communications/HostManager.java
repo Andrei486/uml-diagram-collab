@@ -20,13 +20,11 @@ public class HostManager extends Manager {
     /**
      * constructs a ClientManager, sets up all the support classes and
      * prepares accept connections from ClientManagers
-     * @param port the port to be opened
      * @param messageInterpreter the MessageInterpreter of the system
      * @param messageConstructor the MessageConstructor of the system
      * @throws IOException the connections can not be set up
      */
     public HostManager(
-            int port,
             MessageInterpreter messageInterpreter,
             MessageConstructor messageConstructor,
             SessionModel sessionModel)
@@ -36,7 +34,7 @@ public class HostManager extends Manager {
         messageInterpreter.setManager(this);
         messageInterpreter.setSessionModel(sessionModel);
         this.clientList = new ClientList(messageInterpreter);
-        this.hostConnectionManager = new HostConnectionManager(port, this.clientList, this);
+        this.hostConnectionManager = new HostConnectionManager(this.clientList, this);
         this.sendingQueue = new LinkedBlockingQueue<TargetedMessage>();
         this.sender = new TCPSender(this.sendingQueue, this.clientList, this);
         messageConstructor.setManager(this, clientList);
@@ -44,6 +42,10 @@ public class HostManager extends Manager {
         new Thread(hostConnectionManager).start();
         this.senderThread = new Thread(sender);
         this.senderThread.start();
+    }
+
+    public void setPort(int port) {
+        this.port = port;
     }
 
     @Override

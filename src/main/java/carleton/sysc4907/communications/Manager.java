@@ -14,6 +14,7 @@ public abstract class Manager {
     protected MessageConstructor messageConstructor;
     protected ClientList clientList;
     protected boolean isHost;
+    protected int port;
 
 
     public void setMessageInterpreter(MessageInterpreter messageInterpreter) {
@@ -46,6 +47,10 @@ public abstract class Manager {
 
     public boolean isHost() {
         return isHost;
+    }
+
+    public int getPort() {
+        return port;
     }
 
     /**
