@@ -27,13 +27,13 @@ public abstract class UmlBoxElementController extends ResizableElementController
     @FXML
     public Group titleLabel;
     @FXML
-    private Rectangle background;
+    protected Rectangle background;
     @FXML
-    private StackPane bgStackPane;
+    protected StackPane bgStackPane;
     @FXML
-    private EditableLabelController titleLabelController;
+    protected EditableLabelController titleLabelController;
     @FXML
-    private EditableLabelController entriesLabelController;
+    protected EditableLabelController entriesLabelController;
 
     /**
      * Constructs a new ResizableElementController.
@@ -74,7 +74,6 @@ public abstract class UmlBoxElementController extends ResizableElementController
         entriesLabelController.getLabel().setPadding(textMargins);
         entriesLabelController.getLabel().setAlignment(Pos.TOP_LEFT);
         entriesLabelController.getLabel().setTextAlignment(TextAlignment.LEFT);
-
     }
 
 

@@ -26,6 +26,7 @@ public class UmlInterfaceElementController extends UmlBoxElementController{
     public void initialize() {
         super.initialize();
         setDefaultText();
+        titleLabelController.getLabel().getStyleClass().add("italicized");
     }
 
     @Override
