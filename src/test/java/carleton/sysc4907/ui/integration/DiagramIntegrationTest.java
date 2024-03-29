@@ -4,6 +4,8 @@ import carleton.sysc4907.App;
 import javafx.application.Application;
 import javafx.scene.Node;
 import javafx.scene.Parent;
+import javafx.scene.control.MenuBar;
+import javafx.scene.control.MenuItem;
 import javafx.scene.input.KeyCode;
 import javafx.scene.layout.Pane;
 import org.junit.jupiter.api.Assertions;
@@ -14,13 +16,13 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.testfx.api.FxRobot;
 import org.testfx.api.FxToolkit;
 import org.testfx.framework.junit5.ApplicationExtension;
+import org.testfx.service.query.PointQuery;
 
 import java.util.Set;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 
 @ExtendWith(MockitoExtension.class)
 @ExtendWith(ApplicationExtension.class)
@@ -47,13 +49,20 @@ public class DiagramIntegrationTest {
 
     @Test
     public void launchApplication(FxRobot robot) throws InterruptedException {
-        TimeUnit.MILLISECONDS.sleep(500);
+//        TimeUnit.MILLISECONDS.sleep(500);
         robot.clickOn("#usernameField");
         robot.type(KeyCode.T, KeyCode.E, KeyCode.S, KeyCode.T);
         robot.clickOn("#newBtn");
-        TimeUnit.MILLISECONDS.sleep(500);
+//        TimeUnit.MILLISECONDS.sleep(500);
         Pane editingArea = robot.lookup("#editingArea").query();
         robot.clickOn(editingArea);
+        Parent elementLibraryPane = robot.lookup("#elementsPane").query();
+        assertNotNull(elementLibraryPane);
+    }
+
+    @Test
+    public void addAndDeleteElements(FxRobot robot) throws InterruptedException {
+        launchApplication(robot);
         Parent elementLibraryPane = robot.lookup("#elementsPane").query();
         // create one of each element
         for (var button : elementLibraryPane.lookupAll(".button")) {
@@ -71,5 +80,13 @@ public class DiagramIntegrationTest {
             robot.press(KeyCode.DELETE);
             robot.release(KeyCode.DELETE);
         }
+    }
+
+    @Test
+    public void exitDiagramEditor(FxRobot robot) throws InterruptedException {
+        launchApplication(robot);
+        robot.press(KeyCode.ALT, KeyCode.F, KeyCode.X);
+        var elementLibraryPane = robot.lookup("#elementsPane").tryQuery();
+        assertFalse(elementLibraryPane.isPresent());
     }
 }
