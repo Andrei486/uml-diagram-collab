@@ -1,11 +1,11 @@
 package carleton.sysc4907.ui.integration;
 
 import carleton.sysc4907.App;
+import carleton.sysc4907.view.DiagramElement;
 import javafx.application.Application;
 import javafx.scene.Node;
 import javafx.scene.Parent;
-import javafx.scene.control.MenuBar;
-import javafx.scene.control.MenuItem;
+import javafx.scene.control.*;
 import javafx.scene.input.KeyCode;
 import javafx.scene.layout.Pane;
 import org.junit.jupiter.api.Assertions;
@@ -18,6 +18,7 @@ import org.testfx.api.FxToolkit;
 import org.testfx.framework.junit5.ApplicationExtension;
 import org.testfx.service.query.PointQuery;
 
+import java.util.Objects;
 import java.util.Set;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
@@ -88,5 +89,55 @@ public class DiagramIntegrationTest {
         robot.press(KeyCode.ALT, KeyCode.F, KeyCode.X);
         var elementLibraryPane = robot.lookup("#elementsPane").tryQuery();
         assertFalse(elementLibraryPane.isPresent());
+    }
+
+    @Test
+    public void editTextStyling(FxRobot robot) throws InterruptedException {
+        launchApplication(robot);
+        Parent elementLibraryPane = robot.lookup("#elementsPane").query();
+        var addButton = elementLibraryPane.lookupAll(".button").stream().filter(
+                b -> Objects.equals(((Button) b).getText(), "UML Class")).findFirst().orElse(null);
+        assertNotNull(addButton);
+        robot.clickOn(addButton);
+        TimeUnit.MILLISECONDS.sleep(100);
+        var element = robot.lookup("#element").queryAs(DiagramElement.class);
+        var titleLabel = element.lookup("#titleLabel");
+        robot.doubleClickOn(titleLabel);
+        var boldButton = robot.lookup("#boldButton").queryAs(ToggleButton.class);
+        robot.clickOn(boldButton);
+        var italicsButton = robot.lookup("#italicsButton").queryAs(ToggleButton.class);
+        robot.clickOn(italicsButton);
+        var underlineButton = robot.lookup("#underlineButton").queryAs(ToggleButton.class);
+        robot.clickOn(underlineButton);
+        var fontSizeSpinner = robot.lookup("#fontSize").queryAs(Spinner.class);
+        robot.clickOn(fontSizeSpinner);
+        robot.press(KeyCode.BACK_SPACE).release(KeyCode.BACK_SPACE).press(KeyCode.BACK_SPACE).release(KeyCode.BACK_SPACE);
+        robot.press(KeyCode.DIGIT1, KeyCode.DIGIT7, KeyCode.ENTER);
+        var titleLabelVisibleLabel = titleLabel.lookup("#label");
+
+        assertTrue(boldButton.isSelected());
+        assertTrue(italicsButton.isSelected());
+        assertTrue(underlineButton.isSelected());
+        assertTrue(titleLabelVisibleLabel.getStyleClass().contains("bolded"));
+        assertTrue(titleLabelVisibleLabel.getStyleClass().contains("italicized"));
+        assertTrue(titleLabelVisibleLabel.getStyleClass().contains("underlined"));
+        assertEquals(17.0, fontSizeSpinner.getValue());
+
+        var fieldsLabel = element.lookup("#fieldsLabel");
+        robot.doubleClickOn(fieldsLabel);
+
+        assertFalse(boldButton.isSelected());
+        assertFalse(italicsButton.isSelected());
+        assertFalse(underlineButton.isSelected());
+        assertTrue(titleLabelVisibleLabel.getStyleClass().contains("bolded"));
+        assertTrue(titleLabelVisibleLabel.getStyleClass().contains("italicized"));
+        assertTrue(titleLabelVisibleLabel.getStyleClass().contains("underlined"));
+        assertNotEquals(17, fontSizeSpinner.getValue());
+
+        robot.doubleClickOn(titleLabel);
+        assertTrue(boldButton.isSelected());
+        assertTrue(italicsButton.isSelected());
+        assertTrue(underlineButton.isSelected());
+        assertEquals(17.0, fontSizeSpinner.getValue());
     }
 }
