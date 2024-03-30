@@ -51,8 +51,8 @@ public class CommandListCompressorTest {
         var testId = 12L;
         var testId2 = 13L;
         List<Command<?>> commandList = new LinkedList<>();
-        commandList.add(new AddCommand(new AddCommandArgs("test", testId), diagramModel, elementCreator));
-        var addCmd = new AddCommand(new AddCommandArgs("test", testId), diagramModel, elementCreator);
+        commandList.add(new AddCommand(new AddCommandArgs("test", 0, 0, testId), diagramModel, elementCreator));
+        var addCmd = new AddCommand(new AddCommandArgs("test", 0, 0, testId), diagramModel, elementCreator);
         commandList.add(addCmd);
         commandList.add(new EditTextCommand(new EditTextCommandArgs("new text", testId2), elementIdManager));
         var editCmd = new EditTextCommand(new EditTextCommandArgs("newer text", testId2), elementIdManager);
@@ -91,7 +91,7 @@ public class CommandListCompressorTest {
         var testId = 12L;
         var testId2 = 13L;
         List<Command<?>> commandList = new LinkedList<>();
-        commandList.add(new AddCommand(new AddCommandArgs("test", testId), diagramModel, elementCreator));
+        commandList.add(new AddCommand(new AddCommandArgs("test", 0, 0, testId), diagramModel, elementCreator));
         commandList.add(new EditTextCommand(new EditTextCommandArgs("new text", testId2), elementIdManager));
         commandList.add(new ResizeCommand(new ResizeCommandArgs(
                 false, true,
