@@ -29,6 +29,8 @@ public class AddCommand implements Command<AddCommandArgs> {
         if (element == null) return; // If the type of element to create is not recognized
         editingArea.getChildren().add(element);
         diagramModel.getElements().add(element);
+        element.setLayoutX(args.x());
+        element.setLayoutY(args.y());
     }
 
     @Override

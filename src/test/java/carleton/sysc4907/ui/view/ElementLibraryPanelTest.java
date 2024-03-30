@@ -8,6 +8,7 @@ import carleton.sysc4907.communications.MessageConstructor;
 import carleton.sysc4907.controller.ElementLibraryPanelController;
 import carleton.sysc4907.model.DiagramModel;
 import carleton.sysc4907.model.ExecutedCommandList;
+import carleton.sysc4907.processing.EditingAreaCoordinateProvider;
 import carleton.sysc4907.processing.ElementCreator;
 import carleton.sysc4907.processing.ElementIdManager;
 import carleton.sysc4907.view.DiagramElement;
@@ -66,6 +67,9 @@ public class ElementLibraryPanelTest {
     @Mock
     private MessageConstructor mockMessageConstructor;
 
+    @Mock
+    private EditingAreaCoordinateProvider coordinateProvider;
+
     @Start
     private void start(Stage stage) throws IOException {
         try (MockedStatic<EditingAreaProvider> utilities = Mockito.mockStatic(EditingAreaProvider.class)) {
@@ -86,7 +90,8 @@ public class ElementLibraryPanelTest {
                                 mockDiagramModel,
                                 addCommandFactory,
                                 mockElementCreator,
-                                mockElementIdManager);
+                                mockElementIdManager,
+                                coordinateProvider);
                         return controller;
                     });
             Scene scene = new Scene(injector.load("view/ElementLibraryPanel.fxml"));
@@ -109,6 +114,8 @@ public class ElementLibraryPanelTest {
                 .thenReturn(mockDiagramElement);
         Mockito.when(mockExecutedCommandList.getCommandList()).thenReturn(new LinkedList<>());
         Mockito.when(mockElementIdManager.getNewIdRange(anyInt())).thenReturn(testId);
+        Mockito.when(coordinateProvider.getCenterVisibleX()).thenReturn(0.0);
+        Mockito.when(coordinateProvider.getCenterVisibleY()).thenReturn(0.0);
 
         robot.clickOn("#elementsPane .button");
 
