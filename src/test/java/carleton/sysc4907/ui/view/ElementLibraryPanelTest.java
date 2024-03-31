@@ -114,13 +114,15 @@ public class ElementLibraryPanelTest {
                 .thenReturn(mockDiagramElement);
         Mockito.when(mockExecutedCommandList.getCommandList()).thenReturn(new LinkedList<>());
         Mockito.when(mockElementIdManager.getNewIdRange(anyInt())).thenReturn(testId);
-        Mockito.when(coordinateProvider.getCenterVisibleX()).thenReturn(0.0);
-        Mockito.when(coordinateProvider.getCenterVisibleY()).thenReturn(0.0);
+        Mockito.when(coordinateProvider.getCenterVisibleX()).thenReturn(100.0);
+        Mockito.when(coordinateProvider.getCenterVisibleY()).thenReturn(400.0);
 
         robot.clickOn("#elementsPane .button");
 
         Mockito.verify(mockElementsList).add(any(DiagramElement.class));
         Mockito.verify(mockNodesList).add(any(Node.class));
+        Mockito.verify(mockDiagramElement).setLayoutX(100.0);
+        Mockito.verify(mockDiagramElement).setLayoutY(400.0);
         EditingAreaProvider.init(null);
     }
 }
