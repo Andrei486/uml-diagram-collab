@@ -47,6 +47,7 @@ public class DiagramEditorLoader {
     private MessageConstructor constructor;
 
     private SessionModel sessionModel;
+    private EditingAreaCoordinateProvider editingAreaCoordinateProvider;
 
     /**
      * Constructs a new DiagramEditorLoader.
@@ -138,6 +139,7 @@ public class DiagramEditorLoader {
         PathingStrategyFactory pathingStrategyFactory = new PathingStrategyFactory();
         DependencyInjector elementControllerInjector = new DependencyInjector();
         FileSaver fileSaver = new FileSaver(diagramModel, executedCommandList, commandListCompressor);
+        editingAreaCoordinateProvider = new EditingAreaCoordinateProvider(null);
         ElementCreator elementCreator;
         try {
             elementCreator = new ElementCreator(elementControllerInjector, TEMPLATE_FILE_PATH, elementIdManager);
@@ -254,7 +256,7 @@ public class DiagramEditorLoader {
         injector.addInjectionMethod(DiagramEditingAreaController.class,
                 () -> new DiagramEditingAreaController(diagramModel));
         injector.addInjectionMethod(ElementLibraryPanelController.class,
-                () -> new ElementLibraryPanelController(diagramModel, addCommandFactory, elementCreator, elementIdManager));
+                () -> new ElementLibraryPanelController(diagramModel, addCommandFactory, elementCreator, elementIdManager, editingAreaCoordinateProvider));
 
         // Run the previous commands
         executedCommandRunner.runPreviousCommands(commandArgsList);
@@ -298,6 +300,7 @@ public class DiagramEditorLoader {
         stage.setTitle("Diagram Editor");
         stage.getScene().getWindow().addEventFilter(WindowEvent.WINDOW_CLOSE_REQUEST, windowEvent -> manager.close());
         interpreter.setWindow(stage.getScene().getWindow());
+        editingAreaCoordinateProvider.setScene(scene);
         System.out.println("Window Was Set");
         stage.show();
     }
