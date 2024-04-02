@@ -60,14 +60,14 @@ public abstract class UmlBoxElementController extends ResizableElementController
         bgStackPane.maxHeightProperty().bind(element.maxHeightProperty());
 
         //Set properties for title section
-        titleRectangle.heightProperty().bind(element.maxHeightProperty().multiply(0.3));
+        titleRectangle.heightProperty().bind(element.maxHeightProperty().multiply(0.4));
         titleRectangle.widthProperty().bind(element.maxWidthProperty());
         titleLabelController.getHeightProperty().bind(titleRectangle.heightProperty());
         titleLabelController.getWidthProperty().bind(element.maxWidthProperty());
         titleLabelController.getLabel().setPadding(textMargins);
 
         //Set properties for fields section
-        entriesRectangle.heightProperty().bind(element.maxHeightProperty().multiply(0.7));
+        entriesRectangle.heightProperty().bind(element.maxHeightProperty().multiply(0.6));
         entriesRectangle.widthProperty().bind(element.maxWidthProperty());
         entriesLabelController.getHeightProperty().bind(entriesRectangle.heightProperty());
         entriesLabelController.getWidthProperty().bind(element.maxWidthProperty());
@@ -101,5 +101,9 @@ public abstract class UmlBoxElementController extends ResizableElementController
 
     public void setFieldsText(String text) {
         entriesLabelController.setText(text);
+    }
+
+    public String getEntriesText() {
+        return entriesLabelController.getText();
     }
 }
