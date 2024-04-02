@@ -41,7 +41,7 @@
     -fx-stroke: #000000;
 }
 
-.diagram-UML-class-element {
+.diagram-UML-class-element, .diagram-UML-box-element {
     -fx-fill: #F4F4F4;
     -fx-stroke: #000000;
 }
