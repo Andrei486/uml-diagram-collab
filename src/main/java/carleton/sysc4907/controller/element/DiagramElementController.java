@@ -80,6 +80,7 @@ public abstract class DiagramElementController {
         addMouseHandler(MouseEvent.MOUSE_DRAGGED, this::handleMouseDraggedMovePreview);
         addMouseHandler(MouseEvent.MOUSE_RELEASED, this::handleMouseReleasedDeletePreview);
         addMouseHandler(MouseEvent.MOUSE_PRESSED, this::handleSelect);
+        addMouseHandler(MouseEvent.MOUSE_PRESSED, this::handleCancelDragOperations);
         addMouseHandler(MouseEvent.MOUSE_PRESSED, (evt) -> element.requestFocus());
         snapHandles = new ArrayList<>();
         snapHandleProvider = SnapHandleProvider.getSingleton();
@@ -195,6 +196,13 @@ public abstract class DiagramElementController {
                 diagramModel.getSelectedElements().clear();
                 diagramModel.getSelectedElements().add(element);
             }
+        }
+    }
+
+    protected void handleCancelDragOperations(MouseEvent event) {
+        if (event.isSecondaryButtonDown()) {
+            dragging = false;
+            previewCreator.deleteMovePreview(element, preview);
         }
     }
 

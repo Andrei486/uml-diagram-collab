@@ -21,12 +21,12 @@ public class SessionModel {
      * @param localUser the local User accessing the room
      */
     public SessionModel(String roomCode, User localUser) {
-        if (!roomCode.matches("([A-Z0-9]){12}")) {
-            throw new IllegalArgumentException("Room code must be 12 digits long and alphanumeric (uppercase only).");
-        }
-        if (localUser == null) {
-            throw new IllegalArgumentException("Local user for a room cannot be null.");
-        }
+//        if (!roomCode.matches("([A-Z0-9]){12}")) {
+//            throw new IllegalArgumentException("Room code must be 12 digits long and alphanumeric (uppercase only).");
+//        }
+//        if (localUser == null) {
+//            throw new IllegalArgumentException("Local user for a room cannot be null.");
+//        }
         setRoomCode(roomCode);
         this.localUser = localUser;
         getUsers().add(localUser);

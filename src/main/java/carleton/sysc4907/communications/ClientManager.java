@@ -43,6 +43,7 @@ public class ClientManager extends Manager{
         this.senderThread = new Thread(sender);
         this.senderThread.start();
         this.clientConnectionManger = new ClientConnectionManager(ip, port, this.clientList, messageConstructor, sessionModel);
+        this.port = this.clientConnectionManger.getPort();
     }
 
     @Override
