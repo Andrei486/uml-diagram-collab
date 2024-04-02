@@ -1,14 +1,18 @@
 package carleton.sysc4907.controller;
 
+import carleton.sysc4907.EditingAreaProvider;
 import carleton.sysc4907.command.RemoveCommandFactory;
 import carleton.sysc4907.command.args.RemoveCommandArgs;
 import carleton.sysc4907.processing.FileSaver;
 import carleton.sysc4907.view.DiagramElement;
 import carleton.sysc4907.model.DiagramModel;
+import javafx.embed.swing.SwingFXUtils;
 import javafx.fxml.FXML;
+import javafx.scene.SnapshotParameters;
 import javafx.scene.control.Alert;
 import javafx.scene.control.MenuBar;
 import javafx.scene.control.MenuItem;
+import javafx.scene.image.WritableImage;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyCodeCombination;
 import javafx.scene.input.KeyCombination;
@@ -17,12 +21,14 @@ import javafx.scene.layout.Region;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 
-import javafx.event.ActionEvent;
 import javafx.stage.WindowEvent;
 
+import javax.imageio.ImageIO;
 import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.ObjectOutputStream;
 import java.util.List;
-import java.util.function.Consumer;
 
 /**
  * Controller for the main menu bar of the diagram editor, which includes File/Edit options, etc.
@@ -100,7 +106,6 @@ public class DiagramMenuBarController {
         fileChooser.setTitle("Choose Save Location");
         Stage stage = (Stage) menuBar.getScene().getWindow();
         File saveFile = fileChooser.showSaveDialog(stage);
-
         if (saveFile == null) {
             return; // No file selected, cancel action
         } else {
@@ -113,6 +118,38 @@ public class DiagramMenuBarController {
                 alert.getDialogPane().setMinHeight(Region.USE_PREF_SIZE);
                 alert.getDialogPane().setMinWidth(Region.USE_PREF_SIZE);
                 alert.showAndWait();
+            }
+        }
+    }
+
+    @FXML
+    public void exportToImage() {
+        FileChooser fileChooser = new FileChooser();
+        fileChooser.setTitle("Choose Export Location");
+        fileChooser.setInitialFileName("export.png");
+        fileChooser.getExtensionFilters().addAll(
+            new FileChooser.ExtensionFilter("Image Files", "*.png", "*.jpg", "*.gif"),
+            new FileChooser.ExtensionFilter("All Files", "*.*")
+        );
+        Stage stage = (Stage) menuBar.getScene().getWindow();
+        File saveFile = fileChooser.showSaveDialog(stage);
+
+        if (saveFile != null) {  // Make sure that a file was selected
+            try {
+                saveFile.createNewFile();
+                System.out.println(saveFile.getPath());
+                System.out.println(EditingAreaProvider.getEditingArea());
+                WritableImage image = EditingAreaProvider.getEditingArea().snapshot(new SnapshotParameters(), null);
+                ImageIO.write(SwingFXUtils.fromFXImage(image, null), "png", saveFile);
+            } catch (IOException e) {
+                Alert alert = new Alert(Alert.AlertType.ERROR);
+                alert.setTitle("Could not export");
+                alert.setHeaderText("Error: Could not export");
+                alert.setContentText("An error has occurred saving to the selected file: " + saveFile.getPath());
+                alert.getDialogPane().setMinHeight(Region.USE_PREF_SIZE);
+                alert.getDialogPane().setMinWidth(Region.USE_PREF_SIZE);
+                alert.showAndWait();
+                return;
             }
         }
     }
