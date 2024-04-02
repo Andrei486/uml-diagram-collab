@@ -165,13 +165,15 @@ public class ConnectorElementController extends DiagramElementController {
             var handle = connectorHandleCreator.createMovePointHandle(element, startX, startY);
             handle.setOnDragDetected(this::handleDragDetectedStartMovePoint);
             handle.setOnMouseDragged(event -> handleMouseDraggedMovePreviewPoint(event, true));
-            handle.setOnMouseReleased(event -> handleMouseReleasedResize(event, true));
+            handle.setOnMousePressed(this::handleCancelDragOperations);
+            handle.setOnMouseReleased(event -> handleMouseReleasedMovePoint(event, true));
             handle.setOnMouseClicked(Event::consume);
             handles.add(handle);
             handle = connectorHandleCreator.createMovePointHandle(element, endX, endY);
             handle.setOnDragDetected(this::handleDragDetectedStartMovePoint);
             handle.setOnMouseDragged(event -> handleMouseDraggedMovePreviewPoint(event, false));
-            handle.setOnMouseReleased(event -> handleMouseReleasedResize(event, false));
+            handle.setOnMousePressed(this::handleCancelDragOperations);
+            handle.setOnMouseReleased(event -> handleMouseReleasedMovePoint(event, false));
             handle.setOnMouseClicked(Event::consume);
             handles.add(handle);
         } else {
@@ -263,6 +265,16 @@ public class ConnectorElementController extends DiagramElementController {
         }
     }
 
+    @Override
+    protected void handleCancelDragOperations(MouseEvent event) {
+        super.handleCancelDragOperations(event);
+        if (event.isSecondaryButtonDown()) {
+            movePointDragging = false;
+            connectorMovePointPreviewCreator.deleteMovePreview(element, previewController);
+            snapHandleProvider.setAllHandlesVisible(false);
+        }
+    }
+
     /**
      * Handler for the endpoint move handles, starts a drag operation.
      * @param event the mouse event
@@ -309,7 +321,7 @@ public class ConnectorElementController extends DiagramElementController {
      * @param event the mouse release event
      * @param isStart true if the start point was the one dragged, false if it was the end point
      */
-    private void handleMouseReleasedResize(MouseEvent event, boolean isStart) {
+    private void handleMouseReleasedMovePoint(MouseEvent event, boolean isStart) {
         if (!movePointDragging) {
             return;
         }
