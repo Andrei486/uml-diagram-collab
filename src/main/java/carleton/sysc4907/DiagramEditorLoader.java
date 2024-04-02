@@ -47,6 +47,7 @@ public class DiagramEditorLoader {
     private MessageConstructor constructor;
 
     private SessionModel sessionModel;
+    private EditingAreaCoordinateProvider editingAreaCoordinateProvider;
 
     /**
      * Constructs a new DiagramEditorLoader.
@@ -88,6 +89,7 @@ public class DiagramEditorLoader {
         this.sessionModel = new SessionModel(roomCode, hostUser);
 
         var manager = initializeTCPHost();
+        this.sessionModel.setRoomCode(roomCode + ":" + manager.getPort());
         load(stage, username, roomCode, manager, userFactory, new Object[0]);
         showScene(stage, injector, manager);
     }
@@ -104,7 +106,7 @@ public class DiagramEditorLoader {
     public void loadJoin(Stage stage, String username, String host, int port, Object[] commandArgsList) throws IOException {
         UserFactory userFactory = new UserFactory();
         User hostUser = userFactory.createHostUser(username);
-        String roomCode = "111111111111";
+        String roomCode = host + ":" + port;
         this.sessionModel = new SessionModel(roomCode, hostUser);
 
         var manager = initializeTCPClient(host, port);
@@ -137,6 +139,7 @@ public class DiagramEditorLoader {
         PathingStrategyFactory pathingStrategyFactory = new PathingStrategyFactory();
         DependencyInjector elementControllerInjector = new DependencyInjector();
         FileSaver fileSaver = new FileSaver(diagramModel, executedCommandList, commandListCompressor);
+        editingAreaCoordinateProvider = new EditingAreaCoordinateProvider(null);
         ElementCreator elementCreator;
         try {
             elementCreator = new ElementCreator(elementControllerInjector, TEMPLATE_FILE_PATH, elementIdManager);
@@ -253,7 +256,7 @@ public class DiagramEditorLoader {
         injector.addInjectionMethod(DiagramEditingAreaController.class,
                 () -> new DiagramEditingAreaController(diagramModel));
         injector.addInjectionMethod(ElementLibraryPanelController.class,
-                () -> new ElementLibraryPanelController(diagramModel, addCommandFactory, elementCreator, elementIdManager));
+                () -> new ElementLibraryPanelController(diagramModel, addCommandFactory, elementCreator, elementIdManager, editingAreaCoordinateProvider));
 
         // Run the previous commands
         executedCommandRunner.runPreviousCommands(commandArgsList);
@@ -297,6 +300,7 @@ public class DiagramEditorLoader {
         stage.setTitle("Diagram Editor");
         stage.getScene().getWindow().addEventFilter(WindowEvent.WINDOW_CLOSE_REQUEST, windowEvent -> manager.close());
         interpreter.setWindow(stage.getScene().getWindow());
+        editingAreaCoordinateProvider.setScene(scene);
         System.out.println("Window Was Set");
         stage.show();
     }
@@ -317,7 +321,7 @@ public class DiagramEditorLoader {
     private Manager initializeTCPHost() throws IOException {
         constructor = new MessageConstructor();
         interpreter = new MessageInterpreter(constructor);
-        return new HostManager(4000, interpreter, constructor, sessionModel);
+        return new HostManager(interpreter, constructor, sessionModel);
     }
 
     /**

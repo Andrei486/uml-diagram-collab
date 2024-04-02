@@ -50,7 +50,7 @@ public class FileSaveLoadTest {
         String filePath = temp.getPath();
         // Populate an executed command list
         var addCommand = new AddCommand(
-                new AddCommandArgs("", 120L),
+                new AddCommandArgs("", 0, 0, 120L),
                 diagramModel,
                 mockElementCreator
         );

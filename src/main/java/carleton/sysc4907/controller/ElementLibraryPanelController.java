@@ -1,8 +1,10 @@
 package carleton.sysc4907.controller;
 
 import carleton.sysc4907.DependencyInjector;
+import carleton.sysc4907.EditingAreaProvider;
 import carleton.sysc4907.command.AddCommandFactory;
 import carleton.sysc4907.command.args.AddCommandArgs;
+import carleton.sysc4907.processing.EditingAreaCoordinateProvider;
 import carleton.sysc4907.processing.ElementCreator;
 import carleton.sysc4907.processing.ElementIdManager;
 import carleton.sysc4907.view.DiagramElement;
@@ -35,6 +37,8 @@ public class ElementLibraryPanelController {
     private final ElementCreator elementCreator;
     private final ElementIdManager elementIdManager;
 
+    private final EditingAreaCoordinateProvider coordinateProvider;
+
     /**
      * Constructs a new ElementLibraryPanelController.
      * @param diagramModel the DiagramModel for the current diagram
@@ -43,11 +47,13 @@ public class ElementLibraryPanelController {
             DiagramModel diagramModel,
             AddCommandFactory addCommandFactory,
             ElementCreator elementCreator,
-            ElementIdManager elementIdManager) {
+            ElementIdManager elementIdManager,
+            EditingAreaCoordinateProvider coordinateProvider) {
         this.diagramModel = diagramModel;
         this.addCommandFactory = addCommandFactory;
         this.elementCreator = elementCreator;
         this.elementIdManager = elementIdManager;
+        this.coordinateProvider = coordinateProvider;
     }
 
     @FXML
@@ -68,7 +74,11 @@ public class ElementLibraryPanelController {
         Button button = new Button(elementName);
         button.setOnAction(actionEvent -> {
             int subElementCount = elementCreator.countIdSubElements(elementName);
-            AddCommandArgs args = new AddCommandArgs(elementName, elementIdManager.getNewIdRange(subElementCount));
+            AddCommandArgs args = new AddCommandArgs(
+                    elementName,
+                    coordinateProvider.getCenterVisibleX(),
+                    coordinateProvider.getCenterVisibleY(),
+                    elementIdManager.getNewIdRange(subElementCount));
             var command = addCommandFactory.createTracked(args);
             command.execute();
 

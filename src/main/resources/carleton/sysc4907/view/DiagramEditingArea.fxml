@@ -11,6 +11,7 @@
             fx:controller="carleton.sysc4907.controller.DiagramEditingAreaController"
             fx:id="scrollPane"
             prefHeight="400.0" prefWidth="600.0"
+            pannable="true"
             stylesheets="/stylesheet/DiagramElementsStyle.css">
 
     <Pane fx:id="editingArea" prefHeight="3000" prefWidth="3000">

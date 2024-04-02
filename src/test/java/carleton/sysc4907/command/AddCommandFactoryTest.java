@@ -20,7 +20,7 @@ public class AddCommandFactoryTest {
         DiagramModel diagramModel = new DiagramModel();
         ElementCreator mockElementCreator = Mockito.mock(ElementCreator.class);
         ExecutedCommandList mockExecutedCommandList = Mockito.mock(ExecutedCommandList.class);
-        AddCommandArgs args = new AddCommandArgs(fxmlPath, 0);
+        AddCommandArgs args = new AddCommandArgs(fxmlPath, 0, 0, 0);
         Manager mockManager = Mockito.mock(Manager.class);
         MessageConstructor mockMessageConstructor = Mockito.mock(MessageConstructor.class);
         AddCommandFactory factory = new AddCommandFactory(diagramModel, mockElementCreator, mockManager, mockExecutedCommandList, mockMessageConstructor);

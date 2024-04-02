@@ -15,14 +15,14 @@ public class HostConnectionManager implements Runnable{
 
     /**
      * Constructs the object and starts the connection
-     * @param port the port number to open
      * @param clients the client list of the host
      * @param hostManager the host the connection belongs to
      * @throws IOException the connection failed
      */
-    public HostConnectionManager(int port, ClientList clients, HostManager hostManager) throws IOException {
+    public HostConnectionManager(ClientList clients, HostManager hostManager) throws IOException {
         this.hostManager = hostManager;
-        this.serverSocket = new ServerSocket(port);
+        this.serverSocket = new ServerSocket(0);
+        this.hostManager.setPort(serverSocket.getLocalPort());
         this.clients = clients;
     }
 
@@ -45,6 +45,11 @@ public class HostConnectionManager implements Runnable{
     public void close() throws IOException {
         serverSocket.close();
     }
+
+    public int getPort() {
+        return serverSocket.getLocalPort();
+    }
+
 
     /**
      * Loop that accepts connects and adds them to the client list
