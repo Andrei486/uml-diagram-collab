@@ -15,6 +15,7 @@ public class ClientConnectionManager {
     private ClientList clients;
     private SessionModel sessionModel;
     private MessageConstructor messageConstructor;
+    private ClientManager clientManager;
 
     /**
      * Constructs the object and starts the connection
@@ -22,10 +23,11 @@ public class ClientConnectionManager {
      * @param port the port host application is connected to
      * @param clients the client list of the clientManager
      */
-    ClientConnectionManager(String ip, int port, ClientList clients, MessageConstructor messageConstructor, SessionModel sessionModel) {
+    ClientConnectionManager(String ip, int port, ClientList clients, MessageConstructor messageConstructor, SessionModel sessionModel, ClientManager clientManager) {
         this.clients = clients;
         this.messageConstructor = messageConstructor;
         this.sessionModel = sessionModel;
+        this.clientManager = clientManager;
         startConnection(ip, port);
     }
 
@@ -41,6 +43,7 @@ public class ClientConnectionManager {
             clients.addClient(clientSocket);
             messageConstructor.sendInvalid(new Message(MessageType.JOIN_REQUEST, sessionModel.getLocalUser().getUsername()));
         } catch (IOException e) {
+            clientManager.close();
             throw new RuntimeException(e);
         }
     }
