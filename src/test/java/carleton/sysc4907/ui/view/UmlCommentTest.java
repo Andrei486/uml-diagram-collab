@@ -77,7 +77,6 @@ public class UmlCommentTest extends ResizableElementTest {
         var editableText = robot.lookup("#editableText").queryAs(TextArea.class);
         var label = robot.lookup("#label").queryAs(Label.class);
         label.setUserData(testLabelId);
-        Mockito.when(elementIdManager.getElementById(testLabelId)).thenReturn(label);
         // Check that the editable label shows as a label
         assertFalse(editableText.isVisible());
         assertTrue(label.isVisible());

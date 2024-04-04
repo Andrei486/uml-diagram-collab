@@ -43,7 +43,7 @@ public abstract class UmlBoxElementTest extends ResizableElementTest {
         var label = robot.lookup("#titleLabel").queryAs(Parent.class);
         var titleLabel = label.getChildrenUnmodifiable().stream().filter(node -> node instanceof Label).findFirst().get();
         titleLabel.setUserData(testTitleLabelId);
-        Mockito.when(elementIdManager.getElementById(testTitleLabelId)).thenReturn(titleLabel);
+//        Mockito.when(elementIdManager.getElementById(testTitleLabelId)).thenReturn(titleLabel);
         // Check that the editable label shows as a label
         assertTrue(label.isVisible());
         // Double click element
@@ -58,7 +58,6 @@ public abstract class UmlBoxElementTest extends ResizableElementTest {
         var label = robot.lookup("#entriesLabel").queryAs(Parent.class);
         var fieldsLabel = label.getChildrenUnmodifiable().stream().filter(node -> node instanceof Label).findFirst().get();
         fieldsLabel.setUserData(testEntriesLabelId);
-        Mockito.when(elementIdManager.getElementById(testEntriesLabelId)).thenReturn(fieldsLabel);
         // Check that the editable label shows as a label
         assertTrue(label.isVisible());
         // Double click element
@@ -72,7 +71,6 @@ public abstract class UmlBoxElementTest extends ResizableElementTest {
         var label = robot.lookup("#titleLabel").queryAs(Parent.class);
         var titleLabel = label.getChildrenUnmodifiable().stream().filter(node -> node instanceof Label).findFirst().get();
         titleLabel.setUserData(testTitleLabelId);
-        Mockito.when(elementIdManager.getElementById(testTitleLabelId)).thenReturn(titleLabel);
         robot.doubleClickOn(label);
         robot.type(KeyCode.T, KeyCode.E, KeyCode.S, KeyCode.T);
 
@@ -94,7 +92,6 @@ public abstract class UmlBoxElementTest extends ResizableElementTest {
         var label = robot.lookup("#entriesLabel").queryAs(Parent.class);
         var fieldsLabel = label.getChildrenUnmodifiable().stream().filter(node -> node instanceof Label).findFirst().get();
         fieldsLabel.setUserData(testEntriesLabelId);
-        Mockito.when(elementIdManager.getElementById(testEntriesLabelId)).thenReturn(fieldsLabel);
         robot.doubleClickOn(label);
         robot.type(KeyCode.T, KeyCode.E, KeyCode.S, KeyCode.T);
 
