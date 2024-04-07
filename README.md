@@ -21,3 +21,7 @@ This application requires Java 17 to run. Download the Java 17 JDK for your oper
 The latest release is available on GitHub at https://github.com/Andrei486/uml-diagram-collab/releases/latest.
 
 From the release, under Assets, download the JAR file `uml-diagram-collab-1.0-SNAPSHOT.jar`. Move it to a suitable location on your computer, typically outside the Downloads folder. Double-click the application to run it.
+
+## User Manual
+
+The user manual is available in this repository at [this link](User%20Manual.pdf).
